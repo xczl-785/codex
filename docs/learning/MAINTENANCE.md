@@ -11,6 +11,7 @@ Last entropy pass lesson: 5
 - Lesson 0005: Fork、Interrupt、编辑旧消息与 Revert
 - Lesson 0006: 一个长任务为什么仍是一个 Turn
 - Lesson 0007: 自动压缩为什么不会切换 Task
+- Lesson 0008: Turn 与 Task 为什么通常一对一仍要分开
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线

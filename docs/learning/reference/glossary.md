@@ -10,6 +10,10 @@
 | Steer | 把新输入追加给仍在运行的 Turn，修正或补充当前方向 |
 | Session | Thread 在内存中的运行实体，持有服务、状态和操作处理能力 |
 | Task | 驱动一次 Turn 的执行程序，例如普通处理、压缩或代码评审；它不是聊天记录本身 |
+| SessionTask | 所有 Turn 执行策略共同遵守的 Rust trait，约定 `kind`、`run` 和 `abort` 等行为 |
+| RegularTask | `SessionTask` 的普通 Agent 实现，负责驱动模型与工具循环 |
+| RunningTask | Task 启动后的运行时包装，持有取消令牌、异步句柄、完成通知和 TurnContext |
+| TaskKind | 对运行策略的轻量分类，目前包括 Regular、Review、Compact |
 | Op | 送进核心 Thread 的操作消息，例如输入、中断、审批或配置变化 |
 | Event | 核心向外报告的事件，例如内容增量、工具调用、完成或错误 |
 | App Server | 面向客户端的接口与协调层，把请求翻译成核心 Thread 操作 |
