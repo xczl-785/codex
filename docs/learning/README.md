@@ -2,6 +2,8 @@
 
 这个目录用于记录本 fork 的源码学习材料，不作为 Codex 的用户文档或上游项目文档。
 
+开始阅读前，可以先通过 [Codex 工程介绍](repository-inventory.md) 建立目录、模块、运行链路和构建体系的整体认识。
+
 ## 学习范围
 
 第一阶段聚焦 `codex-rs` 中一条完整的本地 Agent 运行链路：命令行解析、会话启动、模型交互、工具调用、审批与沙箱，以及 TUI 如何展示运行状态。SDK、发布流程、CI、跨平台打包和实验性服务先作为扩展主题保留，不作为入门主线。
@@ -110,6 +112,24 @@ codegraph callees CodexThread
 ```powershell
 codegraph init .
 ```
+
+## 外部技术资料
+
+原仓库中只有一个外部链接的跳转文档已合并到这里，减少 `docs/` 目录噪声：
+
+- [Codex 官方文档](https://developers.openai.com/codex)
+- [CLI 功能与交互模式](https://developers.openai.com/codex/cli/features#running-in-interactive-mode)
+- [身份认证](https://developers.openai.com/codex/auth)
+- [基础配置](https://developers.openai.com/codex/config-basic)
+- [高级配置](https://developers.openai.com/codex/config-advanced)
+- [完整配置参考](https://developers.openai.com/codex/config-reference)
+- [配置示例](https://developers.openai.com/codex/config-sample)
+- [非交互模式](https://developers.openai.com/codex/noninteractive)
+- [执行策略](https://developers.openai.com/codex/exec-policy)
+- [沙箱与安全](https://developers.openai.com/codex/security)
+- [AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
+- [Skills](https://developers.openai.com/codex/skills)
+- [Slash commands](https://developers.openai.com/codex/cli/slash-commands)
 
 ## 学习笔记约定
 

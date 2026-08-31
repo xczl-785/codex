@@ -44,10 +44,10 @@ prefix_rule(
     pattern = ["head"],
     match = [
         ["head", "README.md"],
-        ["head", "-n", "5", "CHANGELOG.md"],
+        ["head", "-n", "5", "README.md"],
     ],
     not_match = [
-        ["hea", "-n", "1,5p", "CHANGELOG.md"],
+        ["hea", "-n", "1,5p", "README.md"],
     ],
 )
 
