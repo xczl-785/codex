@@ -20,6 +20,12 @@
   用于查阅核心 `Op` 与事件类型，而不是凭印象猜测消息格式。
 - [Turn 输入协议](../../codex-rs/protocol/src/turn_input.rs)
   用于理解一次新 Turn 或追加输入携带的数据和路由意图。
+- [核心 Turn 输入决策](../../codex-rs/core/src/session/turn_input.rs)
+  用于理解 `StartOrSteer`、`StartIfIdle` 与严格 `Steer` 在核心中的判定。
+- [TUI 输入流](../../codex-rs/tui/src/chatwidget/input_flow.rs)
+  用于理解界面怎样暂存输入，以及 Turn 结束后如何继续处理等待中的消息。
+- [TUI 输入恢复](../../codex-rs/tui/src/chatwidget/input_restore.rs)
+  用于理解 Steer 被拒绝或 Turn 被中断时，输入如何进入队列或回到编辑框。
 
 ## Wisdom (Communities)
 

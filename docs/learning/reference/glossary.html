@@ -19,7 +19,15 @@
         </section>
         <section class="card">
           <h2>Turn</h2>
-          <p>Thread 中的一轮工作，从一次输入开始，到这一轮完成、中断或失败。</p>
+          <p>
+            Thread 中一段连续的 Agent 执行过程，到完成、中断或失败为止。执行期间可能通过 Steer 接收后续输入，并不严格等于一问一答。
+          </p>
+        </section>
+        <section class="card">
+          <h2>Steer</h2>
+          <p>
+            把新用户输入追加给仍在运行的 Turn，用来修正或补充当前方向，而不另开一轮。
+          </p>
         </section>
         <section class="card">
           <h2>Session</h2>
@@ -44,7 +52,7 @@
         <section class="card">
           <h2>App Server</h2>
           <p>
-            稳定的应用接口层，把 TUI、IDE 和 SDK 请求翻译成核心 Thread 操作。
+            面向客户端的应用接口与协调层，把 TUI、IDE 和 SDK 请求翻译成核心 Thread 操作；它是系统边界，不是比 Thread、Turn 更高一级的业务概念。
           </p>
         </section>
         <section class="card">
@@ -76,6 +84,9 @@
       </div>
 
       <nav class="nav">
+        <a href="../lessons/0002-start-steer-or-queue.html"
+          >第二课：连续发送如何归属</a
+        >
         <a href="../lessons/0001-from-prompt-to-turn.html"
           >第一课：从一句话到一次 Turn</a
         >

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>第二课：连续发送时，新 Turn、Steer，还是等待？</title>
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Lesson 0002 · 约 10 分钟</div>
+      <h1>连续发送时：新 Turn、Steer，还是等待？</h1>
+      <p class="lede">
+        界面上的一条消息，不一定对应一个新 Turn。真正的判定依据是：当前 Thread 有没有正在运行、而且仍能接收调整的 Turn。
+      </p>
+
+      <section class="callout">
+        <strong>先给结论</strong>
+        <p>
+          空闲时发送，启动新 Turn；执行中发送，优先 Steer 当前 Turn；如果当前 Turn 已不能接收调整，输入会被拒绝、暂存或稍后重新处理。
+        </p>
+      </section>
+
+      <h2>Turn 不是聊天气泡，而是执行信封</h2>
+
+      <p>
+        可以把 Turn 想成一个正在处理的“执行信封”。它从核心开始处理本轮任务时打开，模型思考、工具调用、审批和继续推理都发生在里面，直到完成、中断或失败才封口。
+      </p>
+      <p>
+        在信封尚未封口时补一句“先别改文件，只分析”，系统可以把这句话塞进当前信封。这叫 <strong>Steer</strong>：不是重开任务，而是给正在运行的任务补充方向。
+      </p>
+
+      <div class="term-grid">
+        <section class="card">
+          <h3>场景一：Thread 空闲</h3>
+          <p>没有活动 Turn。新输入通过 <code>turn/start</code> 启动一轮新的执行。</p>
+        </section>
+        <section class="card">
+          <h3>场景二：Turn 正在运行</h3>
+          <p>界面优先通过 <code>turn/steer</code> 把输入送给当前 Turn，Turn ID 不变。</p>
+        </section>
+        <section class="card">
+          <h3>场景三：状态刚好变化</h3>
+          <p>界面以为 Turn 仍活跃，但核心发现它已经结束，于是刷新状态，再按新 Turn 处理。</p>
+        </section>
+        <section class="card">
+          <h3>场景四：当前不可 Steer</h3>
+          <p>输入不会被悄悄吞掉；界面会保留、排队或恢复它，等待用户或下一次提交。</p>
+        </section>
+      </div>
+
+      <h2>为什么需要 expected turn ID？</h2>
+
+      <p>
+        因为界面和核心是并发变化的。界面发出 Steer 请求时，原来的 Turn 可能恰好结束，新的 Turn 甚至可能已经开始。请求携带“我以为正在运行的是哪一轮”，核心就能阻止一条补充消息误入别的 Turn。
+      </p>
+
+      <section class="callout warning">
+        <strong>所以，“连续发送三条消息有几个 Turn？”没有固定答案</strong>
+        <p>
+          等每轮完成后再发，通常是一个 Thread、三个 Turn；在第一轮仍运行时连续补充，并且 Steer 成功，则可能仍是一个 Thread、一个 Turn。发送时机和运行状态才是决定因素。
+        </p>
+      </section>
+
+      <h2>App Server 放在哪一层？</h2>
+
+      <p>
+        你的“高度封装”直觉是对的，但“更高维的领域概念”不太准确。Thread 和 Turn 是系统在管理的对象；App Server 是客户端进入这些对象的统一门口。
+      </p>
+
+      <div class="flow" aria-label="客户端通过 App Server 使用核心领域能力">
+        <div>
+          <strong>客户端</strong>
+          <span>TUI、IDE 或 SDK 表达用户意图。</span>
+        </div>
+        <div>
+          <strong>App Server</strong>
+          <span>校验并翻译 thread/start、turn/start、turn/steer 等请求。</span>
+        </div>
+        <div>
+          <strong>核心运行时</strong>
+          <span>管理 Thread、Session、Turn 和实际任务。</span>
+        </div>
+        <div>
+          <strong>事件回流</strong>
+          <span>把增量输出、工具状态和完成结果送回客户端。</span>
+        </div>
+      </div>
+
+      <p>
+        因此更合适的比喻是：Thread/Turn 是工单和其中的一次执行，App Server 是接单台兼翻译员。它封装得很高，但它描述的是<strong>访问边界</strong>，不是更抽象的业务实体。
+      </p>
+
+      <h2>沿源码只看三步</h2>
+
+      <ol class="source-list">
+        <li>
+          <a href="../../../codex-rs/tui/src/app/thread_routing.rs"><code>tui/src/app/thread_routing.rs</code></a>
+          先看界面如何在 <code>turn_steer</code> 与 <code>turn_start</code> 之间选择。
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/session/turn_input.rs"><code>core/src/session/turn_input.rs</code></a>
+          再看核心如何处理 <code>StartOrSteer</code>、<code>StartIfIdle</code> 和严格 <code>Steer</code>。
+        </li>
+        <li>
+          <a href="../../../codex-rs/tui/src/chatwidget/input_restore.rs"><code>tui/src/chatwidget/input_restore.rs</code></a>
+          最后看未成功送入当前 Turn 的文字如何被保留下来。
+        </li>
+      </ol>
+
+      <h2>30 秒回忆练习</h2>
+
+      <section class="card">
+        <p>
+          模型正在调用工具时，你补充一句“先别改文件，只做静态分析”。Thread 和 Turn 一定会怎样变化？
+        </p>
+        <details>
+          <summary>核对答案</summary>
+          <p>
+            Thread 不变。界面会先尝试把这句话 Steer 给当前活动 Turn；成功时 Turn 也不变。只有当前 Turn 已结束或无法接收时，才会走暂存、恢复或后续新 Turn 的路径。
+          </p>
+        </details>
+      </section>
+
+      <h2>本课的一句话总结</h2>
+
+      <p class="callout">
+        Turn 的边界由执行生命周期决定，不由聊天气泡决定；App Server 负责让不同客户端以统一方式启动、调整并观察这些执行。
+      </p>
+
+      <h2>Primary sources</h2>
+
+      <ul class="source-list">
+        <li><a href="../../../codex-rs/tui/src/app/thread_routing.rs">TUI Thread/Turn 路由</a></li>
+        <li><a href="../../../codex-rs/core/src/session/turn_input.rs">核心 Turn 输入决策</a></li>
+        <li><a href="../../../codex-rs/protocol/src/turn_input.rs">Turn 输入模式协议</a></li>
+        <li><a href="../../../codex-rs/tui/src/chatwidget/input_flow.rs">TUI 输入队列与继续发送</a></li>
+        <li><a href="../../../codex-rs/tui/src/chatwidget/input_restore.rs">被拒 Steer 与输入恢复</a></li>
+      </ul>
+
+      <p>
+        下一步可以沿着 Thread 的创建、恢复和派生继续，也可以先进入一轮 Turn 内部，看模型调用与工具调用怎样循环。
+      </p>
+
+      <nav class="nav">
+        <a href="0001-from-prompt-to-turn.html">上一课：从一句话到一次 Turn</a>
+        <a href="../reference/glossary.html">核心概念速查</a>
+        <a href="../README.md">返回学习目录</a>
+      </nav>
+    </main>
+  </body>
+</html>

@@ -65,7 +65,7 @@
       <p>
         因为“一段长期会话”和“其中的一轮工作”生命周期不同。Thread
         可以存在很久，可以恢复、派生，也可以包含很多轮；Turn
-        通常只对应一次输入触发的工作过程。
+        则是一段连续的 Agent 执行过程。空闲时的新输入会启动新 Turn；执行中追加的输入可能进入当前 Turn，调整它接下来的方向。
       </p>
 
       <div class="term-grid">
@@ -143,14 +143,15 @@
 
       <section class="card">
         <p>
-          先不要往下展开：如果用户连续输入三次，通常是几个 Thread、几个
-          Turn？App Server 又扮演什么角色？
+          先不要往下展开：如果用户连续输入三次，会是几个 Thread、几个
+          Turn？这个问题还缺少哪个关键信息？App Server 又扮演什么角色？
         </p>
         <details>
           <summary>核对答案</summary>
           <p>
-            通常仍是一个 Thread，里面产生三轮 Turn。App Server
-            是统一接单和翻译请求的接口层，不是模型本身，也不是长期会话本身。
+            通常仍是一个 Thread，但 Turn 数量取决于发送时机：如果每次都等上一轮结束，通常是三个 Turn；如果后续输入在当前 Turn
+            仍可接收调整时到达，它们可能通过 <code>turn/steer</code>
+            进入同一个 Turn。App Server 是统一接单和翻译请求的接口层，不是模型本身，也不是长期会话本身。
           </p>
         </details>
       </section>
@@ -190,6 +191,7 @@
       </p>
 
       <nav class="nav">
+        <a href="0002-start-steer-or-queue.html">下一课：连续发送如何归属</a>
         <a href="../reference/glossary.html">核心概念速查</a>
         <a href="../README.md">返回学习目录</a>
       </nav>
