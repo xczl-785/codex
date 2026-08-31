@@ -22,6 +22,14 @@
   用于理解一次新 Turn 或追加输入携带的数据和路由意图。
 - [核心 Turn 输入决策](../../codex-rs/core/src/session/turn_input.rs)
   用于理解 `StartOrSteer`、`StartIfIdle` 与严格 `Steer` 在核心中的判定。
+- [Session 运行实体](../../codex-rs/core/src/session/session.rs)
+  用于理解一个 Thread 在内存中的服务、状态与活动 Turn。
+- [Turn 上下文](../../codex-rs/core/src/session/turn_context.rs)
+  用于理解一轮执行捕获的配置、模型、权限与环境快照。
+- [Turn 运行状态](../../codex-rs/core/src/state/turn.rs)
+  用于理解 `ActiveTurn`、`RunningTask` 与 `TaskKind` 的组合关系。
+- [Task 执行契约](../../codex-rs/core/src/tasks/mod.rs)
+  用于理解具体 Task 如何运行、取消并把结果交回 Session。
 - [TUI 输入流](../../codex-rs/tui/src/chatwidget/input_flow.rs)
   用于理解界面怎样暂存输入，以及 Turn 结束后如何继续处理等待中的消息。
 - [TUI 输入恢复](../../codex-rs/tui/src/chatwidget/input_restore.rs)

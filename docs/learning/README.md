@@ -9,6 +9,7 @@
 - [学习任务](MISSION.md)：这套源码学习最终要获得什么能力。
 - [第一课：从一句话到一次 Turn](lessons/0001-from-prompt-to-turn.md)：先建立整体运行骨架。
 - [第二课：连续发送时，新 Turn、Steer，还是等待？](lessons/0002-start-steer-or-queue.md)：理解输入怎样启动或调整一轮执行。
+- [第三课：Thread、Session、Turn 与 Task](lessons/0003-thread-session-turn-task.md)：区分长期身份、内存运行体、执行边界和执行程序。
 - [Codex 核心概念速查](reference/glossary.md)：Thread、Turn、Session、Op、Event 等术语的通俗解释。
 - [资料索引](RESOURCES.md)：课程使用的当前源码入口与外部资料。
 
