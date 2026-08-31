@@ -14,7 +14,7 @@ Last entropy pass lesson: 0
 
 - 课程使用中文，类比和流程优先于符号记忆。
 - 事实优先取自当前分支源码与测试。
-- HTML 课程共享 `assets/course.css`，避免重复内联样式。
+- 课程与速查统一使用纯 Markdown；不维护 H5 和样式资产，文档沉淀不得拖慢对话反馈。
 
 ## Next likely directions
 
