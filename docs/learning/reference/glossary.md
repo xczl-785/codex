@@ -17,6 +17,8 @@
 | CodexThread | 调用方持有的 Thread 句柄，用来投递操作和订阅事件 |
 | Tool | 模型可以请求使用的外部能力，例如执行命令或修改文件 |
 | Context | 一次模型请求能看到的信息，包括历史、指令、环境和工具结果 |
+| Inline auto-compaction | 在当前 RegularTask/Turn 调用栈中压缩历史，完成后直接继续下一 Step |
+| Standalone compaction | 由独立 CompactTask 驱动的一次手动压缩 Turn，不负责恢复被替换的普通 Task |
 | Subagent | 由另一个 Agent 创建的子工作者，复用独立 Thread 和正常 Turn 机制 |
 
 注意：App Server 是系统访问边界，不是位于 Thread、Turn 之上的业务实体层。
