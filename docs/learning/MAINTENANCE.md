@@ -28,11 +28,11 @@ Last entropy pass lesson: 5
 
 ## Next likely directions
 
-- 细看 Thread 的创建、恢复、派生与身份传播。
-- 由用户围绕 Thread、Session、Turn、Task 主动提问，按问题选择下一条源码链路。
+- 下一阶段进入一次 Step 的模型请求与工具调用闭环，先回答模型为什么不能直接执行工具。
+- 在模型—工具闭环建立后，再细看工具路由、审批、沙箱和结果回传。
+- 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
-- 细看一次 Turn 内部的模型与工具循环。
 - 在整体链路稳定后进入 Subagent 生命周期。
 
 ## Entropy pass after lesson 0005

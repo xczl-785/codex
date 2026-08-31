@@ -24,6 +24,8 @@
 | ContextManager | Session 内维护模型有效历史的内存投影，可在压缩时被 replacement history 替换 |
 | Rollout | Thread 的追加式持久记录，保存消息、事件、Turn 边界以及压缩检查点等恢复事实 |
 | Compaction checkpoint | 追加到 rollout 的压缩检查点，说明未来重建模型历史时应采用哪份 replacement history |
+| Model-visible history | 当前 Prompt 直接携带给模型的有效历史；压缩后通常从 replacement history 开始 |
+| Model-retrievable history | 不在当前 Prompt 中，但模型可借助显式历史检索工具按需取回的内容；默认不保证存在这种能力 |
 | ThreadItem | App Server 从 Thread 记录重建出的公开历史项目，是客户端协议视图 |
 | Transcript cell | TUI 根据 ThreadItem 生成的展示单元，是面向用户的有损投影 |
 | Inline auto-compaction | 在当前 RegularTask/Turn 调用栈中压缩历史，完成后直接继续下一 Step |

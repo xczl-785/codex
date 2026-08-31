@@ -62,6 +62,12 @@
   用于理解 rollout 如何重建为公开的 Turn 与 ThreadItem，以及压缩为何不删除旧界面记录。
 - [TUI Thread 转录投影](../../codex-rs/tui/src/thread_transcript.rs)
   用于理解公开 ThreadItem 如何进一步转换为用户看到的 transcript cells。
+- [模型工具规划](../../codex-rs/core/src/tools/spec_plan.rs)
+  用于核对普通模型请求实际注册了哪些工具，以及 App Server RPC 为什么不自动成为模型工具。
+- [History/Notes 扩展](../../codex-rs/ext/history-notes/src/extension.rs)
+  用于理解可选历史检索能力的启用条件和 Thread 生命周期挂接方式。
+- [History/Notes 工具](../../codex-rs/ext/history-notes/src/tools.rs)
+  用于核对模型可用的历史窗口列举、项目读取和内容搜索工具。
 
 ## Wisdom (Communities)
 

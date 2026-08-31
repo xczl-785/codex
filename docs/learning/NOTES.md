@@ -12,3 +12,4 @@
 - 架构设计题必须先给出需求、边界和预期交互，允许并鼓励用户先反问澄清；当前安全审计设计题结束后，切换为用户围绕 Thread、Session、Turn、Task 主动提问、教师结合源码回答的形式。
 - 已在第九课区分运行时模型历史、追加式 rollout、App Server 的 Turn/ThreadItem 与 TUI transcript；后续不得把 `replace_compacted_history` 理解为抹除 Thread 的全部历史。
 - 用户已主动把 Codex 多层持久态/运行态隔离与 Harness 状态外置联系起来，后续可沿“事实来源与可重建投影”继续讲解。
+- Thread/Session/Turn/Task 概念阶段以“保存不等于模型可见，模型可见不等于可检索”收尾；下一阶段转入 Step 内模型请求与工具调用闭环。
