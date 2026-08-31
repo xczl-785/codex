@@ -10,6 +10,7 @@ Last entropy pass lesson: 0
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
+- Learning record 0003: 从生命周期定义转向设计动机
 
 ## Durable decisions
 
