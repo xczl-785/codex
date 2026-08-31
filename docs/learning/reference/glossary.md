@@ -20,6 +20,13 @@
 | ThreadManager | 管理多个 Thread，负责创建、恢复、派生、查找和关闭 |
 | CodexThread | 调用方持有的 Thread 句柄，用来投递操作和订阅事件 |
 | Tool | 模型可以请求使用的外部能力，例如执行命令或修改文件 |
+| Tool Calling | 模型通过专门协议项目表达工具名、调用 ID 和参数，而不是把操作混在普通回答文本中 |
+| JSON mode | 约束模型生成合法 JSON 的输出模式，不必然保证符合应用的字段 Schema |
+| Structured Outputs | 使用受支持的 JSON Schema 约束模型输出结构；解决结构问题，不负责业务、权限和执行正确性 |
+| FunctionCall | 模型输出的结构化工具调用意图，包含工具身份、参数和用于关联结果的 call ID |
+| FunctionCallOutput | Harness 执行或拒绝工具后写回模型历史的结果，使模型可以在下一 Step 继续判断 |
+| ToolRouter | 把模型响应项目转换成内部 ToolCall，并把调用送往当前 Step 的工具运行时 |
+| ToolRegistry | 保存当前可调用工具及其实现，负责按工具身份查找、匹配和分发 |
 | Context | 一次模型请求能看到的信息，包括历史、指令、环境和工具结果 |
 | ContextManager | Session 内维护模型有效历史的内存投影，可在压缩时被 replacement history 替换 |
 | Rollout | Thread 的追加式持久记录，保存消息、事件、Turn 边界以及压缩检查点等恢复事实 |

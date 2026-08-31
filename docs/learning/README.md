@@ -16,6 +16,7 @@
 - [第七课：自动压缩为什么不会切换 Task](lessons/0007-inline-auto-compaction.md)：区分长 Turn 内联压缩与独立 `CompactTask`，理解压缩后的续跑控制流。
 - [第八课：Turn 与 Task 为什么通常一对一仍要分开](lessons/0008-turn-and-task-separation.md)：厘清 `SessionTask`、具体 Task、`RunningTask` 与 Turn 的职责和设计动机。
 - [第九课：Session 的生命周期、上下文与界面历史](lessons/0009-session-lifecycle-context-and-history-projections.md)：理解 Session 何时创建和关闭、模型上下文如何组装，以及压缩后“系统保存、模型可见、模型可检索”为何是三件事。
+- [第十课：结构化工具调用为什么仍需要 Harness 校验](lessons/0010-structured-tool-calls-and-runtime-validation.md)：区分 JSON mode、Structured Outputs 与 Tool Calling，理解模型原生结构能力和 Codex 运行时验证的边界。
 - [Codex 核心概念速查](reference/glossary.md)：Thread、Turn、Session、Op、Event 等术语的通俗解释。
 - [资料索引](RESOURCES.md)：课程使用的当前源码入口与外部资料。
 

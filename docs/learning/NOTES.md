@@ -13,3 +13,4 @@
 - 已在第九课区分运行时模型历史、追加式 rollout、App Server 的 Turn/ThreadItem 与 TUI transcript；后续不得把 `replace_compacted_history` 理解为抹除 Thread 的全部历史。
 - 用户已主动把 Codex 多层持久态/运行态隔离与 Harness 状态外置联系起来，后续可沿“事实来源与可重建投影”继续讲解。
 - Thread/Session/Turn/Task 概念阶段以“保存不等于模型可见，模型可见不等于可检索”收尾；下一阶段转入 Step 内模型请求与工具调用闭环。
+- 用户已经了解现代模型普遍具有原生结构化输出/Tool Calling 能力；后续不要把课程退回到单纯提示词提取 JSON，应讲清 strict Schema 的能力边界和 Harness 仍需承担的运行时验证。

@@ -13,12 +13,14 @@ Last entropy pass lesson: 5
 - Lesson 0007: 自动压缩为什么不会切换 Task
 - Lesson 0008: Turn 与 Task 为什么通常一对一仍要分开
 - Lesson 0009: Session 的生命周期、上下文与界面历史
+- Lesson 0010: 结构化工具调用为什么仍需要 Harness 校验
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
 - Learning record 0003: 从生命周期定义转向设计动机
 - Learning record 0004: 先确定需求边界，再判断扩展点
 - Learning record 0005: 运行态是持久事实的可重建投影
+- Learning record 0006: 原生 Tool Calling 已成为理解基线
 
 ## Durable decisions
 
@@ -28,8 +30,8 @@ Last entropy pass lesson: 5
 
 ## Next likely directions
 
-- 下一阶段进入一次 Step 的模型请求与工具调用闭环，先回答模型为什么不能直接执行工具。
-- 在模型—工具闭环建立后，再细看工具路由、审批、沙箱和结果回传。
+- 下一课沿一次实际 FunctionCall 细看 ToolRouter、ToolRegistry、Handler 与 FunctionCallOutput。
+- 在模型—工具闭环建立后，再分别细看审批、沙箱和并行工具调度。
 - 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。

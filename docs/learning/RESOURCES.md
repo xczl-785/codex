@@ -64,10 +64,24 @@
   用于理解公开 ThreadItem 如何进一步转换为用户看到的 transcript cells。
 - [模型工具规划](../../codex-rs/core/src/tools/spec_plan.rs)
   用于核对普通模型请求实际注册了哪些工具，以及 App Server RPC 为什么不自动成为模型工具。
+- [工具路由](../../codex-rs/core/src/tools/router.rs)
+  用于理解模型返回的 FunctionCall 如何转换成内部 ToolCall 并交给注册表。
+- [工具注册与分发](../../codex-rs/core/src/tools/registry.rs)
+  用于理解工具身份查找、类型匹配、Hook、执行和模型可见失败结果。
+- [工具并行执行包装](../../codex-rs/core/src/tools/parallel.rs)
+  用于理解工具成功结果与非致命错误如何统一转换成写回模型历史的 ResponseItem。
+- [流式响应项目处理](../../codex-rs/core/src/stream_events_utils.rs)
+  用于理解 FunctionCall 为什么会排入执行队列并令本次采样需要 follow-up。
+- [工具参数公共解析](../../codex-rs/core/src/tools/handlers/mod.rs)
+  用于核对 FunctionCall 参数怎样由 JSON 字符串反序列化成具体 Rust 类型。
 - [History/Notes 扩展](../../codex-rs/ext/history-notes/src/extension.rs)
   用于理解可选历史检索能力的启用条件和 Thread 生命周期挂接方式。
 - [History/Notes 工具](../../codex-rs/ext/history-notes/src/tools.rs)
   用于核对模型可用的历史窗口列举、项目读取和内容搜索工具。
+- [OpenAI Responses API：结构化输出与工具参数](https://platform.openai.com/docs/api-reference/responses-streaming/response/web_search_call?lang=curl)
+  用于区分 `json_object`、`json_schema` 和 Function Calling 的 `strict` 语义。
+- [Anthropic Tool Use](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use)
+  用于对照另一种主流模型 API 怎样使用 `input_schema`、`tool_use` 和 `tool_result` 形成闭环。
 
 ## Wisdom (Communities)
 
