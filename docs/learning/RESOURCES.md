@@ -34,6 +34,14 @@
   用于理解界面怎样暂存输入，以及 Turn 结束后如何继续处理等待中的消息。
 - [TUI 输入恢复](../../codex-rs/tui/src/chatwidget/input_restore.rs)
   用于理解 Steer 被拒绝或 Turn 被中断时，输入如何进入队列或回到编辑框。
+- [TUI 历史回溯](../../codex-rs/tui/src/app_backtrack.rs)
+  用于理解编辑旧消息为什么通过 Fork 建立源历史保留的新分支。
+- [App Server Thread 协议](../../codex-rs/app-server-protocol/src/protocol/v2/thread.rs)
+  用于核对 `thread/fork`、`thread/revert` 与旧 `thread/rollback` 的准确边界。
+- [App Server Thread 处理](../../codex-rs/app-server/src/request_processors/thread_processor.rs)
+  用于理解 Fork 的历史截断，以及 Revert 如何关闭并重新加载同一 Thread。
+- [App Server Turn 处理](../../codex-rs/app-server/src/request_processors/turn_processor.rs)
+  用于理解 `turn/interrupt` 如何验证活动 Turn 并等待中断事件。
 
 ## Wisdom (Communities)
 
