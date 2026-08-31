@@ -30,6 +30,14 @@
   用于理解 `ActiveTurn`、`RunningTask` 与 `TaskKind` 的组合关系。
 - [Task 执行契约](../../codex-rs/core/src/tasks/mod.rs)
   用于理解具体 Task 如何运行、取消并把结果交回 Session。
+- [普通 Task](../../codex-rs/core/src/tasks/regular.rs)
+  用于理解一个普通 Task 如何发出 TurnStarted，并驱动完整的 `run_turn` 循环。
+- [Turn 内部循环](../../codex-rs/core/src/session/turn.rs)
+  用于理解一次 Turn 内的 Step 捕获、模型采样、工具调用、Steer 接入和中途压缩。
+- [Turn 计时](../../codex-rs/core/src/turn_timing.rs)
+  用于区分整轮墙钟时间、首 Token 时间和采样、工具、压缩等阶段耗时。
+- [TUI Turn 收尾](../../codex-rs/tui/src/chatwidget/turn_runtime.rs)
+  用于理解界面怎样收起流式内容、插入工作分隔符并显示 Turn 总耗时。
 - [TUI 输入流](../../codex-rs/tui/src/chatwidget/input_flow.rs)
   用于理解界面怎样暂存输入，以及 Turn 结束后如何继续处理等待中的消息。
 - [TUI 输入恢复](../../codex-rs/tui/src/chatwidget/input_restore.rs)

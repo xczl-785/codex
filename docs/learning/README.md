@@ -12,6 +12,7 @@
 - [第三课：Thread、Session、Turn 与 Task](lessons/0003-thread-session-turn-task.md)：区分长期身份、内存运行体、执行边界和执行程序。
 - [第四课：从安全审计需求定位架构扩展点](lessons/0004-audit-mode-design-exercise.md)：练习从需求、范围、权限和协议判断真正变化点。
 - [第五课：Fork、Interrupt、编辑旧消息与 Revert](lessons/0005-fork-interrupt-edit-and-revert.md)：理解分支、停止执行和历史重写在各层的不同响应。
+- [第六课：一个长任务为什么仍是一个 Turn](lessons/0006-one-long-turn-and-task-lifecycle.md)：拆开 Turn、Step、工具调用和 Task 的完整运行与计时边界。
 - [Codex 核心概念速查](reference/glossary.md)：Thread、Turn、Session、Op、Event 等术语的通俗解释。
 - [资料索引](RESOURCES.md)：课程使用的当前源码入口与外部资料。
 
