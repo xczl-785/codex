@@ -4,6 +4,13 @@
 
 开始阅读前，可以先通过 [Codex 工程介绍](repository-inventory.md) 建立目录、模块、运行链路和构建体系的整体认识。
 
+## 课程入口
+
+- [学习任务](MISSION.md)：这套源码学习最终要获得什么能力。
+- [第一课：从一句话到一次 Turn](lessons/0001-from-prompt-to-turn.html)：先建立整体运行骨架。
+- [Codex 核心概念速查](reference/glossary.html)：Thread、Turn、Session、Op、Event 等术语的通俗解释。
+- [资料索引](RESOURCES.md)：课程使用的当前源码入口与外部资料。
+
 ## 学习范围
 
 第一阶段聚焦 `codex-rs` 中一条完整的本地 Agent 运行链路：命令行解析、会话启动、模型交互、工具调用、审批与沙箱，以及 TUI 如何展示运行状态。SDK、发布流程、CI、跨平台打包和实验性服务先作为扩展主题保留，不作为入门主线。

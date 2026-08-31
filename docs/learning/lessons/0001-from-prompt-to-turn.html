@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>第一课：从一句话到一次 Turn</title>
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Lesson 0001 · 约 8 分钟</div>
+      <h1>从一句话到一次 Turn</h1>
+      <p class="lede">
+        第一课不追函数细节，只建立一个可用的骨架：你在 Codex
+        里输入一句话后，哪些角色依次接手？
+      </p>
+
+      <section class="callout">
+        <strong>这一课的胜利条件</strong>
+        <p>
+          读完后，你能不看源码，说出“界面、App
+          Server、Thread、Turn”各自负责什么。
+        </p>
+      </section>
+
+      <h2>先把 Codex 想成一间工作室</h2>
+
+      <p>
+        你看到的 TUI 是前台；App Server 是统一接单口；Thread
+        是一张长期保留的工作台；Turn
+        是这张工作台上的一轮任务。真正与模型交流、调用工具和保存状态的工作发生在后面几层。
+      </p>
+
+      <div class="flow" aria-label="一次输入的四阶段流程">
+        <div>
+          <strong>1. 前台接话</strong>
+          <span
+            >CLI 选择交互模式，TUI
+            收集你的文字、当前目录、模型和权限设置。</span
+          >
+        </div>
+        <div>
+          <strong>2. 统一接单</strong>
+          <span
+            >App Server 接收 thread/start 或 turn/start
+            这类请求，屏蔽本地与远程差异。</span
+          >
+        </div>
+        <div>
+          <strong>3. 工作台开工</strong>
+          <span
+            >ThreadManager 找到或创建 Thread，核心运行时启动这一轮 Turn。</span
+          >
+        </div>
+        <div>
+          <strong>4. 结果回流</strong>
+          <span
+            >模型输出、工具调用、审批和完成状态以事件形式返回界面并写入记录。</span
+          >
+        </div>
+      </div>
+
+      <h2>Thread 和 Turn 为什么要分开？</h2>
+
+      <p>
+        因为“一段长期会话”和“其中的一轮工作”生命周期不同。Thread
+        可以存在很久，可以恢复、派生，也可以包含很多轮；Turn
+        通常只对应一次输入触发的工作过程。
+      </p>
+
+      <div class="term-grid">
+        <section class="card">
+          <h3>Thread：工作台</h3>
+          <p>保存身份、历史和长期状态。关闭程序后，它仍可能从记录中恢复。</p>
+        </section>
+        <section class="card">
+          <h3>Turn：这一轮</h3>
+          <p>接收本轮输入，进行模型与工具循环，最后完成、中断或失败。</p>
+        </section>
+      </div>
+
+      <section class="callout warning">
+        <strong>一个容易踩的坑</strong>
+        <p>
+          不要把 Thread 理解成操作系统线程。这里的 Thread
+          是产品领域里的“会话工作单元”，不是 CPU 调度概念。
+        </p>
+      </section>
+
+      <h2>第一次只认七个代码路标</h2>
+
+      <ol class="source-list">
+        <li>
+          <a href="../../../codex-rs/cli/src/main.rs"
+            ><code>cli/src/main.rs</code></a
+          >
+          是总入口。默认没有子命令时，它会进入 TUI。
+        </li>
+        <li>
+          <a href="../../../codex-rs/tui/src/app_command.rs"
+            ><code>tui/src/app_command.rs</code></a
+          >
+          定义界面内部想做的事情，例如发起一轮用户输入。
+        </li>
+        <li>
+          <a href="../../../codex-rs/tui/src/app/thread_routing.rs"
+            ><code>tui/src/app/thread_routing.rs</code></a
+          >
+          把界面命令路由为 App Server 的 Thread/Turn 请求。
+        </li>
+        <li>
+          <a
+            href="../../../codex-rs/app-server/src/request_processors/turn_processor.rs"
+            ><code>turn_processor.rs</code></a
+          >
+          处理 <code>turn/start</code>，把 API 请求送入核心。
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/thread_manager.rs"
+            ><code>core/src/thread_manager.rs</code></a
+          >
+          管理 Thread 的创建、恢复、派生和关闭。
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/codex_thread.rs"
+            ><code>core/src/codex_thread.rs</code></a
+          >
+          是向某个 Thread 投递操作、接收事件的句柄。
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/session/handlers.rs"
+            ><code>core/src/session/handlers.rs</code></a
+          >
+          是核心消费操作、推进 Turn 的重要处理入口。
+        </li>
+      </ol>
+
+      <p>
+        现在不需要逐个读完。第一次源码浏览只需打开这些文件，找到对应名字，确认“它确实在这里”，然后退出。
+      </p>
+
+      <h2>30 秒回忆练习</h2>
+
+      <section class="card">
+        <p>
+          先不要往下展开：如果用户连续输入三次，通常是几个 Thread、几个
+          Turn？App Server 又扮演什么角色？
+        </p>
+        <details>
+          <summary>核对答案</summary>
+          <p>
+            通常仍是一个 Thread，里面产生三轮 Turn。App Server
+            是统一接单和翻译请求的接口层，不是模型本身，也不是长期会话本身。
+          </p>
+        </details>
+      </section>
+
+      <h2>本课的一句话总结</h2>
+
+      <p class="callout">
+        Codex 不是“界面直接问模型”，而是界面通过统一接口把一轮工作交给某个长期
+        Thread，核心完成模型与工具循环，再用事件把过程和结果送回来。
+      </p>
+
+      <h2>Primary sources</h2>
+
+      <ul class="source-list">
+        <li>
+          <a href="../../../codex-rs/cli/src/main.rs">当前分支 CLI 入口源码</a>
+        </li>
+        <li>
+          <a href="../../../codex-rs/tui/src/app/thread_routing.rs"
+            >当前分支 TUI Thread 路由源码</a
+          >
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/thread_manager.rs"
+            >当前分支 ThreadManager 源码</a
+          >
+        </li>
+        <li>
+          <a href="../../../codex-rs/core/src/codex_thread.rs"
+            >当前分支 CodexThread 源码</a
+          >
+        </li>
+      </ul>
+
+      <p>
+        哪里不清楚，直接把你的理解或疑问告诉我；下一轮会根据你的回答调整难度。
+      </p>
+
+      <nav class="nav">
+        <a href="../reference/glossary.html">核心概念速查</a>
+        <a href="../README.md">返回学习目录</a>
+      </nav>
+    </main>
+  </body>
+</html>

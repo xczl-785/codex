@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex 核心概念速查</title>
+    <link rel="stylesheet" href="../assets/course.css" />
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Reference 0001</div>
+      <h1>Codex 核心概念速查</h1>
+      <p class="lede">先记职责，不急着记实现。遇到源码名词时回到这里校准。</p>
+
+      <div class="term-grid">
+        <section class="card">
+          <h2>Thread</h2>
+          <p>一段可以持续、恢复和派生的工作会话，像一个长期保存的工作台。</p>
+        </section>
+        <section class="card">
+          <h2>Turn</h2>
+          <p>Thread 中的一轮工作，从一次输入开始，到这一轮完成、中断或失败。</p>
+        </section>
+        <section class="card">
+          <h2>Session</h2>
+          <p>Thread 在内存中的运行实体，持有服务、状态和处理操作的能力。</p>
+        </section>
+        <section class="card">
+          <h2>Task</h2>
+          <p>一次 Turn 内实际执行的工作形态，例如普通处理、压缩或代码评审。</p>
+        </section>
+        <section class="card">
+          <h2>Op</h2>
+          <p>
+            送进核心 Thread 的操作消息，例如启动输入、中断、审批结果或配置变化。
+          </p>
+        </section>
+        <section class="card">
+          <h2>Event</h2>
+          <p>
+            核心向外报告的事件消息，例如内容增量、工具调用、Turn 完成或错误。
+          </p>
+        </section>
+        <section class="card">
+          <h2>App Server</h2>
+          <p>
+            稳定的应用接口层，把 TUI、IDE 和 SDK 请求翻译成核心 Thread 操作。
+          </p>
+        </section>
+        <section class="card">
+          <h2>ThreadManager</h2>
+          <p>管理多个 Thread 的总管，负责创建、恢复、派生、查找和关闭。</p>
+        </section>
+        <section class="card">
+          <h2>CodexThread</h2>
+          <p>调用方握在手里的 Thread 句柄，提供投递操作和订阅事件的通道。</p>
+        </section>
+        <section class="card">
+          <h2>Tool</h2>
+          <p>
+            模型可以请求使用的外部能力，相当于 Agent
+            的手，例如执行命令或修改文件。
+          </p>
+        </section>
+        <section class="card">
+          <h2>Context</h2>
+          <p>一次模型请求能看到的信息集合，包括历史、指令、环境和工具结果。</p>
+        </section>
+        <section class="card">
+          <h2>Subagent</h2>
+          <p>
+            由另一个 Agent 创建的子工作者，本质上复用独立 Thread 和正常 Turn
+            机制。
+          </p>
+        </section>
+      </div>
+
+      <nav class="nav">
+        <a href="../lessons/0001-from-prompt-to-turn.html"
+          >第一课：从一句话到一次 Turn</a
+        >
+        <a href="../README.md">返回学习目录</a>
+      </nav>
+    </main>
+  </body>
+</html>
