@@ -24,6 +24,14 @@
   用于理解 `StartOrSteer`、`StartIfIdle` 与严格 `Steer` 在核心中的判定。
 - [Session 运行实体](../../codex-rs/core/src/session/session.rs)
   用于理解一个 Thread 在内存中的服务、状态与活动 Turn。
+- [Session 状态](../../codex-rs/core/src/state/session.rs)
+  用于理解跨 Turn 保留的配置、模型历史、世界状态和压缩窗口。
+- [Session 初始化与历史安装](../../codex-rs/core/src/session/mod.rs)
+  用于理解新建、恢复和派生时如何构造 Session、启动提交循环并安装初始历史。
+- [Rollout 历史重建](../../codex-rs/core/src/session/rollout_reconstruction.rs)
+  用于理解恢复时如何采用最新压缩检查点，并重放检查点之后的历史。
+- [模型历史管理](../../codex-rs/core/src/context_manager/history.rs)
+  用于理解模型可见历史的规范化、替换、版本和 Prompt 投影。
 - [Turn 上下文](../../codex-rs/core/src/session/turn_context.rs)
   用于理解一轮执行捕获的配置、模型、权限与环境快照。
 - [Turn 运行状态](../../codex-rs/core/src/state/turn.rs)
@@ -50,6 +58,10 @@
   用于理解 Fork 的历史截断，以及 Revert 如何关闭并重新加载同一 Thread。
 - [App Server Turn 处理](../../codex-rs/app-server/src/request_processors/turn_processor.rs)
   用于理解 `turn/interrupt` 如何验证活动 Turn 并等待中断事件。
+- [App Server Thread 历史重建](../../codex-rs/app-server-protocol/src/protocol/thread_history.rs)
+  用于理解 rollout 如何重建为公开的 Turn 与 ThreadItem，以及压缩为何不删除旧界面记录。
+- [TUI Thread 转录投影](../../codex-rs/tui/src/thread_transcript.rs)
+  用于理解公开 ThreadItem 如何进一步转换为用户看到的 transcript cells。
 
 ## Wisdom (Communities)
 

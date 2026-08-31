@@ -21,6 +21,11 @@
 | CodexThread | 调用方持有的 Thread 句柄，用来投递操作和订阅事件 |
 | Tool | 模型可以请求使用的外部能力，例如执行命令或修改文件 |
 | Context | 一次模型请求能看到的信息，包括历史、指令、环境和工具结果 |
+| ContextManager | Session 内维护模型有效历史的内存投影，可在压缩时被 replacement history 替换 |
+| Rollout | Thread 的追加式持久记录，保存消息、事件、Turn 边界以及压缩检查点等恢复事实 |
+| Compaction checkpoint | 追加到 rollout 的压缩检查点，说明未来重建模型历史时应采用哪份 replacement history |
+| ThreadItem | App Server 从 Thread 记录重建出的公开历史项目，是客户端协议视图 |
+| Transcript cell | TUI 根据 ThreadItem 生成的展示单元，是面向用户的有损投影 |
 | Inline auto-compaction | 在当前 RegularTask/Turn 调用栈中压缩历史，完成后直接继续下一 Step |
 | Standalone compaction | 由独立 CompactTask 驱动的一次手动压缩 Turn，不负责恢复被替换的普通 Task |
 | Subagent | 由另一个 Agent 创建的子工作者，复用独立 Thread 和正常 Turn 机制 |

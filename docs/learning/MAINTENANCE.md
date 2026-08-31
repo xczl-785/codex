@@ -12,11 +12,13 @@ Last entropy pass lesson: 5
 - Lesson 0006: 一个长任务为什么仍是一个 Turn
 - Lesson 0007: 自动压缩为什么不会切换 Task
 - Lesson 0008: Turn 与 Task 为什么通常一对一仍要分开
+- Lesson 0009: Session 的生命周期、上下文与界面历史
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
 - Learning record 0003: 从生命周期定义转向设计动机
 - Learning record 0004: 先确定需求边界，再判断扩展点
+- Learning record 0005: 运行态是持久事实的可重建投影
 
 ## Durable decisions
 
@@ -26,9 +28,10 @@ Last entropy pass lesson: 5
 
 ## Next likely directions
 
-- 细看 Thread 的创建、恢复、派生与事件通道。
+- 细看 Thread 的创建、恢复、派生与身份传播。
 - 由用户围绕 Thread、Session、Turn、Task 主动提问，按问题选择下一条源码链路。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
+- 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
 - 细看一次 Turn 内部的模型与工具循环。
 - 在整体链路稳定后进入 Subagent 生命周期。
 
