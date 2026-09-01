@@ -36,8 +36,10 @@ Codex CLI 是一个以 Rust 为核心实现的本地编码 Agent。它同时提�
 
 ### 工程入口
 
-- `README.md`：项目入口、安装方式和学习文档导航。
-- `AGENTS.md`：本仓库的开发、编码和验证约束。
+- `README.md`：当前学习分支的人类入口，说明学习目标并路由课程、工程介绍和上游资料。
+- `README.codex-upstream.md`：保留的上游产品、安装与使用说明。
+- `AGENTS.md`：学习工作区的 Agent 入口，定义静态阅读、讲解和文档沉淀方式。
+- `AGENTS.codex-development.md`：完整保留的上游源码开发、编码、评审和验证约束；源码任务必须主动加载。
 - `justfile`：格式化、lint、测试和代码生成的统一命令入口。
 - `LICENSE`、`NOTICE`：源码许可和第三方归属。
 

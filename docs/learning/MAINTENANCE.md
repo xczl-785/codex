@@ -1,5 +1,8 @@
 # Learning Workspace Maintenance
 
+> **Process contract**
+> 状态：`working`。本文件负责维护课程索引、长期教学决策和下一步方向；事实来源是当前课程、学习记录与仓库状态，下游使用者是后续教学会话。学习任务结束或由新的维护账本接管时退出当前状态，之后保留为过程证据，不作为 Codex 架构事实或普通课程入口。
+
 Last entropy pass lesson: 5
 
 ## Current index
