@@ -19,3 +19,8 @@
 - 用户已经了解现代模型普遍具有原生结构化输出/Tool Calling 能力；后续不要把课程退回到单纯提示词提取 JSON，应讲清 strict Schema 的能力边界和 Harness 仍需承担的运行时验证。
 - 用户已经理解 ToolRouter 按 Step 定稿、Step 间可刷新而 Step 内保持快照一致；后续可直接使用“请求快照”解释设置、MCP 和环境变化。
 - 用户已区分 Call/Output 的完整回放价值，但对恢复与并行的关联需要明确限定：持久化不创造并行或自动恢复，只提供 call_id 配对和可判定的因果事实。
+- 第十二课暂缓设计题，先用具体执行后果巩固安全层次；必须明确沙箱不是副本、预演或事务，允许范围内的副作用真实生效，成功后不会在“真实环境”重复执行。
+- 用户开始横向比较 Claude Code、Cursor 与 LangGraph checkpoint；讲解时必须先区分文件快照和图运行状态，尤其说明 LangGraph 把 `messages` 作为 state channel 持久化时会累计保存完整对话，并可能造成接近平方级存储增长。
+- 用户尚未确认朋友的项目直接使用 LangGraph 还是以 LangChain 名义接入；后续结论保持条件性，并通过 import、checkpointer 配置或 `checkpoints`/`checkpoint_writes` 等数据库表识别实际持久化层。
+- 用户已理解长命令通过 `session_id` 续接，但后续必须保持精确术语：协议上的 `session_id` 是内部 `process_id`；初始 Tool Call 已完成，真实进程仍可存活，后续 `write_stdin` 是同一 RegularTask 后续 Step 中的新 Tool Call。
+- 用户希望以后通过修改源码观察真实进程生命周期；将最小 tracing 实验保留为可选实践，当前仍以静态阅读为主。

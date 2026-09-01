@@ -5,9 +5,10 @@
 
 ## Current progress
 
-- Last completed lesson: 0011
-- Next lesson: 0012 — 审批、权限、执行策略与沙箱为什么不能合并
-- Current handoff: 已建立模型调用、Step 工具快照、Handler 执行和结果回传闭环；下一步沿 `exec_command` 的安全边界区分是否同意、授予什么能力、命令策略判断和操作系统强制隔离。
+- Last completed lesson: 0014
+- Current lesson: 准备进入 0015 — 一条命令为什么有三种输出视图
+- Next checkpoint: 区分 UI 实时 Event、模型分段 Tool Output 与最终持久化记录，跟踪截断、chunk 和完成事件。
+- Current handoff: 已区分 Tool Call、后台真实进程、yield、hard timeout 与语义重试；`session_id` 只是模型可见的内部 `process_id`。后续源码实验需观察同一进程从分配到移除的事件序列。
 - Last entropy pass: after lesson 0005。该字段只表示最近一次全量内容复核点，不表示课程停在第五课。
 
 ## Current index
@@ -23,6 +24,9 @@
 - Lesson 0009: Session 的生命周期、上下文与界面历史
 - Lesson 0010: 结构化工具调用为什么仍需要 Harness 校验
 - Lesson 0011: 一次 Function Call 如何完成模型—工具闭环
+- Lesson 0012: ExecPolicy、权限提升与沙箱到底怎样配合
+- Lesson 0013: Claude Code、Cursor 与 LangGraph 的 Checkpoint 模型
+- Lesson 0014: 一条命令怎样变成可续接的真实进程
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -31,6 +35,7 @@
 - Learning record 0005: 运行态是持久事实的可重建投影
 - Learning record 0006: 原生 Tool Calling 已成为理解基线
 - Learning record 0007: Step 工具快照与调用因果链
+- Learning record 0008: Checkpoint 边界与设计偏好
 
 ## Durable decisions
 
@@ -40,10 +45,12 @@
 
 ## Next likely directions
 
-- 下一课沿 `exec_command` 细看审批、权限、执行策略和沙箱边界。
-- 安全边界清楚后，再细看命令执行生命周期和并行工具调度。
+- 下一课区分 UI 实时 Event、模型分段 Tool Output 和持久化命令记录。
+- 完成输出视图后，进入并行工具调度，再进入 Subagent 生命周期与通信。
+- 后续有运行条件时，用临时 tracing 修改观察真实进程的 `process_id`、yield、poll、exit 与 cleanup；实验代码不长期保留。
 - 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
+- 将 Codex rollout 与 LangGraph checkpoint 的比较保留为已完成扩展，不继续偏离当前主线。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
 - 在整体链路稳定后进入 Subagent 生命周期。
 

@@ -28,6 +28,12 @@
     区分 JSON mode、Structured Outputs 与 Tool Calling，理解模型能力和运行时验证的边界。
 11. [一次 Function Call 如何完成模型—工具闭环](lessons/0011-function-call-runtime-loop-and-step-tool-snapshots.md)
     跟踪 ToolRouter、ToolRegistry、Handler 与 FunctionCallOutput，并理解每个 Step 的工具快照和调用因果链。
+12. [ExecPolicy、权限提升与沙箱到底怎样配合](lessons/0012-exec-policy-escalation-and-sandbox.md)
+    理解命令规则、模型提权信息来源，以及沙箱为何是受限的真实执行而不是预演。
+13. [Claude Code、Cursor 与 LangGraph 的 Checkpoint 模型](lessons/0013-checkpoint-models-claude-cursor-langgraph.md)
+    区分文件恢复点与图状态快照，理解连续回退、时间旅行和 LangGraph 状态膨胀。
+14. [一条命令怎样变成可续接的真实进程](lessons/0014-unified-exec-process-yield-timeout-and-retry.md)
+    区分 Tool Call 与进程生命周期、yield 与 hard timeout，并建立安全重试的判断框架。
 
 ## 稳定参考
 
