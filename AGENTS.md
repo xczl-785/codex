@@ -51,6 +51,18 @@ codegraph callees <symbol>
 
 学习入口与文档角色见 [README.md](README.md) 和 [docs/learning/README.md](docs/learning/README.md)。
 
+### 接续已有教学
+
+没有继承既有对话上下文的 Agent 在继续课程前，应按以下顺序恢复教学状态：
+
+1. `docs/learning/MISSION.md`：确认长期目标和范围。
+2. `docs/learning/MAINTENANCE.md`：确认已完成课程、当前衔接点和下一主题。
+3. `docs/learning/NOTES.md`：恢复讲解方式和用户理解基线。
+4. `docs/learning/learning-records/README.md` 及最新记录：了解近期认识变化。
+5. 上一课与准备开始的下一课：核对具体知识边界。
+
+`roadmap.md` 描述长期范围和推荐方向，`MAINTENANCE.md` 才是当前教学进度与下一步的过程事实来源。两者出现不同粒度的优先项时，以 `MAINTENANCE.md` 的当前衔接点安排下一课。
+
 ## 源码修改模式
 
 当任务明确要求修改、评审或验证源码时：

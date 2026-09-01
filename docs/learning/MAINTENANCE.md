@@ -3,7 +3,12 @@
 > **Process contract**
 > 状态：`working`。本文件负责维护课程索引、长期教学决策和下一步方向；事实来源是当前课程、学习记录与仓库状态，下游使用者是后续教学会话。学习任务结束或由新的维护账本接管时退出当前状态，之后保留为过程证据，不作为 Codex 架构事实或普通课程入口。
 
-Last entropy pass lesson: 5
+## Current progress
+
+- Last completed lesson: 0010
+- Next lesson: 0011 — 一次 Function Call 如何完成模型—工具闭环
+- Current handoff: 沿 `ToolRouter -> ToolRegistry -> Handler -> FunctionCallOutput` 跟踪一次真实工具调用，然后观察结果如何进入下一次模型请求。
+- Last entropy pass: after lesson 0005。该字段只表示最近一次全量内容复核点，不表示课程停在第五课。
 
 ## Current index
 
