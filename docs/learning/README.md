@@ -34,6 +34,8 @@
     区分文件恢复点与图状态快照，理解连续回退、时间旅行和 LangGraph 状态膨胀。
 14. [一条命令怎样变成可续接的真实进程](lessons/0014-unified-exec-process-yield-timeout-and-retry.md)
     区分 Tool Call 与进程生命周期、yield 与 hard timeout，并建立安全重试的判断框架。
+15. [同一个真实进程为什么有三种输出视图](lessons/0015-one-process-three-output-views.md)
+    区分 UI 实时增量、模型分段 Tool Output 与客户端命令生命周期，并理解三类 ID 和持久化边界。
 
 ## 稳定参考
 

@@ -5,10 +5,10 @@
 
 ## Current progress
 
-- Last completed lesson: 0014
-- Current lesson: 准备进入 0015 — 一条命令为什么有三种输出视图
-- Next checkpoint: 区分 UI 实时 Event、模型分段 Tool Output 与最终持久化记录，跟踪截断、chunk 和完成事件。
-- Current handoff: 已区分 Tool Call、后台真实进程、yield、hard timeout 与语义重试；`session_id` 只是模型可见的内部 `process_id`。后续源码实验需观察同一进程从分配到移除的事件序列。
+- Last completed lesson: 0015
+- Current lesson: 暂停推进新课，进入课程 0001—0015 的整理与回顾阶段。
+- Next checkpoint: 按主题复盘既有课程，合并重复理解、标记仍不牢固的概念，并根据疑问选择少量源码链路回看。
+- Current handoff: 已讲到 Unified Exec 的 UI 实时增量、模型分段 Tool Output 和客户端命令生命周期；下一位 Agent 不要默认继续扩展新概念，应先帮助用户整理已有知识并按需静态阅读源码。
 - Last entropy pass: after lesson 0005。该字段只表示最近一次全量内容复核点，不表示课程停在第五课。
 
 ## Current index
@@ -27,6 +27,7 @@
 - Lesson 0012: ExecPolicy、权限提升与沙箱到底怎样配合
 - Lesson 0013: Claude Code、Cursor 与 LangGraph 的 Checkpoint 模型
 - Lesson 0014: 一条命令怎样变成可续接的真实进程
+- Lesson 0015: 同一个真实进程为什么有三种输出视图
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -45,14 +46,16 @@
 
 ## Next likely directions
 
-- 下一课区分 UI 实时 Event、模型分段 Tool Output 和持久化命令记录。
-- 完成输出视图后，进入并行工具调度，再进入 Subagent 生命周期与通信。
+- 当前阶段先整理和回顾课程 0001—0015，不急于继续主线。
+- 建议按“生命周期概念、上下文与压缩、工具闭环、安全执行、Checkpoint 与真实进程”重新分组，找出重复内容和未理解点。
+- 用户提出具体疑问时，可沿课程末尾的源码入口做局部静态阅读；不要为了覆盖目录而机械通读。
+- 回顾完成后，再从取消传播、并行工具调度或 Subagent 生命周期与通信中选择下一条线。
 - 后续有运行条件时，用临时 tracing 修改观察真实进程的 `process_id`、yield、poll、exit 与 cleanup；实验代码不长期保留。
 - 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
 - 将 Codex rollout 与 LangGraph checkpoint 的比较保留为已完成扩展，不继续偏离当前主线。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
-- 在整体链路稳定后进入 Subagent 生命周期。
+- Subagent 生命周期与通信仍是重点专题，但不是当前整理阶段必须立即开始的内容。
 
 ## Entropy pass after lesson 0005
 
