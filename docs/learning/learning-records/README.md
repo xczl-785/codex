@@ -25,5 +25,6 @@
 - [0006：原生 Tool Calling 已成为理解基线](0006-native-tool-calling-baseline.md)
 - [0007：Step 工具快照与调用因果链](0007-step-tool-snapshots-and-causal-history.md)
 - [0008：Checkpoint 边界与设计偏好](0008-checkpoint-boundaries-and-design-preference.md)
+- [0009：从阶段复盘转入受控实践](0009-stage-review-to-practice.md)
 
 新理解推翻旧记录时，不静默重写学习过程；应在新记录中说明它修正或取代了哪项认识，并把稳定结论沉淀到对应课程。

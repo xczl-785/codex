@@ -48,8 +48,12 @@
 
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
 
+## 实践任务
+
+- [实现一个最小源码学习 Agent](practice/0001-source-study-agent.md)：通过“关键控制面手写、基础设施复用、AI 受控协作”实现可与 Codex 对照的最小 Agent Harness。
+
 ## 文档边界
 
-`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
+`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`practice/` 保存已经确定的实践任务与验收边界，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
 
 本目录不是 Codex 的上游用户文档。产品、安装与使用说明见根目录 [上游 README](../../README.codex-upstream.md)，本地构建要求见 [docs/install.md](../install.md)。

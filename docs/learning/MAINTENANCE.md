@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0015
-- Current lesson: 暂停推进新课，进入课程 0001—0015 的整理与回顾阶段。
-- Next checkpoint: 用户先完成阶段复盘中的综合场景自测，再根据暴露出的连接点做少量源码回看。
-- Current handoff: 已将课程 0001—0015 按五个主题簇和四条设计原则重组为阶段复盘；下一位 Agent 应先讨论综合自测，不要默认推进新概念。
+- Current lesson: 课程 0001—0015 的整理与综合场景校准已完成，进入实践任务准备阶段。
+- Next checkpoint: 讲清实践任务的实现边界和细节，随后完成里程碑 0 的顶层垂直切片，再决定独立 Rust 工程位置与依赖。
+- Current handoff: 已确定通过最小源码学习 Agent 进入受控实践；关键控制面手写，基础设施复用，允许 AI 参与但不代替生命周期、状态所有权和行为契约判断。
 - Last entropy pass: after lesson 0015。
 
 ## Current index
@@ -29,6 +29,7 @@
 - Lesson 0014: 一条命令怎样变成可续接的真实进程
 - Lesson 0015: 同一个真实进程为什么有三种输出视图
 - Stage review 0001: 课程 0001—0015 整体知识地图
+- Practice 0001: 实现一个最小源码学习 Agent
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -38,6 +39,7 @@
 - Learning record 0006: 原生 Tool Calling 已成为理解基线
 - Learning record 0007: Step 工具快照与调用因果链
 - Learning record 0008: Checkpoint 边界与设计偏好
+- Learning record 0009: 从阶段复盘转入受控实践
 
 ## Durable decisions
 
@@ -45,13 +47,14 @@
 - 事实优先取自当前分支源码与测试。
 - 课程与速查统一使用纯 Markdown；不维护 H5 和样式资产，文档沉淀不得拖慢对话反馈。
 - 跨多课的阶段复盘放在 `reviews/`，按主题重组理解，不改变 `lessons/` 的线性课程职责，也不冒充下一课。
+- 已确定的实践任务放在 `practice/`，明确目标、非目标、行为契约和验收标准；实验源码不直接加入 Codex workspace。
+- 实践默认使用 Rust，采用“关键控制面手写、基础设施复用、AI 受控协作”，先以 ScriptedModel 验证 Harness，再接真实模型。
 
 ## Next likely directions
 
-- 当前阶段先整理和回顾课程 0001—0015，不急于继续主线。
-- 建议按“生命周期概念、上下文与压缩、工具闭环、安全执行、Checkpoint 与真实进程”重新分组，找出重复内容和未理解点。
-- 用户提出具体疑问时，可沿课程末尾的源码入口做局部静态阅读；不要为了覆盖目录而机械通读。
-- 回顾完成后，再从取消传播、并行工具调度或 Subagent 生命周期与通信中选择下一条线。
+- 先完成实践里程碑 0：只沿第一版 Agent 所需的顶层垂直链路建立源码映射，不机械通读目录。
+- 随后在独立工程实现 ScriptedModel、Turn/Step 循环、只读工具和确定性测试。
+- 实践接入真实模型与 JSONL rollout 后，再按取消传播、并行工具调度、Subagent 生命周期与通信推进。
 - 后续有运行条件时，用临时 tracing 修改观察真实进程的 `process_id`、yield、poll、exit 与 cleanup；实验代码不长期保留。
 - 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
