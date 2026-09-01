@@ -7,9 +7,9 @@
 
 - Last completed lesson: 0015
 - Current lesson: 暂停推进新课，进入课程 0001—0015 的整理与回顾阶段。
-- Next checkpoint: 按主题复盘既有课程，合并重复理解、标记仍不牢固的概念，并根据疑问选择少量源码链路回看。
-- Current handoff: 已讲到 Unified Exec 的 UI 实时增量、模型分段 Tool Output 和客户端命令生命周期；下一位 Agent 不要默认继续扩展新概念，应先帮助用户整理已有知识并按需静态阅读源码。
-- Last entropy pass: after lesson 0005。该字段只表示最近一次全量内容复核点，不表示课程停在第五课。
+- Next checkpoint: 用户先完成阶段复盘中的综合场景自测，再根据暴露出的连接点做少量源码回看。
+- Current handoff: 已将课程 0001—0015 按五个主题簇和四条设计原则重组为阶段复盘；下一位 Agent 应先讨论综合自测，不要默认推进新概念。
+- Last entropy pass: after lesson 0015。
 
 ## Current index
 
@@ -28,6 +28,7 @@
 - Lesson 0013: Claude Code、Cursor 与 LangGraph 的 Checkpoint 模型
 - Lesson 0014: 一条命令怎样变成可续接的真实进程
 - Lesson 0015: 同一个真实进程为什么有三种输出视图
+- Stage review 0001: 课程 0001—0015 整体知识地图
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -43,6 +44,7 @@
 - 课程使用中文，类比和流程优先于符号记忆。
 - 事实优先取自当前分支源码与测试。
 - 课程与速查统一使用纯 Markdown；不维护 H5 和样式资产，文档沉淀不得拖慢对话反馈。
+- 跨多课的阶段复盘放在 `reviews/`，按主题重组理解，不改变 `lessons/` 的线性课程职责，也不冒充下一课。
 
 ## Next likely directions
 
@@ -56,6 +58,15 @@
 - 将 Codex rollout 与 LangGraph checkpoint 的比较保留为已完成扩展，不继续偏离当前主线。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
 - Subagent 生命周期与通信仍是重点专题，但不是当前整理阶段必须立即开始的内容。
+
+## Entropy pass after lesson 0015
+
+- 复核了课程 0001—0015、学习记录 0001—0008、速查、路线图、维护账本和教学笔记。
+- 通过当前 CodeGraph 索引抽查了 Turn/Task/Step、自动压缩、模型—工具闭环和 Unified Exec 关键链路，课程结论与当前源码保持一致。
+- 将前十五课重组为执行生命周期、历史与投影、模型—工具闭环、权限与安全执行、真实进程与输出五个主题簇。
+- 提炼了四条跨模块设计原则：生命周期分离、保存与可见性分离、逐层信任校验、按消费者建立视图。
+- 标记了五类已学但仍需贯通的概念，以及取消传播、并行工具调度、Subagent 生命周期三类尚未系统学习的主题。
+- 原课程中的重复多数承担逐层加深作用，暂不合并或删除；阶段复盘负责提供跨课程统一入口。
 
 ## Entropy pass after lesson 0005
 
