@@ -5,9 +5,9 @@
 
 ## Current progress
 
-- Last completed lesson: 0010
-- Next lesson: 0011 — 一次 Function Call 如何完成模型—工具闭环
-- Current handoff: 沿 `ToolRouter -> ToolRegistry -> Handler -> FunctionCallOutput` 跟踪一次真实工具调用，然后观察结果如何进入下一次模型请求。
+- Last completed lesson: 0011
+- Next lesson: 0012 — 审批、权限、执行策略与沙箱为什么不能合并
+- Current handoff: 已建立模型调用、Step 工具快照、Handler 执行和结果回传闭环；下一步沿 `exec_command` 的安全边界区分是否同意、授予什么能力、命令策略判断和操作系统强制隔离。
 - Last entropy pass: after lesson 0005。该字段只表示最近一次全量内容复核点，不表示课程停在第五课。
 
 ## Current index
@@ -22,6 +22,7 @@
 - Lesson 0008: Turn 与 Task 为什么通常一对一仍要分开
 - Lesson 0009: Session 的生命周期、上下文与界面历史
 - Lesson 0010: 结构化工具调用为什么仍需要 Harness 校验
+- Lesson 0011: 一次 Function Call 如何完成模型—工具闭环
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -29,6 +30,7 @@
 - Learning record 0004: 先确定需求边界，再判断扩展点
 - Learning record 0005: 运行态是持久事实的可重建投影
 - Learning record 0006: 原生 Tool Calling 已成为理解基线
+- Learning record 0007: Step 工具快照与调用因果链
 
 ## Durable decisions
 
@@ -38,8 +40,8 @@
 
 ## Next likely directions
 
-- 下一课沿一次实际 FunctionCall 细看 ToolRouter、ToolRegistry、Handler 与 FunctionCallOutput。
-- 在模型—工具闭环建立后，再分别细看审批、沙箱和并行工具调度。
+- 下一课沿 `exec_command` 细看审批、权限、执行策略和沙箱边界。
+- 安全边界清楚后，再细看命令执行生命周期和并行工具调度。
 - 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
 - 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
 - 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。

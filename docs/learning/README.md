@@ -26,6 +26,8 @@
    理解 Session 创建与关闭、上下文组装，以及系统保存、模型可见和模型可检索的区别。
 10. [结构化工具调用为什么仍需要 Harness 校验](lessons/0010-structured-tool-calls-and-runtime-validation.md)
     区分 JSON mode、Structured Outputs 与 Tool Calling，理解模型能力和运行时验证的边界。
+11. [一次 Function Call 如何完成模型—工具闭环](lessons/0011-function-call-runtime-loop-and-step-tool-snapshots.md)
+    跟踪 ToolRouter、ToolRegistry、Handler 与 FunctionCallOutput，并理解每个 Step 的工具快照和调用因果链。
 
 ## 稳定参考
 
