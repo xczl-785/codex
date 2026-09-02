@@ -13,17 +13,18 @@
 
 不继续进行纯概念复习，也不立即修改 Codex 核心或进入完整 Subagent 实现。下一阶段采用“顶层垂直切片 + 最小 Agent 实践”：
 
-1. 简短映射 CLI、TUI、Thread、Session、Turn、工具和历史边界；
-2. 在独立工程实现只读源码学习 Agent；
-3. 先使用 ScriptedModel 确定性验证 Harness；
-4. 再接入真实模型与持久化；
-5. 后续按取消传播、并行工具调度、Subagent 生命周期扩展。
+1. 在独立工程实现可绑定任意本地仓库的只读代码库理解 Agent；
+2. 先用两个小型 fixture repository 和 ScriptedModel 确定性验证 Harness；
+3. 再接入真实模型、历史与恢复；
+4. 将 Codex 作为后续复杂对照样本，而不是写死的服务对象；
+5. 后续按大型仓库适配、取消与并行、Subagent 生命周期扩展。
 
 ## 实践偏好与教学约束
 
 - 用户希望通过模仿和实践加速理解，但担心完全手写成本过高，也担心高层框架隐藏关键机制。
 - 采用“关键控制面手写、基础设施复用、AI 受控协作”的边界。
 - 允许 AI 生成骨架、机械代码、测试夹具和外部适配；生命周期、状态所有权、循环终止、失败语义、持久化边界和验收测试必须由用户理解并确认。
-- 默认使用 Rust，以便把实践经验直接映射回 Codex；第一版不做 TUI、Shell、沙箱、并行和 Subagent。
+- 默认使用 Rust，但工具契约和目标代码库保持语言无关；第一版不做 TUI、Shell、编译、语义索引、并行和 Subagent。
+- 实践从“Codex 源码学习 Agent”修正为“通用代码库理解 Agent”。Repository Binding、路径边界、有界输出和证据引用成为第一版核心契约。
 
-详细任务见 [`practice/0001-source-study-agent.md`](../practice/0001-source-study-agent.md)。
+详细任务见 [`practice/0001-codebase-study-agent.md`](../practice/0001-codebase-study-agent.md)。

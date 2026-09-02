@@ -50,7 +50,7 @@
 
 ## 实践任务
 
-- [实现一个最小源码学习 Agent](practice/0001-source-study-agent.md)：通过“关键控制面手写、基础设施复用、AI 受控协作”实现可与 Codex 对照的最小 Agent Harness。
+- [实现一个通用代码库理解 Agent](practice/0001-codebase-study-agent.md)：绑定任意本地代码库，通过通用只读工具和证据约束实现最小 Agent Harness，再以 Codex 作为复杂对照样本。
 
 ## 文档边界
 

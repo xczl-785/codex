@@ -26,4 +26,4 @@
 - 用户希望以后通过修改源码观察真实进程生命周期；将最小 tracing 实验保留为可选实践，当前仍以静态阅读为主。
 - 第十五课后切换到整理和回顾阶段。下一位教学 Agent 应先帮助用户重组课程 0001—0015、确认薄弱概念并按需回看源码，不要默认继续添加新课；对话仍是主要学习载体，文档用于详细回顾。
 - 已新增 `reviews/0001-lessons-0001-0015-stage-review.md`，用五个主题簇和四条设计原则建立整体框架。用户将先阅读并回答其中的综合场景；在得到反馈前，不预判下一主题。
-- 用户已完成阶段复盘的综合场景校准，下一阶段转入 `practice/0001-source-study-agent.md`。先讲清 CLI/TUI、框架复用和 AI 参与边界，再做顶层垂直切片；默认使用 Rust 和 ScriptedModel，不把实验源码直接加入 Codex workspace。
+- 用户已完成阶段复盘的综合场景校准，下一阶段转入 `practice/0001-codebase-study-agent.md`。实践目标已从 Codex 专用源码学习工具调整为通用代码库理解 Agent：默认使用 Rust 和 ScriptedModel，以 Repository Binding、通用只读工具、有界证据和跨语言 fixture repository 为第一版核心，不把实验源码直接加入 Codex workspace。
