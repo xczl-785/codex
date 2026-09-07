@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0015
-- Current lesson: 课程 0001—0015 的整理与综合场景校准已完成，进入实践任务准备阶段。
-- Next checkpoint: 讲清通用代码库 Agent 的 Repository Binding、工具契约与 fixture repository，随后决定独立 Rust 工程位置和第一批依赖。
-- Current handoff: 实践已从 Codex 专用源码学习工具调整为通用代码库理解 Agent；Codex 只作为后期对照目标。关键控制面手写，基础设施复用，允许 AI 参与但不代替生命周期、路径安全、状态所有权和行为契约判断。
+- Current lesson: 实践 0002 的基础概念与对话案例已完成，已准备好 M0—M3 实验契约；实验工程尚未创建，代码与真实沙箱观察均未开始。
+- Next checkpoint: 按实践 0002 建立独立 Rust PermissionSandboxLab，先做 M0 行为契约与 M1 Fake Executor；通过后验证授权时效、恢复决策，再做安全真实观察，随后进入实践 0003。
+- Current handoff: 先读学习记录 0011 的最新进展与实践 0002。用户已通过权限组合、审批拒绝、部分副作用、磁盘满与产物核验案例。一次批准与持久匹配规则曾混淆，实验需要重点验证；不要重新泛讲五层，也不要提前实现平台安全沙箱。
 - Last entropy pass: after lesson 0015。
 
 ## Current index
@@ -30,6 +30,8 @@
 - Lesson 0015: 同一个真实进程为什么有三种输出视图
 - Stage review 0001: 课程 0001—0015 整体知识地图
 - Practice 0001: 实现一个通用代码库理解 Agent
+- Practice 0002: 权限、审批、沙箱与提权实验
+- Practice 0003: 上下文限制、压缩检查点与历史恢复复盘
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -40,6 +42,8 @@
 - Learning record 0007: Step 工具快照与调用因果链
 - Learning record 0008: Checkpoint 边界与设计偏好
 - Learning record 0009: 从阶段复盘转入受控实践
+- Learning record 0010: 从 Harness 实践收尾转入权限与上下文专题
+- Learning record 0011: 从资源范围与命令规则重新建立权限基础，已完成案例校准
 
 ## Durable decisions
 
@@ -50,19 +54,17 @@
 - 已确定的实践任务放在 `practice/`，明确目标、非目标、行为契约和验收标准；实验源码不直接加入 Codex workspace。
 - 实践默认使用 Rust，采用“关键控制面手写、基础设施复用、AI 受控协作”，目标仓库保持语言无关，先以小型 fixture repository 和 ScriptedModel 验证 Harness，再接真实模型。
 - 第一版通过 Repository Binding 限制代码库根目录，所有工具输出有界并携带相对路径和行号；Codex、CodeGraph 和 Git 都不是硬依赖。
+- 实践 0001 收尾后，学习顺序固定为：权限与沙盒实践 → 上下文、压缩与恢复复盘 → 取消传播 → 并行工具调度 → Subagent 生命周期。上下文复盘与权限实践没有技术依赖，这个顺序用于集中解决当前最薄弱概念。
+- 权限专题深入控制面和失败语义，但不手搓安全级操作系统沙箱；上下文专题深入事实、投影、检查点和恢复不变量，中等深度定位 Codex 源码，暂不深入 tokenizer、摘要算法、分布式存储或向量记忆。
 
 ## Next likely directions
 
-- 先完成实践里程碑 0：设计两个不同语言的小型 fixture repository，固定定位、追踪和证据不足场景。
-- 随后在独立工程实现 Repository Binding、ScriptedModel、Turn/Step 循环、通用只读工具和确定性测试。
-- 实践接入真实模型与历史恢复后，再用熟悉的业务仓库和 Codex 验证通用性，按需增加 Git、CodeGraph 或 LSP 适配器。
-- 通用基础稳定后，再按取消与并行、Subagent 生命周期与通信推进。
-- 后续有运行条件时，用临时 tracing 修改观察真实进程的 `process_id`、yield、poll、exit 与 cleanup；实验代码不长期保留。
-- 后续继续细看 Thread 的 Fork、恢复与 Subagent 身份传播。
-- 深入对话历史与工作区状态为何独立，以及需要同步回退时由谁协调。
-- 将 Codex rollout 与 LangGraph checkpoint 的比较保留为已完成扩展，不继续偏离当前主线。
-- 把 Codex 的持久记录、运行投影与 Harness 状态外置放在一起比较。
-- Subagent 生命周期与通信仍是重点专题，但不是当前整理阶段必须立即开始的内容。
+- 等独立 CodebaseAgent 仓库完成文档收尾；详细状态只读该工程自己的 `docs/STATUS.md`，本仓库不复制其当前文件清单。
+- 执行 [实践 0002](practice/0002-permission-sandbox-lab.md)：先建立授权与执行状态机，再用 Fake Executor 固定正常、拒绝、提权、部分副作用和不可盲目重试场景，最后按需观察一次安全的真实沙箱行为。
+- 执行 [实践 0003](practice/0003-context-history-recovery-lab.md)：使用 CodebaseAgent 已实现的 M3 行为与 Codex 源码，对照容量准入、模型可见历史、持久事实、压缩检查点和新 Session 恢复。
+- 完成两项复盘后进入取消传播；只有取消、提交顺序和竞态语义稳定，才学习真正的并行工具调度。
+- Subagent 生命周期最后进入，重点研究父子 Thread、权限继承或收窄、通信、等待、中断和资源回收，不因已有多 Agent 工具就提前模仿接口。
+- LangGraph checkpoint 横向比较保留为已完成扩展；只有上下文复盘出现具体疑问时才回看，不另开泛化框架调研。
 
 ## Entropy pass after lesson 0015
 

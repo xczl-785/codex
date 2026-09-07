@@ -31,6 +31,35 @@
 沙箱执行：进程实际上不能越过哪里
 ```
 
+### 1.1 先区分资源范围与命令规则
+
+`PermissionProfile` 可以借 Linux 文件权限理解：它规定对资源能做什么。但它不是文件本身的 `755/777`，不会直接把目录改成这些权限，也不能让普通进程突破系统账户已有权限。它描述 Agent 执行环境的资源边界，由平台沙箱落实。
+
+假设默认范围为：`D:\Project` 可读写，`D:\Archive` 只读。Profile 回答“能不能写 Archive”；ExecPolicy 回答“这条命令能不能执行、要不要审批”。
+
+例如，可以另行配置 `git status → Allow`、`git reset --hard → Prompt`。这是教学规则示例，不是默认配置承诺。两条命令都在 Project 中执行，资源范围相同，但后者可能丢弃修改，需要命令层面的控制。仅有目录读写权限表达不了这种区别。
+
+`Allow` 应先理解为通过命令规则这一关，不能单凭这个枚举推断最终沙箱模式。显式规则、本次权限请求、审批与环境约束仍会影响执行方式；不要把所有 Allow 一概解释为“必定留在默认沙箱”。
+
+### 1.2 自定义脚本的副作用怎样受到限制
+
+执行 `python generate_report.py` 时，Codex 不必提前读懂脚本或预测全部路径。即使目标由用户输入或字符串拼接决定，Python 真正创建、打开文件时，也必须向操作系统提出具体的资源访问请求。
+
+```text
+Profile 规定 Archive 只读
+  → 平台适配代码转换为可执行的沙箱限制
+  → Python 在限制下运行，计算出目标路径
+  → 请求以写入方式打开目标文件
+      Project/report.txt：权限允许时成功
+      Archive/report.txt：被访问控制拒绝
+```
+
+系统检查真实访问目标，不是仅看启动目录，也不依赖自定义命令的名字。文件访问失败可能先表现为 Python 的 PermissionError；工具层如何归类为沙箱拒绝还需结合执行证据，不能把所有 PermissionError 都当作 Codex 沙箱问题。
+
+沙箱负责资源边界，不理解全部业务意图：覆盖 Project 中的重要文件可能仍符合可写权限。因此命令检查与资源隔离都有价值。
+
+Windows 当前源码入口为 `codex-rs/windows-sandbox-rs/src/resolved_permissions.rs` 中的 `try_from_permission_profile`、`try_from_permission_profile_for_workspace_roots` 和 `writable_roots_for_cwd`；它们提取运行时文件/网络规则并解析目录范围。平台启动适配入口为 `codex-rs/sandboxing/src/manager.rs`。这里说明职责，不要求学习者手写系统隔离设施。
+
 ## 2. ExecPolicy 不是“禁止命令枚举表”
 
 ExecPolicy 的最终决定确实是一个枚举：
@@ -417,7 +446,44 @@ ExecPolicy 拆分并检查命令片段
        返回模型，或在策略允许时审批后重试
 ```
 
-## 10. 本课的记忆锚点
+## 10. 批准如何变成权限，批准能保留多久
+
+ApprovalPolicy 是请示制度，Approval 是具体答复，reviewer 决定由用户还是自动审查器回答。允许申请不等于已经获批；Auto-review 更换审批者，不自动扩大默认 Profile。
+
+审批请求携带命令、目标、所需权限和理由。执行器依据请求与批准决定安排执行：明确追加权限时，为本次执行组合默认 Profile 与获批权限，保留其他沙箱限制；require_escalated 则申请绕过默认沙箱，仍受不可覆盖的环境约束。理由文字不是系统级路径限制，不能把“为了写一个文件”当成进程实际仅能写该文件。
+
+授权复用范围与执行资源范围是两个维度：
+
+| 方式 | 保存与复用 |
+| --- | --- |
+| Approved / 本次批准 | 放行当前请求，不建立未来匹配规则 |
+| ApprovedForSession | 会话缓存按工具定义的键匹配，不能理解为所有命令免审 |
+| ApprovedExecpolicyAmendment | 保存命令前缀规则，未来匹配命令按规则处理 |
+| 修改权限配置 | 改变之后使用的默认资源范围，与保存命令规则不同 |
+
+一次批准不会因 exec_command 达到 yield 返回就让仍存活的进程立即丧失执行权限。审批复用期结束或规则删除，也不等于已有进程自动终止或已有副作用回滚。
+
+源码入口：`protocol/src/protocol.rs` 的 ReviewDecision、`core/src/tools/sandboxing.rs` 的 ApprovalStore/with_cached_approval、`execpolicy/src/amend.rs` 的规则持久化。不同审批种类、工具与界面提供的选项可能不同。
+
+## 11. 失败案例与边界
+
+报告脚本先追加工作区 runs.log，再生成工作区 report.txt，最后复制到只读 Archive。若前两步成功而最后被拦截，日志和源报告保留。失败返回后先核对报告完整性、正确性与是否属于本次任务，确认可用再只申请复制，避免重复追加日志或覆盖报告。
+
+若复制权限已经生效但磁盘已满，应归类为环境容量导致的执行失败，继续提权无益。重试前检查可用空间和目标残留，确认替换授权，成功后核对源目标内容或哈希；仅文件存在、能打开不足以证明完整复制。
+
+| 拒绝位置 | 本次执行进程 | 先前副作用 |
+| --- | --- | --- |
+| 命令明确 Forbidden | 不启动 | 不撤销更早操作 |
+| 审批 Denied | 待批准命令不启动 | 不撤销更早操作 |
+| 运行时 SandboxDenied | 本案例中已经启动 | 允许范围内修改仍保留 |
+
+SandboxDenied 是拒绝类别，不表示内部审批已经失败，也不标识结果是否已经交回模型。普通 exec_command 的 OnRequest 文件越界路径通常将失败返回模型，再由模型明确申请；其他策略、工具覆盖或特定网络分支可在调用内重试。内部重试可复用 CallId，但创建新 Attempt；模型再次调用则是新 Tool Call。完整链路以 `core/src/tools/orchestrator.rs` 与对应 runtime 的判断为准。
+
+模型可能只知道部分规则。即使它不知道有效 Exec Policy 的禁止项而提交提权请求，执行器仍先检查规则，命中 Forbidden 后拒绝，不因提权参数进入正常审批放行。规则匹配不能看穿任意脚本，资源沙箱仍有独立价值。
+
+若保留沙箱仅批准本次 Archive 写权限，脚本随后写 Other 仍会被拦截；批准运行脚本不等于批准脚本任意副作用。
+
+## 12. 本课的记忆锚点
 
 1. ExecPolicy 枚举的是决定，不是世界上所有危险命令。
 2. 命令判断来自前缀规则、危险行为识别和默认兜底策略。

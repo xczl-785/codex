@@ -82,9 +82,10 @@ SDK、发布流程、CI、跨平台打包和实验性服务作为扩展主题保
 ## 后续方向
 
 - 沿一次真实 Function Call 阅读 ToolRouter、ToolRegistry、Handler 与 FunctionCallOutput。
-- 在模型—工具闭环建立后，分别阅读审批、沙箱和并行工具调度。
-- 继续研究 Thread 的 Fork、恢复与 Subagent 身份传播。
-- 比较对话持久记录、模型可见上下文、工作区状态与 Harness 状态外置。
+- 在模型—工具闭环建立后，先用实践贯通 Permission/Policy、Approval、Sandbox、Escalation 和执行失败；不把操作系统沙箱实现当作入门手写任务。
+- 随后集中比较上下文容量、模型可见 History、持久 rollout、压缩检查点和新 Session 恢复，掌握语义边界后再按真实瓶颈深入计量或摘要算法。
+- 再按取消传播、并行工具调度、Subagent 生命周期与通信推进；取消和资源收尾是后两者的前置理解。
+- 继续研究 Thread 的 Fork、恢复与 Subagent 身份传播，以及父子 Agent 的权限继承或显式收窄。
 - 扩展到 MCP、Skills、Plugins、Apps、App Server 和 SDK 边界。
 
 阅读源码时优先使用仓库 CodeGraph 索引；命令和资料入口见 [资料索引](RESOURCES.md)。

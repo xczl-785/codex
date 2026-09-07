@@ -51,6 +51,8 @@
 ## 实践任务
 
 - [实现一个通用代码库理解 Agent](practice/0001-codebase-study-agent.md)：绑定任意本地代码库，通过通用只读工具和证据约束实现最小 Agent Harness，再以 Codex 作为复杂对照样本。
+- [权限、审批、沙箱与提权实验](practice/0002-permission-sandbox-lab.md)：用确定性策略与执行替身贯通动作准入、用户审批、受限真实执行、权限提升和失败分类。
+- [上下文限制、压缩检查点与历史恢复复盘](practice/0003-context-history-recovery-lab.md)：基于已经完成的 Harness 实践，对照 Codex 的持久事实、模型投影、容量准入、压缩和恢复边界。
 
 ## 文档边界
 
