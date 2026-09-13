@@ -194,11 +194,10 @@ fn load_for_prompt_bytes_uncached(
                 height: prepared_height,
             }
         } else if file_bytes.len() > REENCODE_IMAGE_ABOVE_BYTES
-            && matches!(format, Some(ImageFormat::Png | ImageFormat::WebP))
+            && let Some(target_format @ (ImageFormat::Png | ImageFormat::WebP)) = format
         {
             // Avoid another lossy JPEG generation for detailed reference images. Lossless
             // recompression is only useful when it actually reduces the upload size.
-            let target_format = format.expect("lossless source format");
             let (bytes, output_format) = encode_image(&dynamic, target_format, metadata)?;
             EncodedImage {
                 bytes: if bytes.len() < file_bytes.len() {
