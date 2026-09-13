@@ -2943,3 +2943,46 @@ async fn stream_until_complete_with_metadata(
         }
     }
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn request_image_budget_bounds_websocket_history_and_resets_delta() {
+    skip_if_no_network!();
+    let server = start_websocket_server(vec![vec![
+        vec![ev_response_created("resp-1"), ev_completed("resp-1")],
+        vec![ev_response_created("resp-2"), ev_completed("resp-2")],
+    ]])
+    .await;
+    let harness = websocket_harness_for_codex_backend(&server).await;
+    let mut session = harness.client.new_session();
+    let mut input = Vec::new();
+    for index in 0..32 {
+        input.push(serde_json::from_value(json!({
+            "type": "function_call_output", "call_id": format!("image-{index}"),
+            "output": [{"type": "input_image", "image_url": format!("data:image/png;base64,{}", "A".repeat(1024 * 1024))}],
+        })).unwrap());
+    }
+    let mut prompt = prompt_with_input(input.clone());
+    stream_until_complete(&mut session, &harness, &prompt).await;
+    prompt.input.push(input[0].clone());
+    stream_until_complete(&mut session, &harness, &prompt).await;
+    let requests = server.single_connection();
+    assert_eq!(requests.len(), 2);
+    for request in &requests {
+        let body = request.body_json();
+        assert!(
+            body.get("previous_response_id")
+                .is_none_or(serde_json::Value::is_null)
+        );
+        let items = body["input"].as_array().unwrap();
+        let images: Vec<_> = items
+            .iter()
+            .filter_map(|item| item["output"][0]["image_url"].as_str())
+            .collect();
+        assert_eq!(images.len(), 8);
+        assert!(images.iter().map(|url| url.len()).sum::<usize>() <= 12 * 1024 * 1024);
+        assert_eq!(items[0]["call_id"], "image-0");
+        assert_eq!(items[0]["output"][0]["type"], "input_text");
+    }
+    assert_eq!(&prompt.input[..32], input.as_slice());
+    server.shutdown().await;
+}

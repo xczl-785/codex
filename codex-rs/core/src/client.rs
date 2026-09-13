@@ -852,6 +852,16 @@ impl ModelClient {
                 }
             }
         }
+        let image_budget = crate::request_image_budget::apply_inline_image_byte_budget(&mut input);
+        if image_budget.omitted_images > 0 {
+            warn!(
+                original_image_bytes = image_budget.original_bytes,
+                retained_image_bytes = image_budget.retained_bytes,
+                retained_images = image_budget.retained_images,
+                omitted_images = image_budget.omitted_images,
+                "omitted inline images from outbound request by local image budget"
+            );
+        }
         let reasoning = self.build_reasoning(model_info, effort, summary);
         let stream_options = (self.state.concurrent_reasoning_summaries_enabled
             && is_openai

@@ -1362,3 +1362,6 @@ async fn non_chatgpt_codex_endpoints_omit_attestation_generation() {
     );
     assert_eq!(attestation_calls.load(Ordering::Relaxed), 0);
 }
+
+#[path = "client_image_budget_tests.rs"]
+mod image_budget_tests;

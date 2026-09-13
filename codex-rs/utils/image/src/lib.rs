@@ -30,6 +30,7 @@ pub const MAX_DIMENSION: u32 = 2048;
 /// requirement or target upload size.
 pub const MAX_PROMPT_IMAGE_INPUT_BYTES: usize = 1024 * 1024 * 1024;
 const MAX_IMAGE_CACHE_BYTES: usize = 64 * 1024 * 1024;
+const REENCODE_IMAGE_ABOVE_BYTES: usize = 1024 * 1024;
 
 pub mod error;
 
@@ -191,6 +192,26 @@ fn load_for_prompt_bytes_uncached(
                 source_height: height,
                 width: prepared_width,
                 height: prepared_height,
+            }
+        } else if file_bytes.len() > REENCODE_IMAGE_ABOVE_BYTES
+            && matches!(format, Some(ImageFormat::Png | ImageFormat::WebP))
+        {
+            // Avoid another lossy JPEG generation for detailed reference images. Lossless
+            // recompression is only useful when it actually reduces the upload size.
+            let target_format = format.expect("lossless source format");
+            let (bytes, output_format) = encode_image(&dynamic, target_format, metadata)?;
+            EncodedImage {
+                bytes: if bytes.len() < file_bytes.len() {
+                    bytes
+                } else {
+                    file_bytes
+                }
+                .into(),
+                mime: format_to_mime(output_format),
+                source_width: width,
+                source_height: height,
+                width,
+                height,
             }
         } else {
             if let Some(format) = format.filter(|format| can_preserve_source_bytes(*format)) {
@@ -376,15 +397,14 @@ fn encode_image(
 
     match target_format {
         ImageFormat::Png => {
-            let rgba = image.to_rgba8();
             let mut encoder = PngEncoder::new(&mut buffer);
             apply_image_metadata(&mut encoder, icc_profile, exif, target_format)?;
             encoder
                 .write_image(
-                    rgba.as_raw(),
+                    image.as_bytes(),
                     image.width(),
                     image.height(),
-                    ColorType::Rgba8.into(),
+                    image.color().into(),
                 )
                 .map_err(|source| ImageProcessingError::Encode {
                     format: target_format,

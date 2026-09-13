@@ -9,6 +9,43 @@ use image::metadata::Orientation;
 
 const TEST_RGB_ICC_PROFILE: &[u8] = b"0123456789abcdefRGB ";
 const TEST_CMYK_ICC_PROFILE: &[u8] = b"0123456789abcdefCMYK";
+
+#[test]
+fn oversized_lossless_images_are_reencoded_without_changing_pixels_or_metadata() {
+    let pixels = ImageBuffer::from_pixel(1280, 820, Rgba([10u8, 20, 30, 128]));
+    for format in [ImageFormat::Png, ImageFormat::WebP] {
+        let mut bytes = image_bytes_with_metadata(&pixels, format, TEST_RGB_ICC_PROFILE);
+        bytes.resize(2 * 1024 * 1024, 0);
+        for mode in [PromptImageMode::ResizeToFit, PromptImageMode::Original] {
+            let prepared =
+                load_for_prompt_bytes_uncached(Path::new("large-image"), bytes.clone(), mode)
+                    .expect("prepare oversized image");
+            assert!(prepared.bytes.len() < 1024 * 1024);
+            assert_eq!((prepared.width, prepared.height), pixels.dimensions());
+            assert_eq!(
+                (prepared.source_width, prepared.source_height),
+                pixels.dimensions()
+            );
+            assert_eq!(
+                image::load_from_memory(&prepared.bytes).unwrap().to_rgba8(),
+                pixels
+            );
+            let mut decoder = ImageReader::new(Cursor::new(&prepared.bytes))
+                .with_guessed_format()
+                .unwrap()
+                .into_decoder()
+                .unwrap();
+            assert_eq!(
+                decoder.icc_profile().unwrap(),
+                Some(TEST_RGB_ICC_PROFILE.to_vec())
+            );
+            assert_eq!(
+                decoder.exif_metadata().unwrap(),
+                Some(ROTATE_90_EXIF.to_vec())
+            );
+        }
+    }
+}
 const ROTATE_90_EXIF: &[u8] = &[
     0x49, 0x49, 0x2a, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x12, 0x01, 0x03, 0x00, 0x01, 0x00,
     0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -377,4 +414,39 @@ async fn bounds_cache_by_encoded_byte_size() {
     assert!(cache.get(&key(1)).is_none());
     assert!(cache.get(&key(2)).is_some());
     assert!(cache.get(&key(3)).is_none());
+}
+
+#[test]
+fn oversized_sixteen_bit_png_preserves_color_precision() {
+    let pixels = ImageBuffer::from_pixel(64, 32, Rgba([1000u16, 2000, 3000, 4000]));
+    let mut encoded = Cursor::new(Vec::new());
+    DynamicImage::ImageRgba16(pixels.clone())
+        .write_to(&mut encoded, ImageFormat::Png)
+        .unwrap();
+    let mut bytes = encoded.into_inner();
+    bytes.resize(2 * 1024 * 1024, 0);
+    let prepared =
+        load_for_prompt_bytes_uncached(Path::new("16bit.png"), bytes, PromptImageMode::Original)
+            .unwrap();
+    assert!(prepared.bytes.len() < 1024 * 1024);
+    assert_eq!(
+        image::load_from_memory(&prepared.bytes)
+            .unwrap()
+            .to_rgba16(),
+        pixels
+    );
+}
+
+#[test]
+fn oversized_jpeg_keeps_source_bytes_to_avoid_another_lossy_generation() {
+    let pixels = ImageBuffer::from_pixel(64, 32, Rgba([10u8, 20, 30, 255]));
+    let mut bytes = image_bytes(&pixels, ImageFormat::Jpeg);
+    bytes.resize(2 * 1024 * 1024, 0);
+    let prepared = load_for_prompt_bytes_uncached(
+        Path::new("reference.jpg"),
+        bytes.clone(),
+        PromptImageMode::Original,
+    )
+    .unwrap();
+    assert_eq!(prepared.bytes.as_ref(), bytes.as_slice());
 }
