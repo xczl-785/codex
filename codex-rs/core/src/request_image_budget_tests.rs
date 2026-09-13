@@ -23,7 +23,7 @@ fn byte_budget_preserves_latest_user_and_tool_pairing() {
     let mut input = vec![
         item("message", vec![image.clone()]),
         item("function_call_output", vec![text.clone(), image.clone()]),
-        item("custom_tool_call_output", vec![image.clone()]),
+        item("custom_tool_call_output", vec![image]),
     ];
     let mut expected = input.clone();
     expected[1] = item(
