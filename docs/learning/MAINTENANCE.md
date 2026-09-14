@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0015
-- Current lesson: 实践 0002 的基础概念与对话案例已完成，已准备好 M0—M3 实验契约；实验工程尚未创建，代码与真实沙箱观察均未开始。
-- Next checkpoint: 按实践 0002 建立独立 Rust PermissionSandboxLab，先做 M0 行为契约与 M1 Fake Executor；通过后验证授权时效、恢复决策，再做安全真实观察，随后进入实践 0003。
-- Current handoff: 先读学习记录 0011 的最新进展与实践 0002。用户已通过权限组合、审批拒绝、部分副作用、磁盘满与产物核验案例。一次批准与持久匹配规则曾混淆，实验需要重点验证；不要重新泛讲五层，也不要提前实现平台安全沙箱。
+- Current lesson: 用户于 2026-09-14 确认权限、沙盒实验已完成；实践 0002 结束，下一主题为实践 0003。本轮未重新验收独立实验工程的代码与测试。
+- Next checkpoint: 进入实践 0003，先贯通持久事实、运行态 History 与模型可见投影，再用容量边界、同 Turn 自动压缩、退出后恢复和结果未知四个场景对照源码。
+- Current handoff: 先读学习记录 0011 的最新进展与实践 0003。不要重新安排权限实验 M0/M1；复用 CodebaseAgent 已有 M3 实践，对照 Codex 的压缩与恢复链路，不另建一套持久化系统。
 - Last entropy pass: after lesson 0015。
 
 ## Current index
@@ -59,12 +59,20 @@
 
 ## Next likely directions
 
-- 等独立 CodebaseAgent 仓库完成文档收尾；详细状态只读该工程自己的 `docs/STATUS.md`，本仓库不复制其当前文件清单。
-- 执行 [实践 0002](practice/0002-permission-sandbox-lab.md)：先建立授权与执行状态机，再用 Fake Executor 固定正常、拒绝、提权、部分副作用和不可盲目重试场景，最后按需观察一次安全的真实沙箱行为。
+- 如需核对独立 CodebaseAgent 的实现或文档收尾状态，读取该工程自己的 `docs/STATUS.md`；不把此前收尾状态当作下一主题的新增阻塞条件，本仓库不复制其当前文件清单。
+- [实践 0002](practice/0002-permission-sandbox-lab.md) 已由用户确认完成；仅在后续具体疑问触发时回看，不重复安排实验。
 - 执行 [实践 0003](practice/0003-context-history-recovery-lab.md)：使用 CodebaseAgent 已实现的 M3 行为与 Codex 源码，对照容量准入、模型可见历史、持久事实、压缩检查点和新 Session 恢复。
 - 完成两项复盘后进入取消传播；只有取消、提交顺序和竞态语义稳定，才学习真正的并行工具调度。
 - Subagent 生命周期最后进入，重点研究父子 Thread、权限继承或收窄、通信、等待、中断和资源回收，不因已有多 Agent 工具就提前模仿接口。
 - LangGraph checkpoint 横向比较保留为已完成扩展；只有上下文复盘出现具体疑问时才回看，不另开泛化框架调研。
+
+## 实践 0003 开场准备（2026-09-14）
+
+- 首个问题：Thread 明明保存了旧消息，为什么压缩后模型仍看不到原文？先区分持久记录、Session 运行态 History、当前模型请求和 UI 历史，再跟踪一次压缩前后的变化。
+- 本轮轻量核对：工作区原先无未提交变更；CodeGraph 报告索引最新。抽查 `Session::replace_compacted_history`，确认其构造带有 `replacement_history` 的 `CompactedItem`、替换运行态历史并追加 rollout 记录。此结论不代表已经验证全部恢复与容量分支。
+- 下一次源码阅读：从 `core/src/session/turn.rs` 的容量与自动压缩分支进入，对照 `core/src/compact.rs` 和 `Session::replace_compacted_history`，随后定位恢复投影和代表性测试。使用 CodeGraph 定位后按需精读，不全仓展开。
+- 用一段“旧消息 → 压缩检查点 → 新消息 → 退出 → 新 Session”的事件序列，分别说明保存了什么、模型看得到什么、运行资源能否恢复；再加入一个只有 Call、没有 Output 的崩溃边界。
+- 本次只准备衔接，不认定实践 0003 已完成。退出标准仍以实践文档的完成检查为准；通过后依次学习取消传播、并行工具调度、Subagent 生命周期。
 
 ## Entropy pass after lesson 0015
 
