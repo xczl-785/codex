@@ -36,10 +36,14 @@
     区分 Tool Call 与进程生命周期、yield 与 hard timeout，并建立安全重试的判断框架。
 15. [同一个真实进程为什么有三种输出视图](lessons/0015-one-process-three-output-views.md)
     区分 UI 实时增量、模型分段 Tool Output 与客户端命令生命周期，并理解三类 ID 和持久化边界。
+16. [压缩怎样整理历史，以及哪些信息仍然可见](lessons/0016-compaction-mechanism-and-visible-history.md)
+    跟踪压缩触发、摘要请求、replacement history、检查点恢复与信息损失边界。
+17. [停止 Turn，究竟停止了什么](lessons/0017-cancellation-and-process-lifetimes.md)
+    区分取消传播、任务清理、命令执行模式和完成竞态。
+18. [工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)
+    区分工具能力声明、具体调用依赖、共享/独占门禁、完成顺序和历史记录顺序。
 
 ## 稳定参考
-
-补充课程：[0016：压缩怎样整理历史，以及哪些信息仍然可见](lessons/0016-compaction-mechanism-and-visible-history.md)，对应实践 0003 的压缩机制与历史可见性复盘。
 
 - [Codex 核心概念速查](reference/glossary.md)：快速回忆 Thread、Session、Turn、Task、Op、Event 等概念。
 - [Codex 工程介绍](repository-inventory.md)：目录分层、模块职责、核心链路和构建体系。
@@ -47,10 +51,6 @@
 - [资料索引](RESOURCES.md)：课程使用的源码入口与外部技术资料。
 
 ## 阶段复盘
-
-取消专题：[0017：停止 Turn，究竟停止了什么](lessons/0017-cancellation-and-process-lifetimes.md)，区分取消传播、任务清理、命令执行模式和完成竞态。
-
-并行专题：[0018：工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)，区分工具能力声明、具体调用依赖、真实完成顺序和历史记录顺序。
 
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
 - [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：核对实践证据强度，并判断下一步应新建实验还是复用 CodebaseAgent。

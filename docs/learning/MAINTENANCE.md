@@ -14,10 +14,9 @@
 
 ## Current index
 
+- Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 - Lesson 0017: 停止 Turn，究竟停止了什么
 - Lesson 0018: 工具并行资格与结果顺序
-
-- Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 
 - Lesson 0001: 从一句话到一次 Turn
 - Lesson 0002: 连续发送时：新 Turn、Steer，还是等待？
