@@ -28,5 +28,19 @@
 - [0009：从阶段复盘转入受控实践](0009-stage-review-to-practice.md)
 - [0010：从 Harness 实践收尾转入权限与上下文专题](0010-harness-close-to-security-and-context.md)
 - [0011：从资源范围与命令规则重新建立权限基础](0011-permission-foundations.md)
+- [0012：压缩、恢复与历史可见性](0012-compaction-recovery-and-history-visibility.md)
+- [0013：取消与进程生命周期边界](0013-cancellation-and-process-lifetime-boundaries.md)
+- [0014：并行准入、结果顺序与职责分离](0014-parallel-admission-order-and-responsibility.md)
 
 新理解推翻旧记录时，不静默重写学习过程；应在新记录中说明它修正或取代了哪项认识，并把稳定结论沉淀到对应课程。
+
+## 更新门槛
+
+学习记录按“理解发生了什么变化”更新，不按对话轮次或课程数量机械增加。出现以下情况时，应在转入新主题前检查是否需要新增记录：
+
+- 用户用场景、复述或实践证明了非平凡理解；
+- 一个会影响后续教学的误解已经被纠正；
+- 用户已有知识使后续课程可以提高起点；
+- 学习目标发生变化。
+
+`NOTES.md` 可以暂存教学过程，`MAINTENANCE.md` 负责当前进度；二者都不能长期代替这里的理解基线。

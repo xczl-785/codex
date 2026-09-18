@@ -39,6 +39,8 @@
 
 ## 稳定参考
 
+补充课程：[0016：压缩怎样整理历史，以及哪些信息仍然可见](lessons/0016-compaction-mechanism-and-visible-history.md)，对应实践 0003 的压缩机制与历史可见性复盘。
+
 - [Codex 核心概念速查](reference/glossary.md)：快速回忆 Thread、Session、Turn、Task、Op、Event 等概念。
 - [Codex 工程介绍](repository-inventory.md)：目录分层、模块职责、核心链路和构建体系。
 - [学习路线图](roadmap.md)：完整主题范围、源码阅读顺序和重点专题。
@@ -46,16 +48,23 @@
 
 ## 阶段复盘
 
+取消专题：[0017：停止 Turn，究竟停止了什么](lessons/0017-cancellation-and-process-lifetimes.md)，区分取消传播、任务清理、命令执行模式和完成竞态。
+
+并行专题：[0018：工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)，区分工具能力声明、具体调用依赖、真实完成顺序和历史记录顺序。
+
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
+- [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：核对实践证据强度，并判断下一步应新建实验还是复用 CodebaseAgent。
 
 ## 实践任务
 
 - [实现一个通用代码库理解 Agent](practice/0001-codebase-study-agent.md)：绑定任意本地代码库，通过通用只读工具和证据约束实现最小 Agent Harness，再以 Codex 作为复杂对照样本。
 - [权限、审批、沙箱与提权实验](practice/0002-permission-sandbox-lab.md)：用确定性策略与执行替身贯通动作准入、用户审批、受限真实执行、权限提升和失败分类。
 - [上下文限制、压缩检查点与历史恢复复盘](practice/0003-context-history-recovery-lab.md)：基于已经完成的 Harness 实践，对照 Codex 的持久事实、模型投影、容量准入、压缩和恢复边界。
+- [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
+- [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
 
 ## 文档边界
 
-`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`practice/` 保存已经确定的实践任务与验收边界，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
+`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`practice/` 保存已经确定的实践入口与验收边界，`practice/materials/` 保存按需读取的详细场景材料，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
 
 本目录不是 Codex 的上游用户文档。产品、安装与使用说明见根目录 [上游 README](../../README.codex-upstream.md)，本地构建要求见 [docs/install.md](../install.md)。

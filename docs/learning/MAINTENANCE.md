@@ -5,13 +5,19 @@
 
 ## Current progress
 
-- Last completed lesson: 0015
-- Current lesson: 用户于 2026-09-14 确认权限、沙盒实验已完成；实践 0002 结束，下一主题为实践 0003。本轮未重新验收独立实验工程的代码与测试。
-- Next checkpoint: 进入实践 0003，先贯通持久事实、运行态 History 与模型可见投影，再用容量边界、同 Turn 自动压缩、退出后恢复和结果未知四个场景对照源码。
-- Current handoff: 先读学习记录 0011 的最新进展与实践 0003。不要重新安排权限实验 M0/M1；复用 CodebaseAgent 已有 M3 实践，对照 Codex 的压缩与恢复链路，不另建一套持久化系统。
+- Last completed lesson: 0018（并行资格、共享/独占门禁、结果顺序及取消后的部分完成）
+- Current lesson: 暂停 Subagent 推进；已把下一阶段拆成实践 0004“取消传播”和实践 0005“有界并行工具调度”两份可执行契约。
+- Next checkpoint: 用户开始实践 0004 时，重新打开 CodebaseAgent，并先更新该工程自己的 `docs/STATUS.md`；实践 0004 收口后才进入 0005。
+- Current handoff: 实践 0003、取消传播和并行工具调度的源码与场景校准均已完成；实践 0004/0005 的资料已建立，但尚未激活 AgentLab 实现切片。两份实验复用 CodebaseAgent，不新建第三个工程；0004 固定取消、竞争和部分完成语义，0005 再放开 `max_parallel_tool_calls > 1` 并验证共享/独占门禁。Subagent 只讲到 spawn 会创建独立子 Thread/Session 并启动子 Turn，尚未验收，不计入已完成课程。
 - Last entropy pass: after lesson 0015。
+- Last entropy pass lesson: 15
 
 ## Current index
+
+- Lesson 0017: 停止 Turn，究竟停止了什么
+- Lesson 0018: 工具并行资格与结果顺序
+
+- Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 
 - Lesson 0001: 从一句话到一次 Turn
 - Lesson 0002: 连续发送时：新 Turn、Steer，还是等待？
@@ -29,9 +35,12 @@
 - Lesson 0014: 一条命令怎样变成可续接的真实进程
 - Lesson 0015: 同一个真实进程为什么有三种输出视图
 - Stage review 0001: 课程 0001—0015 整体知识地图
+- Stage review 0002: 权限实验之后的上下文、取消与并行复盘
 - Practice 0001: 实现一个通用代码库理解 Agent
 - Practice 0002: 权限、审批、沙箱与提权实验
 - Practice 0003: 上下文限制、压缩检查点与历史恢复复盘
+- Practice 0004: 取消传播与部分完成状态
+- Practice 0005: 有界并行工具调度与结果顺序
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -44,6 +53,9 @@
 - Learning record 0009: 从阶段复盘转入受控实践
 - Learning record 0010: 从 Harness 实践收尾转入权限与上下文专题
 - Learning record 0011: 从资源范围与命令规则重新建立权限基础，已完成案例校准
+- Learning record 0012: 压缩、恢复与历史可见性
+- Learning record 0013: 取消与进程生命周期边界
+- Learning record 0014: 并行准入、结果顺序与职责分离
 
 ## Durable decisions
 
@@ -61,9 +73,9 @@
 
 - 如需核对独立 CodebaseAgent 的实现或文档收尾状态，读取该工程自己的 `docs/STATUS.md`；不把此前收尾状态当作下一主题的新增阻塞条件，本仓库不复制其当前文件清单。
 - [实践 0002](practice/0002-permission-sandbox-lab.md) 已由用户确认完成；仅在后续具体疑问触发时回看，不重复安排实验。
-- 执行 [实践 0003](practice/0003-context-history-recovery-lab.md)：使用 CodebaseAgent 已实现的 M3 行为与 Codex 源码，对照容量准入、模型可见历史、持久事实、压缩检查点和新 Session 恢复。
-- 完成两项复盘后进入取消传播；只有取消、提交顺序和竞态语义稳定，才学习真正的并行工具调度。
-- Subagent 生命周期最后进入，重点研究父子 Thread、权限继承或收窄、通信、等待、中断和资源回收，不因已有多 Agent 工具就提前模仿接口。
+- [实践 0003](practice/0003-context-history-recovery-lab.md)、取消传播和并行工具调度已完成源码与场景校准。
+- [实践 0004](practice/0004-cancellation-propagation-lab.md) 与 [实践 0005](practice/0005-bounded-parallel-tool-scheduling-lab.md) 已完成资料准备。当前推荐从 0004 开始，更新 CodebaseAgent 自己的 STATUS 后实现取消传播；0004 验收并收口后再进入 0005。
+- Subagent 生命周期暂缓，待取消与并行实践完成后再继续父子 Thread、权限继承或收窄、通信、等待、中断和资源回收。
 - LangGraph checkpoint 横向比较保留为已完成扩展；只有上下文复盘出现具体疑问时才回看，不另开泛化框架调研。
 
 ## 实践 0003 开场准备（2026-09-14）
