@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0018（并行资格、共享/独占门禁、结果顺序及取消后的部分完成）
-- Current lesson: 暂停 Subagent 推进；已把下一阶段拆成实践 0004“取消传播”和实践 0005“有界并行工具调度”两份可执行契约。
-- Next checkpoint: 用户开始实践 0004 时，重新打开 CodebaseAgent，并先更新该工程自己的 `docs/STATUS.md`；实践 0004 收口后才进入 0005。
-- Current handoff: 实践 0003、取消传播和并行工具调度的源码与场景校准均已完成；实践 0004/0005 的资料已建立，但尚未激活 AgentLab 实现切片。两份实验复用 CodebaseAgent，不新建第三个工程；0004 固定取消、竞争和部分完成语义，0005 再放开 `max_parallel_tool_calls > 1` 并验证共享/独占门禁。Subagent 只讲到 spawn 会创建独立子 Thread/Session 并启动子 Turn，尚未验收，不计入已完成课程。
+- Current lesson: 暂停 Subagent 推进；重新打开实践 0003，先补齐持久恢复证据，再开展同 Turn 自动压缩实验。
+- Next checkpoint: 用户在新会话开始实践 0003-A 时，重新打开 CodebaseAgent，并先更新该工程自己的 `docs/STATUS.md`；0003-A 收口后进入 0003-B，之后才进入实践 0004。
+- Current handoff: fresh analysis 确认旧版 0003 混合了 CodebaseAgent 已实现的显式 checkpoint/恢复机制与尚未实现的 Codex 同 Turn 自动压缩。实践现拆为 0003-A“持久事实、检查点与恢复边界”和 0003-B“上下文容量与同 Turn 自动压缩”。每个阶段都允许把同生命周期的体验优化作为候选，由用户提出后在 CodebaseAgent STATUS 中激活；未激活候选不阻塞学习完成。实践 0004/0005 资料继续保留，顺序后移。Subagent 尚未验收。
 - Last entropy pass: after lesson 0015。
 - Last entropy pass lesson: 15
 
@@ -37,7 +37,7 @@
 - Stage review 0002: 权限实验之后的上下文、取消与并行复盘
 - Practice 0001: 实现一个通用代码库理解 Agent
 - Practice 0002: 权限、审批、沙箱与提权实验
-- Practice 0003: 上下文限制、压缩检查点与历史恢复复盘
+- Practice 0003: 持久恢复与同 Turn 上下文压缩（0003-A 恢复；0003-B 自动压缩）
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
 - Reference: Codex 核心概念速查
@@ -65,25 +65,17 @@
 - 已确定的实践任务放在 `practice/`，明确目标、非目标、行为契约和验收标准；实验源码不直接加入 Codex workspace。
 - 实践默认使用 Rust，采用“关键控制面手写、基础设施复用、AI 受控协作”，目标仓库保持语言无关，先以小型 fixture repository 和 ScriptedModel 验证 Harness，再接真实模型。
 - 第一版通过 Repository Binding 限制代码库根目录，所有工具输出有界并携带相对路径和行号；Codex、CodeGraph 和 Git 都不是硬依赖。
-- 实践 0001 收尾后，学习顺序固定为：权限与沙盒实践 → 上下文、压缩与恢复复盘 → 取消传播 → 并行工具调度 → Subagent 生命周期。上下文复盘与权限实践没有技术依赖，这个顺序用于集中解决当前最薄弱概念。
+- 实践 0001 收尾后，学习顺序固定为：权限与沙盒实践 → 持久恢复与同 Turn 自动压缩 → 取消传播 → 并行工具调度 → Subagent 生命周期。恢复与压缩分为 0003-A/0003-B 两个阶段，但仍属于一个实践主题。
 - 权限专题深入控制面和失败语义，但不手搓安全级操作系统沙箱；上下文专题深入事实、投影、检查点和恢复不变量，中等深度定位 Codex 源码，暂不深入 tokenizer、摘要算法、分布式存储或向量记忆。
 
 ## Next likely directions
 
 - 如需核对独立 CodebaseAgent 的实现或文档收尾状态，读取该工程自己的 `docs/STATUS.md`；不把此前收尾状态当作下一主题的新增阻塞条件，本仓库不复制其当前文件清单。
 - [实践 0002](practice/0002-permission-sandbox-lab.md) 已由用户确认完成；仅在后续具体疑问触发时回看，不重复安排实验。
-- [实践 0003](practice/0003-context-history-recovery-lab.md)、取消传播和并行工具调度已完成源码与场景校准。
-- [实践 0004](practice/0004-cancellation-propagation-lab.md) 与 [实践 0005](practice/0005-bounded-parallel-tool-scheduling-lab.md) 已完成资料准备。当前推荐从 0004 开始，更新 CodebaseAgent 自己的 STATUS 后实现取消传播；0004 验收并收口后再进入 0005。
+- [实践 0003](practice/0003-context-history-recovery-lab.md) 已按当前 CodebaseAgent 能力重新划分，尚未在 AgentLab 激活。当前推荐从 0003-A 开始，补强连续 checkpoint、checkpoint 后事实恢复和悬空 Call 零重试证据；随后进入 0003-B 的同 Turn 自动压缩。
+- [实践 0004](practice/0004-cancellation-propagation-lab.md) 与 [实践 0005](practice/0005-bounded-parallel-tool-scheduling-lab.md) 的资料继续保留；0003-B 收口后按 0004 → 0005 顺序推进。
 - Subagent 生命周期暂缓，待取消与并行实践完成后再继续父子 Thread、权限继承或收窄、通信、等待、中断和资源回收。
 - LangGraph checkpoint 横向比较保留为已完成扩展；只有上下文复盘出现具体疑问时才回看，不另开泛化框架调研。
-
-## 实践 0003 开场准备（2026-09-14）
-
-- 首个问题：Thread 明明保存了旧消息，为什么压缩后模型仍看不到原文？先区分持久记录、Session 运行态 History、当前模型请求和 UI 历史，再跟踪一次压缩前后的变化。
-- 本轮轻量核对：工作区原先无未提交变更；CodeGraph 报告索引最新。抽查 `Session::replace_compacted_history`，确认其构造带有 `replacement_history` 的 `CompactedItem`、替换运行态历史并追加 rollout 记录。此结论不代表已经验证全部恢复与容量分支。
-- 下一次源码阅读：从 `core/src/session/turn.rs` 的容量与自动压缩分支进入，对照 `core/src/compact.rs` 和 `Session::replace_compacted_history`，随后定位恢复投影和代表性测试。使用 CodeGraph 定位后按需精读，不全仓展开。
-- 用一段“旧消息 → 压缩检查点 → 新消息 → 退出 → 新 Session”的事件序列，分别说明保存了什么、模型看得到什么、运行资源能否恢复；再加入一个只有 Call、没有 Output 的崩溃边界。
-- 本次只准备衔接，不认定实践 0003 已完成。退出标准仍以实践文档的完成检查为准；通过后依次学习取消传播、并行工具调度、Subagent 生命周期。
 
 ## Entropy pass after lesson 0015
 

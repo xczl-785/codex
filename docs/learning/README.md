@@ -59,7 +59,7 @@
 
 - [实现一个通用代码库理解 Agent](practice/0001-codebase-study-agent.md)：绑定任意本地代码库，通过通用只读工具和证据约束实现最小 Agent Harness，再以 Codex 作为复杂对照样本。
 - [权限、审批、沙箱与提权实验](practice/0002-permission-sandbox-lab.md)：用确定性策略与执行替身贯通动作准入、用户审批、受限真实执行、权限提升和失败分类。
-- [上下文限制、压缩检查点与历史恢复复盘](practice/0003-context-history-recovery-lab.md)：基于已经完成的 Harness 实践，对照 Codex 的持久事实、模型投影、容量准入、压缩和恢复边界。
+- [持久恢复与同 Turn 上下文压缩](practice/0003-context-history-recovery-lab.md)：复用 CodebaseAgent，分阶段验证持久事实与恢复边界，以及容量准入、自动压缩和原 Turn 续跑；相关体验优化可按需激活。
 - [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
 - [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
 
