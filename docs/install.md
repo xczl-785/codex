@@ -1,12 +1,21 @@
 ## Installing & building
 
-### System requirements
+### Platform scope
 
-| Requirement                 | Details                                                         |
-| --------------------------- | --------------------------------------------------------------- |
-| Operating systems           | macOS 12+, Ubuntu 20.04+/Debian 10+, or Windows 11 **via WSL2** |
-| Git (optional, recommended) | 2.23+ for built-in PR helpers                                   |
-| RAM                         | 4-GB minimum (8-GB recommended)                                 |
+The shell commands below describe the macOS/Linux source-build path, also usable
+inside Windows WSL2. Codex additionally has native Windows installation and
+sandbox support; see the [upstream installation entry](../README.codex-upstream.md#installing-and-running-codex-cli)
+and the [Windows execution notes](../codex-rs/core/README.md#windows).
+This page does not provide a native Windows source-build recipe or certify a
+minimum supported OS version.
+
+### Environment for the examples
+
+| Requirement                 | Details                                                                  |
+| --------------------------- | ------------------------------------------------------------------------ |
+| Example environments        | macOS, Linux, or Windows **via WSL2** for the POSIX shell commands below |
+| Git (optional, recommended) | 2.23+ for built-in PR helpers                                            |
+| RAM                         | 4-GB minimum (8-GB recommended)                                          |
 
 ### DotSlash
 

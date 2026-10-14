@@ -4,20 +4,20 @@
 
 ## 接手契约
 
-| 字段 | 当前值 |
-| --- | --- |
-| 状态 | `prepared / not activated in AgentLab` |
-| 目标工程 | `D:\Program\AgentLab\CodebaseAgent` |
+| 字段     | 当前值                                                                                                                  |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 状态     | `prepared / not activated in AgentLab`                                                                                  |
+| 目标工程 | `D:\Program\AgentLab\CodebaseAgent`                                                                                     |
 | 事实来源 | CodebaseAgent 当前行为与测试、[课程 0017](../lessons/0017-cancellation-and-process-lifetimes.md)、当前 Codex 源码与测试 |
-| 进入条件 | 实践 0003 已完成；用户明确开始本实践；更新 CodebaseAgent 的 `docs/STATUS.md` |
-| 退出条件 | 取消能从 Turn 传播到模型请求和工具调用，完成、未完成及恢复边界有确定性测试 |
-| 下一实践 | 实践 0005：有界并行工具调度 |
+| 进入条件 | 实践 0003 已完成；用户明确开始本实践；更新 CodebaseAgent 的 `docs/STATUS.md`                                            |
+| 退出条件 | 取消能从 Turn 传播到模型请求和工具调用，完成、未完成及恢复边界有确定性测试                                              |
+| 下一实践 | 实践 0005：有界并行工具调度                                                                                             |
 
 创建本文件不会自动开启 AgentLab 实现。实时进度始终以 CodebaseAgent 自己的 `docs/STATUS.md` 为准。
 
 ## 实验目标
 
-CodebaseAgent 已有模型—工具循环、多调用批次、持久历史、恢复和压缩，但没有明确的取消传播链。本实践先固定以下问题，避免在实践 0005 中同时调试取消与并行：
+本实践在 0003 的恢复与同 Turn 自动压缩验收后，继续复用 CodebaseAgent 的模型—工具循环、多调用批次和持久历史。激活时先核对目标工程当前的取消能力，再固定以下问题，避免在实践 0005 中同时调试取消与并行：
 
 - 谁拥有 Turn 的取消源；
 - 取消请求和 Turn 终止怎样区分；

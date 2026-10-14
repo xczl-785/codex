@@ -21,11 +21,11 @@ Function Call C2: write_stdin  -> process 42 -> chunk B
 Function Call C3: write_stdin  -> process 42 -> chunk C + exit_code
 ```
 
-| 标识 | 标识的对象 | 生命周期 |
-| --- | --- | --- |
-| `call_id` | 一次模型 Function Call | 一次工具调用 |
-| `process_id` / `session_id` | 一个受 Unified Exec 管理的真实进程 | 从进程创建到退出或清理 |
-| `chunk_id` | 一次返回给模型的输出批次 | 一次 `exec_command` 或 `write_stdin` 返回 |
+| 标识                        | 标识的对象                         | 生命周期                                  |
+| --------------------------- | ---------------------------------- | ----------------------------------------- |
+| `call_id`                   | 一次模型 Function Call             | 一次工具调用                              |
+| `process_id` / `session_id` | 一个受 Unified Exec 管理的真实进程 | 从进程创建到退出或清理                    |
+| `chunk_id`                  | 一次返回给模型的输出批次           | 一次 `exec_command` 或 `write_stdin` 返回 |
 
 协议中的 `session_id` 仍然只是内部 `process_id` 的模型可见名称，不是 Codex 的 Session。一个真实进程可以被多次 Function Call 操作，因此它可以对应多个 `call_id` 和多个 `chunk_id`。
 
@@ -214,4 +214,4 @@ Call/Output 持久化不创造并行能力，也不会自动恢复未完成进�
 
 ## 后续衔接
 
-原计划可继续研究取消信号如何从 Turn/Task 传到工具和真实进程，但当前先暂停推进新课。下一阶段以课程 0001—0015 的整理、回顾和按疑问回看源码为主，再根据复盘结果决定进入取消传播、并行工具调度或 Subagent 生命周期。
+需要跨课程整理时，查阅[前十五课阶段复盘](../reviews/0001-lessons-0001-0015-stage-review.md)。取消与进程生命周期见[课程 0017](0017-cancellation-and-process-lifetimes.md)，工具结果顺序见[课程 0018](0018-parallel-tool-admission-and-result-order.md)。当前教学或实践的下一步由 [MAINTENANCE.md](../MAINTENANCE.md) 决定。

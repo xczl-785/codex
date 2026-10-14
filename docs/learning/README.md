@@ -43,6 +43,10 @@
 18. [工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)
     区分工具能力声明、具体调用依赖、共享/独占门禁、完成顺序和历史记录顺序。
 
+## 按需答疑
+
+- [规划是能力还是组件](lessons/0019-planning-capability-vs-component.md)：`on-demand` 答疑骨架，正文待补；仅在相关疑问出现时展开，不计入已完成课程，也不改变主线顺序。
+
 ## 稳定参考
 
 - [Codex 核心概念速查](reference/glossary.md)：快速回忆 Thread、Session、Turn、Task、Op、Event 等概念。
@@ -53,7 +57,7 @@
 ## 阶段复盘
 
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
-- [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：核对实践证据强度，并判断下一步应新建实验还是复用 CodebaseAgent。
+- [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：归纳课程 0016—0018 的理解边界，区分源码场景校准与可运行实践证据。
 
 ## 实践任务
 
@@ -62,6 +66,12 @@
 - [持久恢复与同 Turn 上下文压缩](practice/0003-context-history-recovery-lab.md)：复用 CodebaseAgent，分阶段验证持久事实与恢复边界，以及容量准入、自动压缩和原 Turn 续跑；相关体验优化可按需激活。
 - [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
 - [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
+
+当前实践顺序与进入条件由 [MAINTENANCE.md](MAINTENANCE.md) 维护；这里列出的是可查阅的契约，不代表所有实践都已激活。详细验收场景从相应实践进入 [支持材料目录](practice/materials/README.md)。
+
+## 接续教学
+
+接续已有教学时，按根目录 [AGENTS.md](../../AGENTS.md) 恢复上下文：任务目标 → 当前维护账本 → [教学笔记](NOTES.md) → [学习记录](learning-records/README.md) → 对应课程。学习记录中的早期认识和历史笔记用于解释理解变化，不决定当前下一步。
 
 ## 文档边界
 
