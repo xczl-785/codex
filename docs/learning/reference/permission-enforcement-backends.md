@@ -1,0 +1,62 @@
+# 权限机制落地：执行后端与沙箱选型参考
+
+配合[第 12 课：ExecPolicy、权限提升与沙箱](../lessons/0012-exec-policy-escalation-and-sandbox.md)使用。课程负责解释机制，本资料供实际接入执行后端时查阅，不构成实施计划。
+
+产品实现依据截至 **2026-10-14** 查阅的一手资料，属于版本快照；落地前重新核对所选版本、平台与已支持的权限。外部产品现状不替代本学习分支的源码事实。
+
+## 1. 要实现哪些层
+
+Agent 要落实权限，需要让授权决定进入真实执行链，但通常无需从头开发底层隔离机制。
+
+| 层级 | 责任 | 实现方式 |
+| --- | --- | --- |
+| 权限控制面 | 默认资源范围、命令规则、审批、授权时效、提权与重试条件 | 按产品需求实现，可复用策略组件 |
+| 执行适配层 | 将有效权限映射给后端，启动进程，收集结果，取消与清理 | 集成运行时或调用执行服务 |
+| 隔离执行机制 | 强制限制文件、网络及其他约定资源的访问 | 复用操作系统机制、沙箱运行时、容器或虚拟机 |
+
+```text
+工具调用 → 命令准入与审批 → 本次有效权限
+  → 执行适配器 → 受限进程或独立执行环境
+  → 真实结果与失败证据 → Agent 决定下一步
+```
+
+“自行实现沙箱”经常指组合和管理系统能力，例如创建受限令牌、生成挂载参数、配置网络代理及管理生命周期；实际访问检查仍由操作系统等执行机制承担。详见课程 5.4—5.8。
+
+## 2. 按开放能力选择后端
+
+| 执行需求 | 可选方式 | 接入时要确认的边界 |
+| --- | --- | --- |
+| 只有少量固定读写工具，不开放任意代码执行 | 在受控工具的资源入口检查权限 | 全部访问路径受控，路径解析可靠，没有绕过检查的执行入口 |
+| 在用户本机运行任意脚本、编译器或开发工具 | 本机沙箱运行时或平台原生适配 | 文件与网络限制、子进程、继承资源、平台兼容及失败处理 |
+| 需要统一 Linux 环境和依赖 | 容器执行器 | 挂载、网络、权限、凭据、宿主通信与资源限额；容器名称本身不证明配置正确 |
+| 需要更独立的执行环境或远程调度 | 虚拟机、microVM 或远程沙箱服务 | 数据和凭据如何进入、结果如何取回、实例销毁及断连后的执行状态 |
+
+这是需求到实现方式的选择参考，不是统一安全等级排名。只有固定工具时可以先落实工具自身的访问控制；开放 Shell、Python 或可执行插件后，还需要约束它们能够触达的资源。
+
+## 3. 产品实现对照
+
+| 产品 | 公开实现 | 查阅入口与适用范围 |
+| --- | --- | --- |
+| Codex | 自有权限和执行编排；Linux 使用 bubblewrap，macOS 使用 Seatbelt，Windows 使用原生后端 | [OpenAI Docs：Sandbox](https://learn.chatgpt.com/docs/sandboxing)。当前公开 Windows 文档还列出 MXC 与 legacy elevated／unelevated，见[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox)；本课此前源码讲解和 M3 观察不能据此改称验证过 MXC |
+| Claude Code | 通过 Sandbox Runtime 包装命令；公开方案使用 Linux bubblewrap、macOS Seatbelt，并结合代理控制网络 | [官方工程说明](https://www.anthropic.com/engineering/claude-code-sandboxing)。可单独集成[开源 Sandbox Runtime](https://github.com/anthropics/sandbox-runtime)，无需引入完整 Claude Code；其当前仓库另列 Windows alpha 后端，应按具体版本确认能力 |
+| DeepSeek Harness | 沙箱服务、共享策略与平台后端分为插件；Linux 选择 bwrap 或 Landlock，macOS 使用 Seatbelt，Windows 使用受限令牌与 ACL | [沙箱包分工](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/README.md)、[平台后端](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/sandbox-local/README.md)。Windows 后端主要限制写入和删除，读取、网络及进程可见性未由该后端限制，并报告 partial，见[明确边界](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/sandbox-windows-acl/README.md) |
+| Cursor | 统一接口、分平台实现；macOS 使用 Seatbelt，Linux 组合 Landlock 与 seccomp | [2026-02-18 工程说明](https://cursor.com/blog/agent-sandboxing)中的 Windows 方案使用 WSL2；这是该说明的实现快照，不保证所有后续版本相同。当前配置语义查[Run Modes](https://cursor.com/docs/agent/security/run-modes) |
+
+看到“支持沙箱”时，应继续查明具体资源、调用路径和后端。某个后端的 full 也只表示覆盖它承诺的范围，不表示覆盖全部机器能力；写入受限不能推断读取和网络同样受限。
+
+## 4. 把授权接到执行时，核对什么
+
+- **权限对应**：执行使用批准后的实际范围；审批理由文字不能代替路径或网络限制。所有文件工具、搜索子进程、Shell 和插件访问应有明确的执行边界。
+- **失败关闭**：必须受限执行却无法建立限制时，明确返回后端不可用，不能静默改成普通执行。区分策略拒绝、审批拒绝、后端启动失败、运行时资源拒绝和程序自身错误。
+- **生命周期**：限制覆盖相关子进程，继承句柄和凭据有界；取消、退出和崩溃后的进程状态与清理责任明确。
+- **副作用证据**：拒绝不回滚此前操作。重试前核验已有结果，不能把缺少 Output 或文件快照未变当作无副作用证明。
+
+至少走查：允许路径成功、越界操作拒绝、先成功后拒绝时前序产物保留、子进程同样受限、沙箱不可用时不普通执行；若承诺网络隔离，再验证对应网络边界。测试范围应覆盖实际准备开放的能力。
+
+## 5. 与 AgentLab 实践的关系
+
+PermissionSandboxLab 的 Rust 核心用内存文件表验证控制面；M3 调用现成 Codex 沙箱，观察了允许写入、越界拒绝和前序副作用保留。两段证据没有组成一个由该 Rust 核心驱动的生产沙箱执行器，也不证明完整审批、内部重试和网络隔离已端到端验收。
+
+历史观察入口：`D:\Program\AgentLab\PermissionSandboxLab\docs\evidence\m3-observation-20260914\README.md`；该独立工程的当前事实以它自己的 `docs/STATUS.md`、源码和证据为准。学习区契约见[实践 0002](../practice/0002-permission-sandbox-lab.md)。
+
+以后接入真实脚本执行时，可保留已经理解的权限控制面，选择满足目标平台和资源边界的后端，再验证批准范围与实际执行范围一致；不因本资料存在自动激活实现任务。

@@ -50,6 +50,7 @@
 ## 稳定参考
 
 - [Codex 核心概念速查](reference/glossary.md)：快速回忆 Thread、Session、Turn、Task、Op、Event 等概念。
+- [权限机制落地参考](reference/permission-enforcement-backends.md)：配合第 12 课，查阅控制面、执行适配与沙箱后端的分工、产品实现和接入边界。
 - [Codex 工程介绍](repository-inventory.md)：目录分层、模块职责、核心链路和构建体系。
 - [学习路线图](roadmap.md)：完整主题范围、源码阅读顺序和重点专题。
 - [资料索引](RESOURCES.md)：课程使用的源码入口与外部技术资料。
