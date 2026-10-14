@@ -30,14 +30,14 @@ Handler 返回 ToolOutput
 
 ## 二、六种容易混淆的对象
 
-| 对象 | 通俗理解 | 职责 |
-| --- | --- | --- |
-| `ToolSpec` | 提供给模型的菜单 | 描述工具名称、用途和参数结构 |
-| `FunctionCall` | 模型下的订单 | 表示模型选择了哪个工具和哪些参数 |
-| `ToolCall` | Codex 内部订单 | 统一 Function、Custom 与 Tool Search 等协议形态 |
-| `ToolInvocation` | 带运行环境的工单 | 增加 Session、Turn、Step、取消令牌和调用来源 |
-| `ToolOutput` | Handler 的内部结果 | 表示文本、结构化内容、成功状态和元数据 |
-| `FunctionCallOutput` | 返回模型的回执 | 用相同 `call_id` 把结果与调用配对 |
+| 对象                 | 通俗理解           | 职责                                            |
+| -------------------- | ------------------ | ----------------------------------------------- |
+| `ToolSpec`           | 提供给模型的菜单   | 描述工具名称、用途和参数结构                    |
+| `FunctionCall`       | 模型下的订单       | 表示模型选择了哪个工具和哪些参数                |
+| `ToolCall`           | Codex 内部订单     | 统一 Function、Custom 与 Tool Search 等协议形态 |
+| `ToolInvocation`     | 带运行环境的工单   | 增加 Session、Turn、Step、取消令牌和调用来源    |
+| `ToolOutput`         | Handler 的内部结果 | 表示文本、结构化内容、成功状态和元数据          |
+| `FunctionCallOutput` | 返回模型的回执     | 用相同 `call_id` 把结果与调用配对               |
 
 模型可能返回：
 

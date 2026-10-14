@@ -22,16 +22,16 @@
 
 ## 文档地图
 
-| 需要 | 入口 |
-| --- | --- |
-| 按顺序学习 | [课程目录](docs/learning/README.md) |
-| 了解整体工程 | [工程介绍](docs/learning/repository-inventory.md) |
-| 查看完整主题范围 | [学习路线图](docs/learning/roadmap.md) |
-| 快速查概念 | [核心概念速查](docs/learning/reference/glossary.md) |
-| 查找源码与外部资料 | [资料索引](docs/learning/RESOURCES.md) |
-| 查看上游产品、安装与使用说明 | [上游 README](README.codex-upstream.md) |
-| 构建当前源码 | [安装与构建](docs/install.md) |
-| 查看配置能力 | [配置说明](docs/config.md) |
+| 需要                         | 入口                                                |
+| ---------------------------- | --------------------------------------------------- |
+| 按顺序学习                   | [课程目录](docs/learning/README.md)                 |
+| 了解整体工程                 | [工程介绍](docs/learning/repository-inventory.md)   |
+| 查看完整主题范围             | [学习路线图](docs/learning/roadmap.md)              |
+| 快速查概念                   | [核心概念速查](docs/learning/reference/glossary.md) |
+| 查找源码与外部资料           | [资料索引](docs/learning/RESOURCES.md)              |
+| 查看上游产品、安装与使用说明 | [上游 README](README.codex-upstream.md)             |
+| 构建当前源码                 | [安装与构建](docs/install.md)                       |
+| 查看配置能力                 | [配置说明](docs/config.md)                          |
 
 `docs/learning/MAINTENANCE.md`、`NOTES.md` 和 `learning-records/` 服务于教学过程维护，不属于首次阅读路线。
 

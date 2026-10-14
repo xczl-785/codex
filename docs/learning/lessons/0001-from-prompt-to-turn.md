@@ -43,4 +43,3 @@ Turn 不严格等于“一条用户消息加一条助手回复”。空闲时的
 答案：通常仍是一个 Thread。Turn 数量取决于发送时机；等每轮结束再发通常是三个 Turn，当前轮执行中追加且 Steer 成功则可能仍是一个 Turn。
 
 下一课：[连续发送时，新 Turn、Steer，还是等待？](0002-start-steer-or-queue.md)
-

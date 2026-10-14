@@ -396,11 +396,11 @@ Agent：继续实施
 
 首先要区分三个不同的问题：
 
-| 问题 | 压缩后的默认答案 |
-| --- | --- |
-| 原始内容是否仍被系统保存？ | 通常是，仍在 rollout/Thread Store 中 |
-| 原始内容是否仍在模型当前 Prompt 中？ | 不一定，只有 replacement history 保留的部分仍在 |
-| 模型是否有标准工具主动回读原始 Thread 历史？ | 普通 Session 默认没有 |
+| 问题                                         | 压缩后的默认答案                                |
+| -------------------------------------------- | ----------------------------------------------- |
+| 原始内容是否仍被系统保存？                   | 通常是，仍在 rollout/Thread Store 中            |
+| 原始内容是否仍在模型当前 Prompt 中？         | 不一定，只有 replacement history 保留的部分仍在 |
+| 模型是否有标准工具主动回读原始 Thread 历史？ | 普通 Session 默认没有                           |
 
 假设 checkpoint 以前有一条精确要求：
 
@@ -494,12 +494,12 @@ Guardian reviewer 还有一条特殊路径：如果父 Session 已有这些 hist
 
 你的观察是准确的。Codex 在多个层次重复使用同一种原则：
 
-| 持久或稳定侧 | 临时运行侧 | 运行侧的用途 |
-| --- | --- | --- |
-| Thread / rollout | Session | 接收操作、维护服务、执行多个 Turn |
-| Turn 记录和协议事件 | RunningTask | 实际驱动这一轮执行 |
-| rollout + compaction checkpoint | ContextManager | 为模型维护短而有效的历史 |
-| ThreadItem | transcript cell | 为客户端提供可读展示 |
+| 持久或稳定侧                    | 临时运行侧      | 运行侧的用途                      |
+| ------------------------------- | --------------- | --------------------------------- |
+| Thread / rollout                | Session         | 接收操作、维护服务、执行多个 Turn |
+| Turn 记录和协议事件             | RunningTask     | 实际驱动这一轮执行                |
+| rollout + compaction checkpoint | ContextManager  | 为模型维护短而有效的历史          |
+| ThreadItem                      | transcript cell | 为客户端提供可读展示              |
 
 Harness 状态外置的核心要求是：执行器不应成为唯一事实来源。执行器可以崩溃、退出或迁移，只要外部事实充分，就可以重建新的执行器继续工作。
 

@@ -19,7 +19,7 @@
 期望结果是：
 
 ```json
-{"cmd":"git status"}
+{ "cmd": "git status" }
 ```
 
 但模型可能返回：
@@ -62,8 +62,8 @@ Agent 程序不得不使用正则表达式、字符串截取、重试提示词�
   "parameters": {
     "type": "object",
     "properties": {
-      "cmd": {"type": "string"},
-      "workdir": {"type": "string"}
+      "cmd": { "type": "string" },
+      "workdir": { "type": "string" }
     },
     "required": ["cmd"]
   }
@@ -130,7 +130,7 @@ Structured Outputs 或严格 Function Calling 可以根据支持的 JSON Schema 
 例如下面是合法 JSON：
 
 ```json
-{"command": 42, "unknown": true}
+{ "command": 42, "unknown": true }
 ```
 
 但它不一定符合应用需要的字段和类型。
@@ -176,7 +176,7 @@ Anthropic 的工具协议同样通过 `input_schema` 描述参数，并用独立
 参数是否能解析成 JSON：
 
 ```json
-{"cmd":"git status"}
+{ "cmd": "git status" }
 ```
 
 下面则语法错误：
@@ -190,7 +190,7 @@ Anthropic 的工具协议同样通过 `input_schema` 描述参数，并用独立
 参数是否符合 Schema 或目标类型：
 
 ```json
-{"cmd": 123}
+{ "cmd": 123 }
 ```
 
 它是合法 JSON，但如果 `cmd` 必须是字符串，就不是合法工具参数。
@@ -394,15 +394,15 @@ Agent 是一个与变化环境交互的系统，不可能只靠生成阶段保�
 
 各层职责是：
 
-| 层 | 主要责任 |
-| --- | --- |
-| 模型平台 | 提供结构化响应通道，可能执行 Schema 约束生成 |
-| ToolRouter | 把响应项目识别成内部 ToolCall |
-| ToolRegistry | 确认工具存在、类型相容并找到实现 |
-| Handler | 解析具体参数，检查业务条件 |
-| 审批与沙箱 | 判断操作能否以当前权限执行 |
-| 操作系统或外部服务 | 真正执行并返回现实结果 |
-| Turn 循环 | 把结果写回历史，决定是否再次采样 |
+| 层                 | 主要责任                                     |
+| ------------------ | -------------------------------------------- |
+| 模型平台           | 提供结构化响应通道，可能执行 Schema 约束生成 |
+| ToolRouter         | 把响应项目识别成内部 ToolCall                |
+| ToolRegistry       | 确认工具存在、类型相容并找到实现             |
+| Handler            | 解析具体参数，检查业务条件                   |
+| 审批与沙箱         | 判断操作能否以当前权限执行                   |
+| 操作系统或外部服务 | 真正执行并返回现实结果                       |
+| Turn 循环          | 把结果写回历史，决定是否再次采样             |
 
 只有这些层共同工作，结构化调用才会成为安全、可靠、可恢复的 Agent 行为。
 
@@ -425,4 +425,3 @@ Agent 是一个与变化环境交互的系统，不可能只靠生成阶段保�
 2. 严格符合工具 Schema 的命令为什么仍然不能直接执行？
 3. `FunctionCall` 中 `call_id` 的作用是什么？
 4. 参数解析失败以后，为什么当前 Turn 仍可能继续？
-

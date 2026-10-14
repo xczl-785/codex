@@ -132,12 +132,12 @@ PostgresSaver 会按 channel version 存放非简单值的 blob，并复用未�
 
 ## 五、三者与 Codex 的位置
 
-| 系统 | Checkpoint 的核心对象 | 能否恢复 Agent 执行状态 | 能否恢复工作区文件 |
-| --- | --- | --- | --- |
-| Claude Code | 会话节点和被编辑工具触及的文件 | 主要恢复对话位置 | 可以，范围受工具边界限制 |
-| Cursor | 请求节点和 Agent 文件变化 | 公开细节有限 | 可以恢复被跟踪的 Agent 修改 |
-| LangGraph | 完整 graph state 和调度进度 | 可以，这是主要目的 | 默认不可以 |
-| Codex | rollout 持久事件与可重建 Session | 可从历史恢复 Session，支持 Thread Revert/Fork | 当前不随 Thread 恢复 |
+| 系统        | Checkpoint 的核心对象            | 能否恢复 Agent 执行状态                       | 能否恢复工作区文件          |
+| ----------- | -------------------------------- | --------------------------------------------- | --------------------------- |
+| Claude Code | 会话节点和被编辑工具触及的文件   | 主要恢复对话位置                              | 可以，范围受工具边界限制    |
+| Cursor      | 请求节点和 Agent 文件变化        | 公开细节有限                                  | 可以恢复被跟踪的 Agent 修改 |
+| LangGraph   | 完整 graph state 和调度进度      | 可以，这是主要目的                            | 默认不可以                  |
+| Codex       | rollout 持久事件与可重建 Session | 可从历史恢复 Session，支持 Thread Revert/Fork | 当前不随 Thread 恢复        |
 
 LangGraph checkpoint 是 Codex 当前没有的一层通用能力：它保存任意工作流状态、节点版本和待执行任务，使图能从精确的 super-step 恢复。Codex 则以追加式 rollout 和领域事件重建 Agent 上下文，没有为任意用户定义 state channel 提供通用数据库快照。
 

@@ -17,11 +17,13 @@
 ## 章节结构
 
 ### 第一节：四分法的来源与它描述的对象
+
 - 待补：说明该分类出自 LLM agent 综述视角，属于**能力清单**而非**模块清单**。
 - 待补：区分"隐式规划"（模型权重能力）与"显式规划"（外部可干预工件）。
 - 待补：指出这一混淆是"看不到规划组件"这一困惑的根源。
 
 ### 第二节：Codex 里规划呈现的三种形态
+
 - 形态 1：模型内部隐式规划（主体）。
   - 已核实锚点：`codex-rs/core/src/session/turn.rs:142-156`（`run_turn` 的行为契约注释）、`session/turn.rs:304`（主循环）。
   - 已核实锚点：`codex-rs/protocol/src/prompts/base_instructions/default.md:52`（`## Planning` 引导段）。
@@ -35,18 +37,21 @@
   - **待补（重点）**：纠正"Codex 没有 PAE"的直觉——Plan mode 就是 PAE 形态，Codex 是"默认 ReAct、按需切换 PAE"，而不是二选一。
 
 ### 第三节：为什么 Codex 不把规划做成独立组件
+
 - 待补：单决策者原则（多决策者带来的同步、仲裁、错误归属成本）。
 - 待补：对话连续性——每步观测都会改变后续决策，外部 plan 偏离后只能强行执行或频繁重规划。
 - 待补：prompt cache 与上下文前缀稳定性。
 - 待补：PEA 真正的适用区间（可预先分解、子步骤独立、需并行或复用）。
 
 ### 第四节：PAE 的适用判据与实例
+
 - 待补：整理判断信号表（步骤可预先枚举、成本/能力不对称、审批闸门、可并行分发、上下文有界、跨 session 交接）。
 - 待补：显式 PAE 实例——Workflow 类平台、LangChain `Plan-and-Execute`、BabyAGI、AutoGPT、Devin、Manus（混合型，plan 主要作可见性投影）。
 - 待补：研究侧实例——Voyager（计划作为可复用资产）、MetaGPT/ChatDev（SOP 分工）、orchestrator-worker（分解 + 并行 + 汇总）。
 - 待补：反推 Codex 默认不使用 PAE 的原因，并指出"把 Codex 当无人值守 worker 批量跑"时 PAE 收益重新出现——这解释 Plan mode 与 subagent 的存在。
 
 ### 第五节：内化的边界
+
 - 待补：ReAct 作为**提示词格式**已过时（reasoning models 在 latent 中完成思考，interleaved thinking 把工具调用插入推理流）。
   - 已核实锚点：`codex-rs/core/src/session/turn_context.rs:262`、`:429`（`ReasoningEffortConfig`，思考预算已成为可调参数）。
 - 待补：ReAct 作为**执行循环**不会过时——"采样→执行→回填"必须留在 harness，因为环境在模型之外。
@@ -56,6 +61,7 @@
 - 待补：框架"瘦身"现象的对照解释（提示词模板退场，执行循环/记忆/权限加重）。
 
 ### 第六节：Memory 的同构性
+
 - 待补：说明 Memory 同样不是独立模块——Codex 的记忆分布在对话历史（thread/rollout）、compaction（`codex-rs/core/src/compact.rs`）与可选的 `codex-rs/memories/` 之间。
 - 待补：用这一点证明"四分法都不应被读成模块清单"。
 

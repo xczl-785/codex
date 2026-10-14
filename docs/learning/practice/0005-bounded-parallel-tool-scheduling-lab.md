@@ -4,14 +4,14 @@
 
 ## 接手契约
 
-| 字段 | 当前值 |
-| --- | --- |
-| 状态 | `prepared / blocked by practice 0004` |
-| 目标工程 | `D:\Program\AgentLab\CodebaseAgent` |
-| 事实来源 | 实践 0004 完成后的 CodebaseAgent 行为与测试、[课程 0018](../lessons/0018-parallel-tool-admission-and-result-order.md)、当前 Codex 源码与测试 |
-| 进入条件 | 实践 0004 已完成并收口；用户明确开始本实践；更新 CodebaseAgent 的 `docs/STATUS.md` |
-| 退出条件 | 并发上限、工具资格、结果配对、历史顺序、取消与失败语义均有确定性测试 |
-| 退出后安排 | 阶段复盘，再决定是否恢复 Subagent 生命周期专题 |
+| 字段       | 当前值                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 状态       | `prepared / blocked by practice 0004`                                                                                                        |
+| 目标工程   | `D:\Program\AgentLab\CodebaseAgent`                                                                                                          |
+| 事实来源   | 实践 0004 完成后的 CodebaseAgent 行为与测试、[课程 0018](../lessons/0018-parallel-tool-admission-and-result-order.md)、当前 Codex 源码与测试 |
+| 进入条件   | 实践 0004 已完成并收口；用户明确开始本实践；更新 CodebaseAgent 的 `docs/STATUS.md`                                                           |
+| 退出条件   | 并发上限、工具资格、结果配对、历史顺序、取消与失败语义均有确定性测试                                                                         |
+| 退出后安排 | 阶段复盘，再决定是否恢复 Subagent 生命周期专题                                                                                               |
 
 本实践不会绕过 0004，也不会仅因文档存在而自动改变 AgentLab 状态。
 
