@@ -1,10 +1,11 @@
 # ExecPolicy、权限提升与沙箱到底怎样配合
 
-本课继续沿 `exec_command` 的安全执行链，回答三个容易混在一起的问题：
+本课继续沿 `exec_command` 的安全执行链，回答四个容易混在一起的问题：
 
 1. ExecPolicy 怎样知道一条命令应该允许、询问还是禁止；
 2. 模型怎样知道当前命令可能需要申请额外权限；
-3. “先在沙箱中运行”到底是不是一次模拟或预演。
+3. “先在沙箱中运行”到底是不是一次模拟或预演；
+4. 沙箱怎样把权限配置变成操作系统真正执行的资源边界。
 
 最重要的结论是：
 
@@ -58,7 +59,7 @@ Profile 规定 Archive 只读
 
 沙箱负责资源边界，不理解全部业务意图：覆盖 Project 中的重要文件可能仍符合可写权限。因此命令检查与资源隔离都有价值。
 
-Windows 当前源码入口为 `codex-rs/windows-sandbox-rs/src/resolved_permissions.rs` 中的 `try_from_permission_profile`、`try_from_permission_profile_for_workspace_roots` 和 `writable_roots_for_cwd`；它们提取运行时文件/网络规则并解析目录范围。平台启动适配入口为 `codex-rs/sandboxing/src/manager.rs`。这里说明职责，不要求学习者手写系统隔离设施。
+从配置到操作系统强制执行的具体机制见本课 5.4—5.8。这里先建立职责：命令检查无法预测任意脚本的全部行为，资源限制必须在真实访问发生时生效。
 
 ## 2. ExecPolicy 不是“禁止命令枚举表”
 
@@ -329,6 +330,103 @@ Set-Content .\result.txt "done"
 
 因为沙箱里那一次本来就是在真实环境中执行，只是权限受限。
 
+### 5.4 资源访问必须经过操作系统的入口
+
+只说“沙箱负责限制”还没有解释它为什么能守住边界。关键是：Codex 在启动程序时把限制落实到操作系统，程序运行后由操作系统执行相应的访问检查，不需要逐次返回 Codex 或交给模型判断。
+
+例如，Python 执行：
+
+```python
+with open(r"D:\Archive\report.txt", "w") as report:
+    report.write("报告内容")
+```
+
+这段代码无法直接操纵磁盘，大致要经过以下过程：
+
+```text
+Python 代码
+  → 解释器与运行库
+  → 请求操作系统以写入方式打开或创建目标文件
+  → 操作系统根据进程安全上下文、目标对象和适用限制检查访问
+      允许：返回具有相应访问权利的文件句柄
+      拒绝：返回错误，Python 可能抛出 PermissionError
+```
+
+文件句柄（handle）是操作系统提供的已打开对象的访问凭证。在 Windows 中，打开对象时会检查所请求的权利，并将获准权利关联到句柄；后续操作必须符合该句柄的权利。不能拿只读句柄随意写入，也不必每写一个字节就重新读取 Codex 的权限配置。见[微软 Access Rights](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/access-rights)。
+
+普通程序运行在用户态，不能自行决定内核的访问检查结果。脚本不论怎样拼接路径、调用第三方库或更换语言，受保护资源的访问最终都要经过对应的系统入口。进程内部计算不需要沙箱逐行检查；打开、创建、删除文件或建立连接等资源操作，在相关机制中受到约束。
+
+### 5.5 Windows：受限令牌与对象访问控制配合
+
+先区分两个概念：
+
+| 概念 | 职责 |
+| --- | --- |
+| Access Token，访问令牌 | 表达进程或线程的安全身份、组和权限等安全上下文 |
+| ACL，访问控制列表 | 表达文件、目录等对象允许或拒绝哪些身份进行哪些操作 |
+
+当前 Windows 后端的一条具体路径会根据允许写入的目录准备能力 SID（Security Identifier，安全标识符），配置相关目录的访问控制规则，创建受限令牌，再用该令牌启动进程：
+
+```text
+PermissionProfile 与工作区目录
+  → 解析实际允许访问的范围
+  → 准备能力 SID，并配置相关目录的 ACL
+  → CreateRestrictedToken 创建受限令牌
+  → CreateProcessAsUserW 使用该令牌启动 Python
+  → Python 请求写文件，Windows 执行访问检查
+```
+
+受限令牌可以增加基于 restricting SIDs 的检查；当该检查适用时，访问必须同时满足原本的身份检查和受限条件。因此，即使用户自己的普通终端能够写 Archive，受限 Python 也可能不能写，不能只看“它是否由同一个用户启动”。见[微软 Restricted Tokens](https://learn.microsoft.com/en-us/windows/win32/secauthz/restricted-tokens)。
+
+当前 `token.rs` 的相关实现使用 `WRITE_RESTRICTED`，限制 SID 的额外检查针对写访问，不能由此推断该路径也能完整落实禁止读取策略。旧受限令牌后端遇到不支持的受限读取要求会拒绝，并要求使用对应的 elevated 后端。Profile 本身是策略描述；Windows 后端为落实策略可以配置对象 ACL，不应把两者混成同一个对象。
+
+这条路径的源码入口：
+
+- [resolved_permissions.rs](../../../codex-rs/windows-sandbox-rs/src/resolved_permissions.rs)：解析权限配置并绑定工作区目录。
+- [spawn_prep.rs](../../../codex-rs/windows-sandbox-rs/src/spawn_prep.rs)：`prepare_legacy_session_security` 准备令牌，`apply_legacy_session_acl_rules` 配置相关目录规则。
+- [token.rs](../../../codex-rs/windows-sandbox-rs/src/token.rs)：`create_token_with_caps_from` 调用 `CreateRestrictedToken`。
+- [process.rs](../../../codex-rs/windows-sandbox-rs/src/process.rs)：`create_process_as_user` 调用 `CreateProcessAsUserW`；后端不支持部分读取限制时的拒绝逻辑见 [lib.rs](../../../codex-rs/windows-sandbox-rs/src/lib.rs)。
+
+以上用于解释已核对的 Windows 执行路径，不代表所有后端都采用完全相同的准备流程，也不表示 elevated 后端会让用户脚本获得管理员权限。
+
+### 5.6 Linux：用受限挂载视图落实文件边界
+
+当前分支 Linux 的文件系统限制主要由 bubblewrap 建立。挂载视图可以理解为“该进程看到的文件系统及其访问属性”；不同进程可以处于不同的挂载命名空间，看到不同的视图。
+
+例如，在允许全盘读取、仅允许指定工作区写入的策略下，可以先建立只读根视图，再为允许写入的目录建立可写绑定：
+
+```text
+沙箱进程的视图（简化示例）
+/                 只读
+/work/Project     可写，绑定到真实工作区
+特定禁止读取区域   被屏蔽
+```
+
+只读挂载是操作系统实际执行的限制，即使底层文件的普通用户权限允许写入，通过这个只读挂载写入仍会失败。可写绑定可以指向真实工作区，修改直接生效，无须复制仓库。策略若限制读取范围，当前实现也可以从空视图开始，只加入批准的可读目录。见[bubblewrap 官方参数说明](https://github.com/containers/bubblewrap/blob/main/bwrap.xml)。
+
+[bwrap.rs](../../../codex-rs/linux-sandbox/src/bwrap.rs) 的 `create_filesystem_args` 组织 `--ro-bind`、`--bind` 及屏蔽区域；挂载顺序还要保证受保护子路径不会被后续可写绑定重新开放。[linux_run_main.rs](../../../codex-rs/linux-sandbox/src/linux_run_main.rs) 组织文件系统视图建立、进程限制与最终命令执行。`no_new_privs` 和 seccomp 等机制承担相应的提权和系统调用限制，不能把所有目录判断都归因于 seccomp。[landlock.rs](../../../codex-rs/linux-sandbox/src/landlock.rs) 还保留 legacy 路径，不能仅根据文件名就认为当前默认文件限制由 Landlock 落实。
+
+### 5.7 子进程与已持有资源也必须纳入边界
+
+普通子进程启动会沿用相关安全上下文或受限环境，脚本再次启动 PowerShell、编译器或另一个解释器，不会因此自然获得外层 Codex 进程的完整权限。
+
+但安全启动不能只限制“未来打开哪些路径”，还要控制已经交给进程的资源。例如，外层进程提前打开 Archive 的文件并传入可写句柄，脚本可能直接使用它。执行器因此需要控制继承的句柄或文件描述符，以及其他可用的高权限通信入口。Windows 的 `create_process_as_user` 路径显式设置了带重定向标准输入输出时的继承句柄列表。
+
+路径别名、符号链接和检查后目标变化也不能只靠字符串前缀处理。当前 Linux 的 `bwrap.rs` 会针对部分可变符号链接场景拒绝建立不可靠的禁止读取屏蔽。这说明配置表达正确、平台机制能表示该策略、启动器正确安装限制，必须共同成立；不能把任意后端都视为无条件支持所有策略。
+
+### 5.8 资源访问检查不等于业务后果检查
+
+| 操作 | 相关机制能够判断什么 |
+| --- | --- |
+| 写入禁止目录 | 文件访问是否越界 |
+| 发起被禁止的网络连接 | 网络隔离或代理策略是否允许 |
+| 删除可写目录中的重要文件 | 可能符合资源权限，资源层无法据此判断文件是否重要 |
+| 向获准访问的服务发送删除数据请求 | 连接可能被允许，业务操作还需要服务端授权等机制判断 |
+
+网络也有相应的系统隔离或代理规则，但不必与文件访问采用同一种实现。“所有副作用都由沙箱判断”容易让人误以为沙箱理解业务意图。更准确的链路是：权限配置经执行器转换为实际限制，进程访问资源时由对应机制强制执行；模型、命令规则、审批与外部服务继续承担各自的语义和授权判断。
+
+上述平台机制依据当前源码静态核对，未在本机重新运行沙箱实验。
+
 ## 6. 在沙箱中运行会产生什么后果
 
 沙箱主要限制进程能接触的资源，而不是修改程序本身的业务逻辑。
@@ -492,5 +590,6 @@ SandboxDenied 是拒绝类别，不表示内部审批已经失败，也不标识
 5. 沙箱是带限制的真实执行，不是预演副本。
 6. 沙箱内允许的文件修改会真实生效，也不会自动回滚。
 7. 沙箱执行成功后不会再执行一次；只有失败并获准提升时才可能重试。
+8. Codex 安装资源限制，操作系统在资源访问入口强制执行；无需模型逐行理解脚本或预测全部副作用。
 
 下一步在这些概念稳定后，再讨论为什么 `OnRequest` 不把所有普通失败自动升级为权限审批。
