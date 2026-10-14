@@ -3,11 +3,15 @@
   "private": true,
   "description": "Tools for repo-wide maintenance.",
   "scripts": {
-    "format": "prettier --check *.json *.md docs/*.md .github/workflows/*.yml **/*.js",
-    "format:fix": "prettier --write *.json *.md docs/*.md .github/workflows/*.yml **/*.js",
+    "format": "prettier --check *.json *.md \"docs/**/*.md\" \"codex-rs/docs/**/*.md\" .github/workflows/*.yml **/*.js",
+    "format:fix": "prettier --write *.json *.md \"docs/**/*.md\" \"codex-rs/docs/**/*.md\" .github/workflows/*.yml **/*.js",
+    "format:docs": "prettier --check *.md \"docs/**/*.md\" \"codex-rs/docs/**/*.md\"",
+    "format:docs:fix": "prettier --write *.md \"docs/**/*.md\" \"codex-rs/docs/**/*.md\"",
+    "lint:docs": "markdownlint-cli2",
     "write-hooks-schema": "cargo run --manifest-path ./codex-rs/Cargo.toml -p codex-hooks --bin write_hooks_schema_fixtures"
   },
   "devDependencies": {
+    "markdownlint-cli2": "0.20.0",
     "prettier": "^3.5.3"
   },
   "resolutions": {

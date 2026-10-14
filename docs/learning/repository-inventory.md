@@ -11,7 +11,7 @@ Codex CLI 是一个以 Rust 为核心实现的本地编码 Agent。它同时提�
 - 能够沿用 Rust、Cargo 和 `just` 的构建与验证方式。
 - 保留功能源码、依赖锁文件、代码生成、测试和跨平台实现。
 - 保留许可证与第三方归属信息。
-- 移除不影响功能的上游贡献、宣传、变更记录和单行跳转文档。
+- 将学习入口与保留的上游资料分开；上游自动化、模块说明和兼容跳转文件仍按各自职责保留，是否清理需另行核对影响。
 
 ## 根目录结构
 
@@ -213,6 +213,20 @@ just test -p <crate>
 - `codex-rs/app-server/tests/` 通过公开 JSON-RPC API 验证服务行为。
 - `codex-rs/tui/` 大量使用 `insta` snapshot 验证可见 UI。
 - Bazel 和 CI 补充跨平台、依赖一致性和仓库级规则验证。
+
+## 文档检查
+
+从根目录安装锁定的维护工具并检查文档：
+
+```powershell
+pnpm install --frozen-lockfile --filter codex-monorepo --ignore-scripts
+pnpm run format:docs
+pnpm run lint:docs
+```
+
+`format:docs` 使用 Prettier 检查根目录入口、`docs/` 和 `codex-rs/docs/`，覆盖嵌套的课程、记录与历史资料；`format:docs:fix` 格式化同一范围。`lint:docs` 检查这些文件的 Markdown 结构、空白和文件结束换行，长中文段落、表格及源码引用不强制按行宽拆开。仓库级 `format` / `format:fix` 也使用这组递归文档路径。
+
+模块 README、SDK 文档、运行时提示模板、技能资源和测试夹具有各自的维护边界，不因后缀是 `.md` 就加入这组学习文档检查。修改它们时仍需按所属模块检查；本地文件链接和章节锚点应在移动、拆分或改写后核对。
 
 ## 学习与改动原则
 

@@ -1,6 +1,22 @@
 config:
-  MD013:
-    line_length: 100
+  # Check Markdown structure and whitespace without rewrapping Chinese prose,
+  # source citations, historical text, or tables to fit a line-length limit.
+  default: false
+  MD001: true
+  MD009: true
+  MD010: true
+  MD012: true
+  MD018: true
+  MD019: true
+  MD020: true
+  MD021: true
+  MD022: true
+  MD023: true
+  MD031: true
+  MD032: true
+  MD047: true
 
 globs:
-  - "docs/tui-chat-composer.md"
+  - "*.md"
+  - "docs/**/*.md"
+  - "codex-rs/docs/**/*.md"
