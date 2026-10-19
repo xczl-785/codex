@@ -9,7 +9,7 @@
 - [TUI 命令路由](../../codex-rs/tui/src/app/thread_routing.rs)
   用于理解界面如何把用户操作转换为 Thread 和 Turn 请求。
 - [App Server Turn 处理](../../codex-rs/app-server/src/request_processors/turn_processor.rs)
-  用于理解 `turn/start` 如何跨过 API 边界进入核心运行时。
+  用于理解 `turn/start` 如何进入核心运行时，以及 `turn/interrupt` 如何验证活动 Turn 并等待中断事件。
 - [ThreadManager](../../codex-rs/core/src/thread_manager.rs)
   用于理解 Thread 的创建、恢复、派生、注册和关闭。
 - [CodexThread](../../codex-rs/core/src/codex_thread.rs)
@@ -56,8 +56,6 @@
   用于核对 `thread/fork`、`thread/revert` 与旧 `thread/rollback` 的准确边界。
 - [App Server Thread 处理](../../codex-rs/app-server/src/request_processors/thread_processor.rs)
   用于理解 Fork 的历史截断，以及 Revert 如何关闭并重新加载同一 Thread。
-- [App Server Turn 处理](../../codex-rs/app-server/src/request_processors/turn_processor.rs)
-  用于理解 `turn/interrupt` 如何验证活动 Turn 并等待中断事件。
 - [App Server Thread 历史重建](../../codex-rs/app-server-protocol/src/protocol/thread_history.rs)
   用于理解 rollout 如何重建为公开的 Turn 与 ThreadItem，以及压缩为何不删除旧界面记录。
 - [TUI Thread 转录投影](../../codex-rs/tui/src/thread_transcript.rs)
@@ -78,10 +76,15 @@
   用于理解可选历史检索能力的启用条件和 Thread 生命周期挂接方式。
 - [History/Notes 工具](../../codex-rs/ext/history-notes/src/tools.rs)
   用于核对模型可用的历史窗口列举、项目读取和内容搜索工具。
-- [OpenAI Responses API：结构化输出与工具参数](https://platform.openai.com/docs/api-reference/responses-streaming/response/web_search_call?lang=curl)
-  用于区分 `json_object`、`json_schema` 和 Function Calling 的 `strict` 语义。
 - [Anthropic Tool Use](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use)
   用于对照另一种主流模型 API 怎样使用 `input_schema`、`tool_use` 和 `tool_result` 形成闭环。
+
+## Subagent 与跨系统协作
+
+- [委派创建入口](../../codex-rs/core/src/thread_spawn.rs)、[子配置](../../codex-rs/core/src/agent/child_config.rs)：创建条件、归属、初始任务与配置覆盖。
+- [协作控制](../../codex-rs/core/src/agent/control/api.rs)、[回收](../../codex-rs/core/src/agent/control/residency.rs)：交付、加载与驻留状态。
+- [A2A 核心概念](https://a2a-protocol.org/v1.0.1/topics/key-concepts/)、[任务生命周期](https://a2a-protocol.org/v1.0.1/topics/life-of-a-task/)：课程 0024 的外部协议依据，固定已查版本，接入前重查。
+- [Google ADK A2A](https://google.github.io/adk-docs/a2a/quickstart-consuming/)、[Microsoft Agent Framework A2A](https://learn.microsoft.com/en-us/agent-framework/journey/agent-to-agent)、[LangSmith A2A](https://docs.langchain.com/langsmith/server-a2a)：实际框架接入示例；支持版本和可选能力属于 2026-10-19 查询快照。
 
 ## Wisdom (Communities)
 

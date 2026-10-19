@@ -4,7 +4,7 @@
 
 2026-10-19，用户反馈独立实践已经推进得差不多，明确上一批课程已来到末尾的 Subagent；要求先更新文档、回顾此前学习，再把 Skills 加载、MCP 接入等排到后面，并补充希望 Subagent 带上 A2A、MCP 之后加入内部工具 / Skill / MCP 横向对比。该安排取代维护账本中重新激活实践 0003-A、继续暂停 Subagent 的教学指令。
 
-本轮未检查独立工程的 STATUS、源码与测试，因此不宣称实践 0003—0005 全部验收。Subagent 与新批次尚未完成，用户的具体 Skill 想法尚未提出。当前行动以 [MAINTENANCE.md](../MAINTENANCE.md) 为准，主题范围以[路线图](../roadmap.md)为准。
+本轮未检查独立工程的 STATUS、源码与测试，因此不宣称实践 0003—0005 全部验收。当时 Subagent 与新批次尚未完成，用户的具体 Skill 想法尚未提出；后续 Subagent 收束与理解变化见[记录 0016](0016-subagent-and-persistence-detour.md)。当前行动以 [MAINTENANCE.md](../MAINTENANCE.md) 为准，主题范围以[路线图](../roadmap.md)为准。
 
 ## 怎样理解难度与记忆深度
 

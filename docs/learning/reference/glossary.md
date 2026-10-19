@@ -40,3 +40,18 @@
 | Subagent                  | 由另一个 Agent 创建的子工作者，复用独立 Thread 和正常 Turn 机制                        |
 
 注意：App Server 是系统访问边界，不是位于 Thread、Turn 之上的业务实体层。
+
+## Agent 协作速查
+
+| 概念        | 含义                                                                                     |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| QueueOnly   | 消息交付模式，不主动要求启动任务；唤醒仍可能受目标状态与配置影响                         |
+| TriggerTurn | 带触发执行意图的交付模式，followup_task 和 spawn 初始任务使用；不意味着强制并发新开 Turn |
+| wait_agent  | 等待调用方邮箱活动、新输入或超时，不代表目标全部完成                                     |
+| 空闲回收    | 卸载符合条件的运行体并保留协作恢复所需状态，不等于关闭身份                               |
+| A2A         | 独立 Agent 系统间的通信协议，不自动建立 Codex 父子 Thread 关系                           |
+| Agent Card  | 对外描述 Agent 服务身份、能力、端点和认证要求的元数据                                    |
+| A2A Task    | 对外可跟踪的工作单元，有 ID 和生命周期；不同于 Codex 内部 Task 类型                      |
+| Artifact    | 任务产生的具体交付物，如报告或结构化数据                                                 |
+
+完整解释见[通信](../lessons/0021-subagent-message-delivery-and-execution.md)、[生命周期](../lessons/0023-subagent-interruption-eviction-and-archive.md)及[A2A](../lessons/0024-a2a-and-cross-system-delegation.md)。

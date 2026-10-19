@@ -43,15 +43,20 @@
 18. [工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)
     区分工具能力声明、具体调用依赖、共享/独占门禁、完成顺序和历史记录顺序。
 
-## 进行中的 Subagent 专题
+## 已完成的 Subagent 专题
 
-- [通信：收到消息为什么不等于开始工作](lessons/0021-subagent-message-delivery-and-execution.md)：已讲通信分层、等待、状态与结果通知；专题整体未完成。文档编号不改变课程顺序。
+按理解顺序先读创建，再读通信、生命周期与跨系统扩展；编号是文档标识，不要求机械按数字学习。
 
-- [历史、归属与配置](lessons/0022-subagent-history-ownership-and-configuration.md)：设计动机、独立 Thread 对照、创建流程、历史过滤、归属寻址与配置继承。
+- [设计、创建、历史与配置（0022）](lessons/0022-subagent-history-ownership-and-configuration.md)：独立 Thread 对照、委派归属、创建链路与能力来源。
+- [消息交付与执行（0021）](lessons/0021-subagent-message-delivery-and-execution.md)：send_message、followup_task、等待、状态和模型可见性。
+- [中断、回收、关闭与归档（0023）](lessons/0023-subagent-interruption-eviction-and-archive.md)：任务、运行体、协作关系和归档状态的区别。
+- [A2A 跨系统委派（0024）](lessons/0024-a2a-and-cross-system-delegation.md)：任务生命周期、实际框架接入及协议与自定义委派的关系。
+
+专题已按约定目标收尾，保留未核实边界，不等于所有分支均经运行验证。
 
 ## 接下来的一批课程
 
-当前已进入 Subagent 生命周期与通信，以此收尾上一批课程，并加入 A2A 对照。随后进入 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
+第一批已由 Subagent 与 A2A 对照收尾。下一批安排为 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 

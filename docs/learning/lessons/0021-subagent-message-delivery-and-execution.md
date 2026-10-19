@@ -1,6 +1,8 @@
 # Subagent 通信：收到消息，为什么不等于开始工作？
 
-状态：Subagent 专题进行中，本节已完成分层答疑；专题整体尚未结束。本文以当前本地 MultiAgent V2 实现为范围，源码与 Git 历史已静态核对，未运行故障实验。
+状态：本节及 Subagent 专题已按约定范围收束。本文以当前本地 MultiAgent V2 实现为范围，源码与 Git 历史已静态核对，未运行故障实验。
+
+与[创建与归属](0022-subagent-history-ownership-and-configuration.md)配合阅读；任务停止和运行体回收见[课程 0023](0023-subagent-interruption-eviction-and-archive.md)。
 
 ## 三层职责
 
@@ -55,6 +57,16 @@
 wait_agent 不会因为子 Agent 每读一个文件、执行一条命令而自动得到进度消息。list_agents 可主动查询名称与 AgentStatus，不依赖子模型回答；Running 是生命周期状态，不是持续心跳或进度保证。正常执行、等待模型、等待耗时命令甚至调用迟迟不返回，都可能仍显示 Running。询问进展可以发 send_message，但仍要等待目标获得读消息的机会。
 
 “等待返回”“子任务终态”和“业务验收通过”分别由输入活动、执行状态和父模型结合任务要求判断，不能互相替代。
+
+## durable sleep 的已知边界
+
+普通模块调研可以沿 spawn_agent → 子方调查 → 父方 wait_agent → 结果通知 → 父方整合推进，不依赖 durable sleep。等待子 Agent 或调用 wait_agent 不自动证明进入了这种状态。
+
+当前 Core 通过 Thread 扩展状态中是否存在 SleepItem 判断 durable sleep；有该标记时会限制空闲回收，并允许 queue-only 消息尝试唤醒。内置 clock.sleep 是工具调用内的计时等待，可被新输入打断，不能仅凭同样使用 SleepItem 就认定它设置了 durable sleep 状态。
+
+实际测试 subagent_notifications.rs 显式模拟扩展恢复 SleepItem，再给重载的 worker 发送 trigger_turn=false 消息，验证唤醒及完成结果归属。它证明状态建立后的 Core 行为，没有证明生产宿主何时决定休眠、怎样持久化及定时恢复。当前尚未定位该生产触发链路，不把假设用例当作 App 实际行为，也不作为普通 Subagent 使用的必学前提。
+
+证据：[休眠判断](../../../codex-rs/core/src/tasks/mod.rs)、[普通 sleep 工具](../../../codex-rs/core/src/tools/handlers/sleep.rs)、[消息唤醒](../../../codex-rs/core/src/session/handlers.rs)、[扩展恢复模拟测试](../../../codex-rs/core/tests/suite/subagent_notifications.rs)。
 
 ## 源码入口
 

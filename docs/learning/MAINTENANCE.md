@@ -1,19 +1,32 @@
 # Learning Workspace Maintenance
 
+## 教学前置要求：必须加载 teach
+
+任何 Agent 开始或接续本仓库教学前，必须先完整加载并遵守 `teach` Skill，不能用记忆、摘要或仅阅读本计划代替。用户指定位置为 `C:/Users/Admin/.cc-switch/skills/teach/SKILL.md`。同一会话已完整加载且内容未变时可复用；新会话必须重新加载。路径失效时先查找已安装的同名 Skill，无法找到则明确说明，不得静默跳过。
+
+加载后按 MISSION → MAINTENANCE → NOTES → 相关学习记录与课程恢复状态；按“具体场景与设计目的 → 主链路 → 实现与必要边界”讲解，依据用户反馈决定下一步。新建课程前按 teach 检查文档熵阈值。学习工作区位于 `docs/learning/`，不在仓库根目录另建一套教学资料。
+
 > **Process contract**
 > 状态：`working`。本文件负责维护课程索引、长期教学决策和下一步方向；事实来源是当前课程、学习记录与仓库状态，下游使用者是后续教学会话。学习任务结束或由新的维护账本接管时退出当前状态，之后保留为过程证据，不作为 Codex 架构事实或普通课程入口。
 
 ## Current progress
 
-- Last completed lesson: 0018（并行资格、共享/独占门禁、结果顺序及取消后的部分完成）
-- Current lesson: Subagent 生命周期专题进行中。已讲创建子 Thread、独立运行体及创建调用完成与子任务完成的区别；SQLite 答疑已收束；已讲通信三层职责，用户正确推导消息交付不保证模型读到。
-- Next checkpoint: 设计动机、独立 Thread 对照、创建主链路、通信等待、历史归属与配置已讲，用户明确反馈清晰并要求加快。下一步按操作效果串讲中断、关闭与回收，再进入 A2A；能力与权限只补影响生命周期的必要边界，Skills/MCP 详细机制留到第二批课程。
-- Current handoff: 用户已正确区分 spawn 调用完成与子任务未完成，并追问生命周期、重启、编辑旧消息和历史存储。已合入远端 `origin/main` 的 `89461ea6`，合并提交 `8885f93e`；新版 TUI 编辑旧消息改走同 Thread 的 Revert，旧版 Fork 结论已在课程 0005 和资料索引修正。SQLite 可重建历史投影答疑沉淀于课程 0009；不能据此把所有 SQLite 状态或父子 Agent 关系视作可丢弃缓存。旧实践安排不重新激活，具体实践验收仍由 CodebaseAgent 的 `docs/STATUS.md` 拥有。
-- Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md) 已安排、待深入，保存触发、容量与异常处理答疑；放在第二批能力扩展之后。当前理解证据见[记录 0016](learning-records/0016-subagent-and-persistence-detour.md)。
-- Last entropy pass: after lesson 0015。
-- Last entropy pass lesson: 15
+- Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
+- Current lesson: 无正在授课的新主题。本轮仅整理文档；用户明确要求不再推进。
+- Next checkpoint: 用户再次要求继续时，进入第二批首题 Skills 发现与加载，沿磁盘文件 → 发现目录 → 模型知道能力 → 正文进入上下文展开；本轮未开始该课。
+- Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
+- Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
+- Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
+- Practice boundary: 旧实践安排不重新激活；CodebaseAgent 的实时实现与验收仍由独立工程 `docs/STATUS.md` 维护。
+- Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
+- Last entropy pass lesson: 22
 
 ## Current index
+
+- Lesson 0021: Subagent 消息交付与执行
+- Lesson 0022: Subagent 设计、创建、历史与配置
+- Lesson 0023: Subagent 中断、回收、关闭与归档
+- Lesson 0024: A2A 跨系统委派与协议价值
 
 - Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 - Lesson 0017: 停止 Turn，究竟停止了什么
@@ -56,7 +69,7 @@
 - Learning record 0012: 压缩、恢复与历史可见性
 - Learning record 0013: 取消与进程生命周期边界
 - Learning record 0014: 并行准入、结果顺序与职责分离
-- Learning record 0016: Subagent 起步与持久化答疑收束
+- Learning record 0016: Subagent 理解变化、扩展与专题收束
 - Learning record 0015: 逐课回顾、记忆深度与扩展阶段衔接
 
 ### 答疑课（不参与主循环）
@@ -79,8 +92,8 @@
 
 ## Next likely directions
 
-- Subagent 已开始，SQLite 答疑已结束，继续主线。它是第一批课程最后一个专题：创建与父子 Thread → 上下文与权限 → 通信与等待 → 中断、关闭与回收 → A2A 对照。
-- A2A 按 Agent2Agent 协议理解，纳入 Subagent 后半段；以官方规范为外部事实来源，讲清远端 Agent 的发现、任务、消息、结果及生命周期与本地 Subagent 的对应和差异。不预设 Codex 已实现 A2A。
+- 第一批以 Subagent 和 A2A 扩展收尾。下一批从 Skills 发现与加载开始，只有用户重新要求继续时才开课。
+- A2A 扩展已达到用户要求深度。协议细节、完整接入和委派器改造均不自动激活；进入 MCP 对比时按需引用课程 0024。
 - 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
 - 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
 - 已有学习记录不是即时记忆测试。重点用权限链路、恢复投影、工具调用与进程的边界做短场景复习，不重讲所有基础名词。
@@ -101,3 +114,12 @@
 - 现有课程各自回答不同问题，无过期结论或需要合并删除的文档。
 - 合并了 `Next likely directions` 中重复的 Turn 内部循环条目。
 - 确认详细解释继续放在 `lessons/`，`reference/` 仅保留压缩后的概念速查。
+
+## Entropy pass through lesson 0022
+
+- 新课前最高编号 22，上次为 15，差值 7，已达到 teach 的强制检查阈值；此前未及时执行，本次补齐后再创建 0023/0024。
+- 检查 RESOURCES 的本地入口与用途，合并重复 Turn 处理入口，移除不匹配的结构化输出外链入口；补入 Subagent 核心源码与 A2A 一手资料。
+- 压缩 NOTES 中重复、已过期的“继续 Subagent/等待”指令，保留设计先行、以场景建立因果链、加快不等于堆术语等长期偏好。
+- 检查记录 0001—0016 的主题、理解证据与后续用途；保留早期认识历史，标记过期阶段安排，收束 0016 的最新理解边界。未删除用户原始材料。
+- reference 两份资料分别承担概念速查与权限后端参考，无需合并；为术语表补充协作与 A2A 概念。assets 为空，没有待迁移的实验代码；practice/materials 是已有实践契约的配套材料，保持入口与职责。
+- 同步课程索引、路线与维护账本；0019/0020 继续保持按需/待深入状态。未重新验收独立实践、未逐课重审早期全部源码和所有外部链接。
