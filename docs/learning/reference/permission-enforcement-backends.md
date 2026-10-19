@@ -8,11 +8,11 @@
 
 Agent 要落实权限，需要让授权决定进入真实执行链，但通常无需从头开发底层隔离机制。
 
-| 层级 | 责任 | 实现方式 |
-| --- | --- | --- |
-| 权限控制面 | 默认资源范围、命令规则、审批、授权时效、提权与重试条件 | 按产品需求实现，可复用策略组件 |
-| 执行适配层 | 将有效权限映射给后端，启动进程，收集结果，取消与清理 | 集成运行时或调用执行服务 |
-| 隔离执行机制 | 强制限制文件、网络及其他约定资源的访问 | 复用操作系统机制、沙箱运行时、容器或虚拟机 |
+| 层级         | 责任                                                   | 实现方式                                   |
+| ------------ | ------------------------------------------------------ | ------------------------------------------ |
+| 权限控制面   | 默认资源范围、命令规则、审批、授权时效、提权与重试条件 | 按产品需求实现，可复用策略组件             |
+| 执行适配层   | 将有效权限映射给后端，启动进程，收集结果，取消与清理   | 集成运行时或调用执行服务                   |
+| 隔离执行机制 | 强制限制文件、网络及其他约定资源的访问                 | 复用操作系统机制、沙箱运行时、容器或虚拟机 |
 
 ```text
 工具调用 → 命令准入与审批 → 本次有效权限
@@ -24,23 +24,23 @@ Agent 要落实权限，需要让授权决定进入真实执行链，但通常�
 
 ## 2. 按开放能力选择后端
 
-| 执行需求 | 可选方式 | 接入时要确认的边界 |
-| --- | --- | --- |
-| 只有少量固定读写工具，不开放任意代码执行 | 在受控工具的资源入口检查权限 | 全部访问路径受控，路径解析可靠，没有绕过检查的执行入口 |
-| 在用户本机运行任意脚本、编译器或开发工具 | 本机沙箱运行时或平台原生适配 | 文件与网络限制、子进程、继承资源、平台兼容及失败处理 |
-| 需要统一 Linux 环境和依赖 | 容器执行器 | 挂载、网络、权限、凭据、宿主通信与资源限额；容器名称本身不证明配置正确 |
-| 需要更独立的执行环境或远程调度 | 虚拟机、microVM 或远程沙箱服务 | 数据和凭据如何进入、结果如何取回、实例销毁及断连后的执行状态 |
+| 执行需求                                 | 可选方式                       | 接入时要确认的边界                                                     |
+| ---------------------------------------- | ------------------------------ | ---------------------------------------------------------------------- |
+| 只有少量固定读写工具，不开放任意代码执行 | 在受控工具的资源入口检查权限   | 全部访问路径受控，路径解析可靠，没有绕过检查的执行入口                 |
+| 在用户本机运行任意脚本、编译器或开发工具 | 本机沙箱运行时或平台原生适配   | 文件与网络限制、子进程、继承资源、平台兼容及失败处理                   |
+| 需要统一 Linux 环境和依赖                | 容器执行器                     | 挂载、网络、权限、凭据、宿主通信与资源限额；容器名称本身不证明配置正确 |
+| 需要更独立的执行环境或远程调度           | 虚拟机、microVM 或远程沙箱服务 | 数据和凭据如何进入、结果如何取回、实例销毁及断连后的执行状态           |
 
 这是需求到实现方式的选择参考，不是统一安全等级排名。只有固定工具时可以先落实工具自身的访问控制；开放 Shell、Python 或可执行插件后，还需要约束它们能够触达的资源。
 
 ## 3. 产品实现对照
 
-| 产品 | 公开实现 | 查阅入口与适用范围 |
-| --- | --- | --- |
-| Codex | 自有权限和执行编排；Linux 使用 bubblewrap，macOS 使用 Seatbelt，Windows 使用原生后端 | [OpenAI Docs：Sandbox](https://learn.chatgpt.com/docs/sandboxing)。当前公开 Windows 文档还列出 MXC 与 legacy elevated／unelevated，见[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox)；本课此前源码讲解和 M3 观察不能据此改称验证过 MXC |
-| Claude Code | 通过 Sandbox Runtime 包装命令；公开方案使用 Linux bubblewrap、macOS Seatbelt，并结合代理控制网络 | [官方工程说明](https://www.anthropic.com/engineering/claude-code-sandboxing)。可单独集成[开源 Sandbox Runtime](https://github.com/anthropics/sandbox-runtime)，无需引入完整 Claude Code；其当前仓库另列 Windows alpha 后端，应按具体版本确认能力 |
+| 产品             | 公开实现                                                                                                            | 查阅入口与适用范围                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex            | 自有权限和执行编排；Linux 使用 bubblewrap，macOS 使用 Seatbelt，Windows 使用原生后端                                | [OpenAI Docs：Sandbox](https://learn.chatgpt.com/docs/sandboxing)。当前公开 Windows 文档还列出 MXC 与 legacy elevated／unelevated，见[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox)；本课此前源码讲解和 M3 观察不能据此改称验证过 MXC                                                                                                                                                                       |
+| Claude Code      | 通过 Sandbox Runtime 包装命令；公开方案使用 Linux bubblewrap、macOS Seatbelt，并结合代理控制网络                    | [官方工程说明](https://www.anthropic.com/engineering/claude-code-sandboxing)。可单独集成[开源 Sandbox Runtime](https://github.com/anthropics/sandbox-runtime)，无需引入完整 Claude Code；其当前仓库另列 Windows alpha 后端，应按具体版本确认能力                                                                                                                                                                                       |
 | DeepSeek Harness | 沙箱服务、共享策略与平台后端分为插件；Linux 选择 bwrap 或 Landlock，macOS 使用 Seatbelt，Windows 使用受限令牌与 ACL | [沙箱包分工](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/README.md)、[平台后端](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/sandbox-local/README.md)。Windows 后端主要限制写入和删除，读取、网络及进程可见性未由该后端限制，并报告 partial，见[明确边界](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/sandbox/sandbox-windows-acl/README.md) |
-| Cursor | 统一接口、分平台实现；macOS 使用 Seatbelt，Linux 组合 Landlock 与 seccomp | [2026-02-18 工程说明](https://cursor.com/blog/agent-sandboxing)中的 Windows 方案使用 WSL2；这是该说明的实现快照，不保证所有后续版本相同。当前配置语义查[Run Modes](https://cursor.com/docs/agent/security/run-modes) |
+| Cursor           | 统一接口、分平台实现；macOS 使用 Seatbelt，Linux 组合 Landlock 与 seccomp                                           | [2026-02-18 工程说明](https://cursor.com/blog/agent-sandboxing)中的 Windows 方案使用 WSL2；这是该说明的实现快照，不保证所有后续版本相同。当前配置语义查[Run Modes](https://cursor.com/docs/agent/security/run-modes)                                                                                                                                                                                                                   |
 
 看到“支持沙箱”时，应继续查明具体资源、调用路径和后端。某个后端的 full 也只表示覆盖它承诺的范围，不表示覆盖全部机器能力；写入受限不能推断读取和网络同样受限。
 
