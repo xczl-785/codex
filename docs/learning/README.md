@@ -43,6 +43,12 @@
 18. [工具并行资格与结果顺序](lessons/0018-parallel-tool-admission-and-result-order.md)
     区分工具能力声明、具体调用依赖、共享/独占门禁、完成顺序和历史记录顺序。
 
+## 进行中的 Subagent 专题
+
+- [通信：收到消息为什么不等于开始工作](lessons/0021-subagent-message-delivery-and-execution.md)：已讲通信分层、等待、状态与结果通知；专题整体未完成。文档编号不改变课程顺序。
+
+- [历史、归属与配置](lessons/0022-subagent-history-ownership-and-configuration.md)：设计动机、独立 Thread 对照、创建流程、历史过滤、归属寻址与配置继承。
+
 ## 接下来的一批课程
 
 当前已进入 Subagent 生命周期与通信，以此收尾上一批课程，并加入 A2A 对照。随后进入 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
