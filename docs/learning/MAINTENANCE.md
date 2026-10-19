@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0018（并行资格、共享/独占门禁、结果顺序及取消后的部分完成）
-- Current lesson: 进入 Subagent 前的阶段复盘与路线衔接；Subagent 是上一批课程的收尾主题，尚未完成。
-- Next checkpoint: 先串联课程 0001—0018，按学习记录定位薄弱连接点；随后从“创建一个 Subagent，究竟创建了什么”开始，专题后半段加入 A2A（Agent2Agent）对照。
-- Current handoff: 2026-10-19 用户反馈实践“已经推得差不多”，并明确当前已到 Subagent，要求更新进度、回顾各课难度与记忆深度，并把 Skills 加载、MCP 接入等排在 Subagent 后面。旧版重新激活 0003-A 的安排不再作为教学门禁。本轮未重新验收独立工程，不把用户反馈写成 0003—0005 全部测试通过；精确实现状态仍由 CodebaseAgent 的 `docs/STATUS.md` 拥有。课程回顾与证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)，新一批课程建议见[路线图](roadmap.md#第二批课程能力扩展与接入)。
+- Current lesson: Subagent 生命周期专题进行中。已讲创建子 Thread、独立运行体及创建调用完成与子任务完成的区别；当前穿插 SQLite 历史投影答疑。
+- Next checkpoint: 先回应新版编辑重发与 SQLite 投影问题，再回到 Subagent 生命周期、恢复与通信；父子工具/Skills/MCP 和权限差异为用户已提出、留待后续的问题。A2A 仍在专题后半段。
+- Current handoff: 用户已正确区分 spawn 调用完成与子任务未完成，并追问生命周期、重启、编辑旧消息和历史存储。已合入远端 `origin/main` 的 `89461ea6`，合并提交 `8885f93e`；新版 TUI 编辑旧消息改走同 Thread 的 Revert，旧版 Fork 结论已在课程 0005 和资料索引修正。SQLite 可重建历史投影答疑沉淀于课程 0009；不能据此把所有 SQLite 状态或父子 Agent 关系视作可丢弃缓存。旧实践安排不重新激活，具体实践验收仍由 CodebaseAgent 的 `docs/STATUS.md` 拥有。
 - Last entropy pass: after lesson 0015。
 - Last entropy pass lesson: 15
 
@@ -77,7 +77,7 @@
 
 ## Next likely directions
 
-- 本轮先完成复盘和路线整理，不立即展开新课。Subagent 为第一批课程最后一个专题：创建与父子 Thread → 上下文与权限 → 通信与等待 → 中断、关闭与回收 → A2A 对照。
+- Subagent 已开始，当前 SQLite 答疑结束后继续主线。它是第一批课程最后一个专题：创建与父子 Thread → 上下文与权限 → 通信与等待 → 中断、关闭与回收 → A2A 对照。
 - A2A 按 Agent2Agent 协议理解，纳入 Subagent 后半段；以官方规范为外部事实来源，讲清远端 Agent 的发现、任务、消息、结果及生命周期与本地 Subagent 的对应和差异。不预设 Codex 已实现 A2A。
 - 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
 - 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。

@@ -5,7 +5,7 @@
 ```text
 Interrupt：停止当前 Turn/Task
 Fork：保留源 Thread，复制历史前缀形成新 Thread
-编辑旧消息：Fork 到旧消息之前，再把消息放回输入框
+编辑旧消息：Revert 当前 Thread 到旧消息之前，再把消息放回输入框
 Revert：保留 Thread ID，用更早的前缀替换其持久历史
 ```
 
@@ -75,51 +75,36 @@ Interrupt 表示“从现在开始不要继续”，不是事务回滚。
 
 ## 三、中断后编辑旧消息并重新发送
 
-当前 TUI 的 Backtrack 功能不是原地修改消息，而是：
+本节在合入 `origin/main` 的 `89461ea6` 后重新核对。当前 TUI 已从旧版 Fork 路径改为同一 Thread 上的 Revert：
 
 ```text
 选择历史中的用户消息
 -> 找到它所属的持久 Turn
--> thread/fork(beforeTurnId)
--> 切换到新 Thread
+-> thread/revert(threadId, beforeTurnId)
+-> 在同一 Thread 中刷新保留的历史
 -> 把原消息恢复到输入框
 -> 用户修改并重新发送
 ```
 
-假设：
+假设 Thread A 原来是 T1 → T2 → T3，选择 T2 编辑：
 
 ```text
-Thread A
-T1：用户输入 A
-T2：用户输入 B
-T3：用户输入 C，执行中被中断
+编辑前：Thread A = T1 → T2 → T3
+回退后：Thread A = T1，输入框恢复 T2 的原始消息
+重发后：Thread A = T1 → T4（修改后的输入触发的新 Turn）
 ```
 
-选择 T2 编辑后：
+因此，“原地编辑”描述的是用户留在同一对话中。底层并非只改旧消息的一段字符串：目标 Turn 与后续 Turn 退出当前有效历史，运行体按保留历史重建；重新发送再产生新 Turn。Thread ID 保持不变，工作区不回到 T2 之前。
 
-```text
-原 Thread A：T1 -> T2 -> T3(aborted)
-新 Thread B：T1
-输入框：恢复 T2 的原始消息
-```
-
-修改并发送后：
-
-```text
-新 Thread B：T1 -> T4(修改后的 B)
-```
-
-因此实际变化是：
-
-- 原 Thread 和被中断 Turn 完整保留；
-- 新建 Thread 和 Session；
-- 编辑只发生在输入框；
-- 重新发送时创建新 Turn 和 `RegularTask`；
-- 工作区不回到 T2 发生前。
+当前 TUI 调用 `backtrack_revert_before_turn_id` 选择边界，随后 `app_server.revert_thread` 执行回退。确认服务端回退后才刷新界面；如果提交后刷新失败，会提示重新恢复会话，不能继续使用旧显示历史假装操作没有发生。
 
 ### Steer 消息的限制
 
-一个 Turn 可以因 Steer 包含多条用户消息，但 App Server 不能在 Turn 中间 Fork。因此 TUI 只能独立重新打开该 Turn 的初始 Prompt，不能把后续 Steer 气泡当成新的 Fork 边界。
+一个 Turn 可以因 Steer 包含多条用户消息，但这里使用 Turn 边界。TUI 不能把同一 Turn 内的后续 Steer 气泡当作独立回退边界；当前实现仍对运行中或无法定位的边界做检查。
+
+### 对已经派发的子 Agent 应怎样理解
+
+父 Thread 的有效历史回退，与子 Thread 的生命周期、父子关系记录及外部副作用属于不同对象。不能从“父历史中不再显示那次 spawn”推断子 Agent 已删除，不能从“同一 Thread ID”推断旧子任务自动重做。本次核对确认编辑入口改用 Revert，没有把它验证为整棵子 Agent 树的事务回滚。子 Agent 的具体处置需继续沿对应版本的关闭、恢复和关系管理链核对。
 
 ## 四、Revert 后重新发送
 
@@ -144,7 +129,7 @@ App Server 的主要步骤是：
 1. 加载 Thread 并保存可恢复配置；
 2. 关闭当前运行时；
 3. 从 `ThreadManager` 移除旧 `CodexThread`；
-4. 让 Thread Store 用目标前缀替换持久历史；
+4. 让 Thread Store 创建引用保留前缀的新 rollout，并切换当前历史指针；
 5. 用截断后的历史重新加载同一个 Thread ID；
 6. 恢复设置、监听器和订阅；
 7. 发送 `thread/reverted` 通知。
@@ -158,7 +143,7 @@ App Server 的主要步骤是：
 | Session    | 旧 Session 关闭，基于新历史创建替代 Session              |
 | Turn       | 目标 Turn 和后续 Turn 被排除；Revert 本身不是 Agent Turn |
 | Task       | Revert 本身不启动 Task；重新发送后才启动新 Task          |
-| Store      | 持久历史被破坏性替换为更早前缀                           |
+| Store      | 当前有效历史切换为更早前缀，旧 rollout 保留              |
 | 文件系统   | 不回滚，客户端需另行处理                                 |
 
 Revert 后必须重建 Session，否则会出现：
@@ -172,19 +157,24 @@ Store 中只有 T1
 
 `thread/rollback` 是旧接口，按末尾 Turn 数量回退，已经被标记为废弃；它同样只影响历史，不撤销本地文件。
 
+### 有效历史切换不等于擦除旧日志
+
+当前存储实现创建新的不可变 rollout，引用旧日志中保留的历史前缀，写入完成后通过条件更新切换状态数据库中的 rollout 路径。Thread ID 不变，但 rollout ID 可以变化；旧日志仍保留。只有数据库当前路径仍等于预期旧路径时才能完成切换，避免覆盖并发变化。这也是为什么不能把整个 SQLite 状态库都称作可丢弃缓存。
+
 ## 五、完整对照
 
-| 操作           | Thread ID           | Session | Turn                     | Task           | 原历史                 | 文件变化 |
-| -------------- | ------------------- | ------- | ------------------------ | -------------- | ---------------------- | -------- |
-| Fork           | 新 ID               | 新建    | 发送后新建               | 发送后新建     | 源 Thread 保留         | 不回滚   |
-| Interrupt      | 不变                | 不变    | 当前轮变 Aborted         | 当前 Task 取消 | 中断轮保留             | 不回滚   |
-| 编辑旧消息再发 | 通过 Fork 得到新 ID | 新建    | 修改后新建               | 新建           | 原 Thread 保留         | 不回滚   |
-| Revert 后再发  | 不变                | 重建    | 被截断轮排除，发送后新建 | 新建           | 当前 Thread 历史被替换 | 不回滚   |
+| 操作           | Thread ID | Session | Turn                     | Task           | 原历史                            | 文件变化 |
+| -------------- | --------- | ------- | ------------------------ | -------------- | --------------------------------- | -------- |
+| Fork           | 新 ID     | 新建    | 发送后新建               | 发送后新建     | 源 Thread 保留                    | 不回滚   |
+| Interrupt      | 不变      | 不变    | 当前轮变 Aborted         | 当前 Task 取消 | 中断轮保留                        | 不回滚   |
+| 编辑旧消息再发 | 不变      | 重建    | 修改后新建               | 新建           | 当前有效历史切换，旧 rollout 保留 | 不回滚   |
+| Revert 后再发  | 不变      | 重建    | 被截断轮排除，发送后新建 | 新建           | 当前有效历史切换                  | 不回滚   |
 
 ## 六、为什么必须是不同操作
 
 - Interrupt 回答：“当前这轮不要继续，但历史保留。”
-- Fork/Edit 回答：“从过去尝试另一条路线，原路线也保留。”
+- Fork 回答：“从过去尝试另一条路线，原路线也保留。”
+- Edit 回答：“回退当前对话，在同一对话中修改输入并重新执行。”
 - Revert 回答：“丢弃当前 Thread 的后续对话历史，让它回到更早状态。”
 
 如果都叫“撤销”，就无法判断用户究竟想停止执行、保留分支还是重写历史，也无法安全决定文件副作用是否处理。
@@ -208,9 +198,9 @@ Store 中只有 T1
 
 ### Codex 的边界
 
-Codex App Server 的 `thread/revert` 只替换当前 Thread 的持久化对话历史。Thread ID 保持不变，旧 Session 被关闭，再依据新历史建立替代 Session；磁盘文件完全不动。
+Codex App Server 的 `thread/revert` 改变当前 Thread 的有效对话历史。Thread ID 保持不变，旧 Session 被关闭，再依据新历史建立替代 Session；工作区文件不自动回滚。持久化层会创建新的 rollout 文件，并切换当前历史指针。
 
-当前 TUI 编辑旧 Prompt 则采用非破坏性 Fork：源 Thread 保留，新 Thread 从历史前缀继续，但新旧 Thread 默认仍看到同一个当前工作区。由此可能形成：
+当前 TUI 编辑旧 Prompt 也通过同一 Thread 的 Revert 回到所选 Turn 之前，再把旧 Prompt 放回输入框供编辑和重新发送。对话历史回退后，工作区仍保持当前状态。由此可能形成：
 
 ```text
 对话历史：已经回到创建 B.rs 之前
@@ -226,7 +216,7 @@ Codex 不自动恢复文件，可以避免覆盖用户在 Agent 执行后追加�
 | 应用                 | 对话状态                   | 工作区文件                   | 核心边界                                         |
 | -------------------- | -------------------------- | ---------------------------- | ------------------------------------------------ |
 | Codex App Server     | 同 Thread 历史 Revert      | 不恢复                       | 客户端负责文件恢复                               |
-| Codex TUI 编辑旧消息 | Fork 新 Thread             | 不恢复                       | 对话分支不等于工作区分支                         |
+| Codex TUI 编辑旧消息 | 同 Thread 历史 Revert      | 不恢复                       | 历史回退不等于工作区回退                         |
 | Claude Code          | 可只恢复对话，也可同时恢复 | 恢复文件编辑工具捕获的快照   | Bash、外部修改和多数后台 Subagent 修改不保证覆盖 |
 | Cursor Agent         | 从旧请求节点恢复交互位置   | 恢复 Agent 自己的文件修改    | 本地 checkpoint，不等同于 Git，不跟踪手工编辑    |
 | Cline                | 可恢复 Task 或同时恢复     | Shadow Git 保存项目文件状态  | 文件快照较完整，但大仓库成本更高                 |
@@ -263,9 +253,11 @@ Checkpoint/Revert：执行之后恢复已经记录下来的部分状态
 
 ## 当前源码入口
 
-- [`tui/src/app_backtrack.rs`](../../../codex-rs/tui/src/app_backtrack.rs)：旧消息选择、Fork 边界和输入框恢复。
+- [`tui/src/app_backtrack.rs`](../../../codex-rs/tui/src/app_backtrack.rs)：旧消息选择、Revert 边界和输入框恢复。
 - [`tui/src/app/thread_routing.rs`](../../../codex-rs/tui/src/app/thread_routing.rs)：TUI 的 Interrupt 请求和 Turn ID 竞争处理。
 - [`app-server-protocol/src/protocol/v2/thread.rs`](../../../codex-rs/app-server-protocol/src/protocol/v2/thread.rs)：Fork、Revert 和旧 Rollback 协议语义。
 - [`app-server/src/request_processors/thread_processor.rs`](../../../codex-rs/app-server/src/request_processors/thread_processor.rs)：Fork 截断与 Revert 关闭、重写、重载流程。
 - [`app-server/src/request_processors/turn_processor.rs`](../../../codex-rs/app-server/src/request_processors/turn_processor.rs)：Interrupt 验证与 Core 操作提交。
 - [`core/src/tasks/mod.rs`](../../../codex-rs/core/src/tasks/mod.rs)：Task 取消、TurnAborted 和中断历史标记。
+
+新版核对入口：[`tui/src/app/event_dispatch.rs`](../../../codex-rs/tui/src/app/event_dispatch.rs) 的编辑消息分支；[`thread-store/src/local/revert_thread.rs`](../../../codex-rs/thread-store/src/local/revert_thread.rs) 的历史指针切换；[`app-server/tests/suite/v2/thread_revert.rs`](../../../codex-rs/app-server/tests/suite/v2/thread_revert.rs) 的同 Thread ID 与运行体重载测试。本轮静态阅读这些测试，未执行 Rust 测试。
