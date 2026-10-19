@@ -45,7 +45,9 @@
 
 ## 接下来的一批课程
 
-当前先做阶段回顾，再以 Subagent 生命周期与通信收尾上一批课程，并加入 A2A 对照。随后进入 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
+当前已进入 Subagent 生命周期与通信，以此收尾上一批课程，并加入 A2A 对照。随后进入 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
+
+已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 
 ## 按需答疑
 

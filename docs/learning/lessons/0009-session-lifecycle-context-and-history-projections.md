@@ -600,6 +600,8 @@ SQLite 是嵌入式数据库，应用直接使用数据库文件，无须为这�
 - [`revert_thread.rs`](../../../codex-rs/thread-store/src/local/revert_thread.rs)：旧 rollout 保留与当前路径条件切换。
 - [`thread_history_materialization_tests.rs`](../../../codex-rs/thread-store/src/local/thread_history_materialization_tests.rs)：已追平时不重放旧行、尾部半行补全后继续投影。本轮只静态阅读，没有执行测试。
 
+关于投影触发、正文冗余、实际容量以及缺失/损坏时的异常处理，继续参阅[独立课程 0020](0020-persistence-projections-and-recovery.md)。该课已安排待深入，当前保存已完成答疑。
+
 ## 十六、本课结论
 
 1. Session 在 Thread 被创建、恢复或派生为内存运行体时开始，不以某个 Turn 为起点。
