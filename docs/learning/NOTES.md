@@ -14,22 +14,28 @@
 
 ## 可直接使用的理解基线
 
-| 主题          | 后续讲解起点                                                                                   | 理解证据                                                                                                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 模型—工具循环 | 已理解原生 Tool Calling、Step 工具快照和 Call/Output 因果配对；不回到正则提取 JSON 的入门叙述  | [记录 0006](learning-records/0006-native-tool-calling-baseline.md)、[记录 0007](learning-records/0007-step-tool-snapshots-and-causal-history.md) |
+| 主题          | 后续讲解起点                                                                                             | 理解证据                                                                                                                                                                   |
+| ------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 模型—工具循环 | 已理解原生 Tool Calling、Step 工具快照和 Call/Output 因果配对；不回到正则提取 JSON 的入门叙述            | [记录 0006](learning-records/0006-native-tool-calling-baseline.md)、[记录 0007](learning-records/0007-step-tool-snapshots-and-causal-history.md)                           |
 | 权限与执行    | 已复习各层职责，并补齐“Codex 安装限制、操作系统落实访问检查”；可从句柄、受限令牌、ACL 与挂载视图继续讲解 | [记录 0011](learning-records/0011-permission-foundations.md)、[课程 0012 的 5.4—5.8](lessons/0012-exec-policy-escalation-and-sandbox.md#54-资源访问必须经过操作系统的入口) |
-| 压缩与恢复    | 已区分持久事实、运行投影、模型直接可见与按需检索；后续围绕检查点选择、未知结果和恢复不变量展开 | [记录 0012](learning-records/0012-compaction-recovery-and-history-visibility.md)                                                                 |
-| 取消          | 已区分 Turn/Task、工具终态和真实进程；不能用是否进入管理器推断进程取消策略                     | [记录 0013](learning-records/0013-cancellation-and-process-lifetime-boundaries.md)                                                               |
-| 并行          | 已区分处理器资格、调用依赖、真实完成顺序与历史顺序；实践重点是确定性竞争和有界调度证据         | [记录 0014](learning-records/0014-parallel-admission-order-and-responsibility.md)                                                                |
+| 压缩与恢复    | 已区分持久事实、运行投影、模型直接可见与按需检索；后续围绕检查点选择、未知结果和恢复不变量展开           | [记录 0012](learning-records/0012-compaction-recovery-and-history-visibility.md)                                                                                           |
+| 取消          | 已区分 Turn/Task、工具终态和真实进程；不能用是否进入管理器推断进程取消策略                               | [记录 0013](learning-records/0013-cancellation-and-process-lifetime-boundaries.md)                                                                                         |
+| 并行          | 已区分处理器资格、调用依赖、真实完成顺序与历史顺序；实践重点是确定性竞争和有界调度证据                   | [记录 0014](learning-records/0014-parallel-admission-order-and-responsibility.md)                                                                                          |
 
 这些记录说明学习者已经怎样理解，不代替当前源码和测试。曾经的纠正与稳定机制解释分别见对应课程，尤其是[取消与进程生命周期](lessons/0017-cancellation-and-process-lifetimes.md)。
 
 ## 实践讲解的深度与边界
 
-- 当前阶段、激活条件和顺序只读取维护账本，不依据旧笔记重新安排实验或提前进入 Subagent。
+- 当前阶段、激活条件和顺序只读取维护账本，不依据旧笔记重新安排实验。当前已衔接 Subagent，实践精确状态仍由独立工程维护。
 - [实践 0003](practice/0003-context-history-recovery-lab.md) 区分已经发生的事实如何恢复，以及运行中的 Turn 如何压缩续跑。按其阶段契约验证理解，不把显式 checkpoint 的实现证据当作自动压缩已实现的证据。
 - 实验源码与实时进度由独立 CodebaseAgent 工程拥有；开始实现前核对该工程自己的 `docs/STATUS.md`、源码和测试，不在本学习分支复制其文件清单或声称重新验收。
 - 核心机制决定阶段是否完成。同生命周期的体验优化只在学习者提出并在目标工程激活后实施；未激活候选不是待办，也不阻塞学习完成。
 - 权限控制面与失败语义深入讲解，操作系统沙箱只定位责任和入口。上下文事实、投影、检查点和恢复不变量深入讲解；tokenizer、摘要算法、向量记忆及分布式存储只在真实问题触发时深入。
 - Checkpoint 横向比较保持对象边界：文件快照、图状态和会话历史不能直接排名。朋友项目实际采用 LangGraph 还是仅接入 LangChain 仍未确认，涉及其存储的结论继续保持条件性。
 - 通过修改源码观察真实进程生命周期属于可选实践，不因历史笔记中的意愿自动激活。
+
+## 本次阶段衔接（2026-10-19）
+
+- 先回顾再开课；Subagent 是前一批课程的收尾，后半段加入 A2A 对照。后续新批次详见[路线图](roadmap.md#第二批课程能力扩展与接入)。
+- 用户希望逐课标注难度与记忆深度，特别关注反复问过的内容。使用[记录 0015](learning-records/0015-review-and-extension-phase.md)中的证据等级，不凭提问次数断言遗忘，也不把历史答对当作当前永久熟练。
+- Skills 加载与 MCP 接入是明确兴趣；用户另有 Skill 设计想法，内容尚未提出。进入 Skills 课程时先接住实际问题，再用源码确认机制，不预设用户要实现哪种功能。

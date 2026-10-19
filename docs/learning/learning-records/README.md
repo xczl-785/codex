@@ -32,6 +32,8 @@
 - [0013：取消与进程生命周期边界](0013-cancellation-and-process-lifetime-boundaries.md)
 - [0014：并行准入、结果顺序与职责分离](0014-parallel-admission-order-and-responsibility.md)
 
+- [0015：逐课回顾、记忆深度与扩展阶段衔接](0015-review-and-extension-phase.md)
+
 新理解推翻旧记录时，不静默重写学习过程；应在新记录中说明它修正或取代了哪项认识，并把稳定结论沉淀到对应课程。当前教学方向始终由 [MAINTENANCE.md](../MAINTENANCE.md) 决定。
 
 ## 历史过程证据

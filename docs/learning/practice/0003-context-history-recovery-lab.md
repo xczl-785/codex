@@ -16,7 +16,7 @@
 
 ## 为什么重新划分
 
-旧版 0003 同时承担两种不同任务：复盘 CodebaseAgent 已完成的显式 checkpoint 与恢复能力，以及理解 Codex 已有的同 Turn 自动压缩。前者在 CodebaseAgent 中已有较完整实现，后者尚未实现；把两者都标记为“已完成”会混淆教学完成和工程能力。
+旧版 0003 同时承担两种不同任务：复盘 CodebaseAgent 已完成的显式 checkpoint 与恢复能力，以及理解 Codex 已有的同 Turn 自动压缩。在 2026-09-20 划分阶段时，前者在 CodebaseAgent 中已有较完整实现，后者尚未实现；把两者都标记为“已完成”会混淆教学完成和工程能力。
 
 本次保留一个实践编号，但按生命周期拆成两个较完整的阶段：
 
@@ -90,9 +90,9 @@
 
    恢复必须保留真实 Output，不能改写为 unknown，也不能重复执行工具。
 
-### 当前证据与待补强处
+### 阶段划分时的证据与核对点
 
-CodebaseAgent 已具备追加式 Thread 日志、显式 checkpoint、新 Session 恢复、Interrupted 与 CallOutcomeUnknown 修复等核心机制。开始本阶段时先静态核对当前源码和测试，不重新实现已有能力。
+阶段划分时已记录 CodebaseAgent 具备追加式 Thread 日志、显式 checkpoint、新 Session 恢复、Interrupted 与 CallOutcomeUnknown 修复等核心机制；这不是当前能力清单。开始本阶段时先静态核对当前源码和测试，不重新实现已有能力。
 
 优先补强三项最有区分力的证据：
 

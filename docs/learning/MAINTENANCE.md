@@ -6,9 +6,9 @@
 ## Current progress
 
 - Last completed lesson: 0018（并行资格、共享/独占门禁、结果顺序及取消后的部分完成）
-- Current lesson: 暂停 Subagent 推进；重新打开实践 0003，先补齐持久恢复证据，再开展同 Turn 自动压缩实验。
-- Next checkpoint: 用户在新会话开始实践 0003-A 时，重新打开 CodebaseAgent，并先更新该工程自己的 `docs/STATUS.md`；0003-A 收口后进入 0003-B，之后才进入实践 0004。
-- Current handoff: fresh analysis 确认旧版 0003 混合了 CodebaseAgent 已实现的显式 checkpoint/恢复机制与尚未实现的 Codex 同 Turn 自动压缩。实践现拆为 0003-A“持久事实、检查点与恢复边界”和 0003-B“上下文容量与同 Turn 自动压缩”。每个阶段都允许把同生命周期的体验优化作为候选，由用户提出后在 CodebaseAgent STATUS 中激活；未激活候选不阻塞学习完成。实践 0004/0005 资料继续保留，顺序后移。Subagent 尚未验收。
+- Current lesson: 进入 Subagent 前的阶段复盘与路线衔接；Subagent 是上一批课程的收尾主题，尚未完成。
+- Next checkpoint: 先串联课程 0001—0018，按学习记录定位薄弱连接点；随后从“创建一个 Subagent，究竟创建了什么”开始，专题后半段加入 A2A（Agent2Agent）对照。
+- Current handoff: 2026-10-19 用户反馈实践“已经推得差不多”，并明确当前已到 Subagent，要求更新进度、回顾各课难度与记忆深度，并把 Skills 加载、MCP 接入等排在 Subagent 后面。旧版重新激活 0003-A 的安排不再作为教学门禁。本轮未重新验收独立工程，不把用户反馈写成 0003—0005 全部测试通过；精确实现状态仍由 CodebaseAgent 的 `docs/STATUS.md` 拥有。课程回顾与证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)，新一批课程建议见[路线图](roadmap.md#第二批课程能力扩展与接入)。
 - Last entropy pass: after lesson 0015。
 - Last entropy pass lesson: 15
 
@@ -55,6 +55,7 @@
 - Learning record 0012: 压缩、恢复与历史可见性
 - Learning record 0013: 取消与进程生命周期边界
 - Learning record 0014: 并行准入、结果顺序与职责分离
+- Learning record 0015: 逐课回顾、记忆深度与扩展阶段衔接
 
 ### 答疑课（不参与主循环）
 
@@ -76,12 +77,12 @@
 
 ## Next likely directions
 
-- 如需核对独立 CodebaseAgent 的实现或文档收尾状态，读取该工程自己的 `docs/STATUS.md`；不把此前收尾状态当作下一主题的新增阻塞条件，本仓库不复制其当前文件清单。
-- [实践 0002](practice/0002-permission-sandbox-lab.md) 已由用户确认完成；仅在后续具体疑问触发时回看，不重复安排实验。
-- [实践 0003](practice/0003-context-history-recovery-lab.md) 已按当前 CodebaseAgent 能力重新划分，尚未在 AgentLab 激活。当前推荐从 0003-A 开始，补强连续 checkpoint、checkpoint 后事实恢复和悬空 Call 零重试证据；随后进入 0003-B 的同 Turn 自动压缩。
-- [实践 0004](practice/0004-cancellation-propagation-lab.md) 与 [实践 0005](practice/0005-bounded-parallel-tool-scheduling-lab.md) 的资料继续保留；0003-B 收口后按 0004 → 0005 顺序推进。
-- Subagent 生命周期暂缓，待取消与并行实践完成后再继续父子 Thread、权限继承或收窄、通信、等待、中断和资源回收。
-- LangGraph checkpoint 横向比较保留为已完成扩展；只有上下文复盘出现具体疑问时才回看，不另开泛化框架调研。
+- 本轮先完成复盘和路线整理，不立即展开新课。Subagent 为第一批课程最后一个专题：创建与父子 Thread → 上下文与权限 → 通信与等待 → 中断、关闭与回收 → A2A 对照。
+- A2A 按 Agent2Agent 协议理解，纳入 Subagent 后半段；以官方规范为外部事实来源，讲清远端 Agent 的发现、任务、消息、结果及生命周期与本地 Subagent 的对应和差异。不预设 Codex 已实现 A2A。
+- 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
+- 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
+- 已有学习记录不是即时记忆测试。重点用权限链路、恢复投影、工具调用与进程的边界做短场景复习，不重讲所有基础名词。
+- LangGraph checkpoint 横向比较已收束，仅在具体疑问触发时回看。
 
 ## Entropy pass after lesson 0015
 
