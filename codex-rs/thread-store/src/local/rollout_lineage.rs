@@ -33,10 +33,12 @@ impl LocalThreadStore {
     pub(super) async fn resolve_rollout_lineage(
         &self,
         requested_thread_id: ThreadId,
+        initial_path: Option<PathBuf>,
     ) -> ThreadStoreResult<RolloutLineage> {
         self.resolve_rollout_lineage_with_representation(
             requested_thread_id,
             LineageRepresentation::Existing,
+            initial_path,
         )
         .await
     }
@@ -48,6 +50,7 @@ impl LocalThreadStore {
         self.resolve_rollout_lineage_with_representation(
             requested_thread_id,
             LineageRepresentation::PlainForReference,
+            /*initial_path*/ None,
         )
         .await
     }
@@ -56,6 +59,7 @@ impl LocalThreadStore {
         &self,
         requested_thread_id: ThreadId,
         representation: LineageRepresentation,
+        mut initial_path: Option<PathBuf>,
     ) -> ThreadStoreResult<RolloutLineage> {
         let mut segments = Vec::new();
         let mut seen = HashSet::new();
@@ -70,14 +74,23 @@ impl LocalThreadStore {
                     Some(self.live_writer_locks.lock(coordination_id).await)
                 }
             };
-            let (rollout_id, rollout_path) = match next_rollout_id {
-                Some(rollout_id) => {
+            let (rollout_id, rollout_path) = match (next_rollout_id, initial_path.take()) {
+                (Some(rollout_id), _) => {
                     let rollout_path = resolve_rollout_path_by_id(self, rollout_id)
                         .await?
                         .ok_or_else(|| malformed_lineage(rollout_id, "missing source rollout"))?;
                     (rollout_id, rollout_path)
                 }
-                None => {
+                (None, Some(path)) => {
+                    let rollout_id =
+                        thread_rollout_resolver::rollout_id_from_path_or_legacy_thread_id(
+                            &path,
+                            requested_thread_id,
+                            ThreadHistoryMode::Paginated,
+                        )?;
+                    (rollout_id, path)
+                }
+                (None, None) => {
                     let resolved = thread_rollout_resolver::resolve_current_including_archived(
                         self,
                         requested_thread_id,
@@ -94,11 +107,32 @@ impl LocalThreadStore {
             }
             let rollout_path = match representation {
                 LineageRepresentation::Existing => rollout_path,
-                LineageRepresentation::PlainForReference => super::helpers::scoped_rollout_path(
-                    self.config.codex_home.clone(),
-                    rollout_path.as_path(),
-                    "Codex home",
-                )?,
+                LineageRepresentation::PlainForReference => {
+                    let outside_codex_home = || ThreadStoreError::InvalidRequest {
+                        message: format!(
+                            "rollout path `{}` must be in Codex home directory",
+                            rollout_path.display()
+                        ),
+                    };
+                    let canonical_rollout_path = std::fs::canonicalize(rollout_path.as_path())
+                        .map_err(|_| outside_codex_home())?;
+                    // Resume can retain either the logical Codex home path or its canonical
+                    // target. Keep references inside canonical managed roots so nested symlinks
+                    // cannot escape them.
+                    let is_managed_rollout = [
+                        self.config.codex_home.join(codex_rollout::SESSIONS_SUBDIR),
+                        self.config
+                            .codex_home
+                            .join(codex_rollout::ARCHIVED_SESSIONS_SUBDIR),
+                    ]
+                    .into_iter()
+                    .filter_map(|root| std::fs::canonicalize(root).ok())
+                    .any(|root| canonical_rollout_path.starts_with(root));
+                    if !is_managed_rollout {
+                        return Err(outside_codex_home());
+                    }
+                    canonical_rollout_path
+                }
             };
             let meta = codex_rollout::read_session_meta_line(rollout_path.as_path())
                 .await
@@ -250,8 +284,9 @@ async fn validate_cutoff_bounds(
     }
     let path = rollout_path.to_path_buf();
     let end_byte_offset = end.end_byte_offset;
+    let (stop, keep_running) = tokio::sync::oneshot::channel::<()>();
     let contains_prefix = tokio::task::spawn_blocking(move || {
-        codex_rollout::rollout_contains_prefix(&path, end_byte_offset)
+        codex_rollout::rollout_contains_prefix(&path, end_byte_offset, || stop.is_closed())
     })
     .await
     .map_err(|err| ThreadStoreError::Internal {
@@ -263,6 +298,7 @@ async fn validate_cutoff_bounds(
             rollout_path.display()
         ),
     })?;
+    drop(keep_running);
     if !contains_prefix {
         return Err(malformed_lineage(
             requested_thread_id,

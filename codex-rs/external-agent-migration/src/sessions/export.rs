@@ -105,7 +105,9 @@ pub(super) fn rollout_items_from_messages(messages: Vec<ConversationMessage>) ->
                 let turn_id = format!("external-import-turn-{user_turn_count}");
                 items.push(RolloutItem::EventMsg(EventMsg::TurnStarted(
                     TurnStartedEvent {
+                        turn_attribution: None,
                         turn_id: turn_id.clone(),
+                        root_turn_id: None,
                         trace_id: None,
                         started_at,
                         model_context_window: None,
@@ -136,6 +138,7 @@ pub(super) fn rollout_items_from_messages(messages: Vec<ConversationMessage>) ->
                         phase: None,
                         memory_citation: None,
                         delivery: None,
+                        questions: None,
                     },
                 )));
                 items.push(RolloutItem::ResponseItem(response_item(message).into()));
@@ -158,15 +161,22 @@ fn external_session_imported_marker_item() -> RolloutItem {
         phase: None,
         memory_citation: None,
         delivery: None,
+        questions: None,
     }))
 }
 
 fn response_item(message: ConversationMessage) -> ResponseItem {
     let content = match message.role {
-        MessageRole::Assistant => ContentItem::OutputText { text: message.text },
+        MessageRole::Assistant => ContentItem::OutputText {
+            annotations: None,
+            logprobs: None,
+            text: message.text,
+        },
         MessageRole::User => ContentItem::InputText { text: message.text },
     };
     ResponseItem::Message {
+        status: None,
+        encrypted_content: None,
         id: None,
         role: match message.role {
             MessageRole::Assistant => "assistant".to_string(),
@@ -203,6 +213,7 @@ fn turn_complete_item(
     completed_at: Option<i64>,
 ) -> RolloutItem {
     RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
+        root_turn_id: None,
         turn_id,
         last_agent_message: None,
         error: None,
@@ -254,6 +265,7 @@ mod tests {
                 phase: None,
                 memory_citation: None,
                 delivery: None,
+                questions: None,
             }
         );
     }
@@ -287,6 +299,7 @@ mod tests {
                 phase: None,
                 memory_citation: None,
                 delivery: None,
+                questions: None,
             })
         );
         let last_turn_complete = imported

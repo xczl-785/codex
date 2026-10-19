@@ -9,8 +9,10 @@ mod extensions;
 mod guard;
 mod metrics;
 mod phase1;
+mod phase1_output;
 mod phase2;
 mod prompts;
+mod rollout_input;
 mod runtime;
 mod start;
 mod storage;
@@ -40,7 +42,7 @@ mod artifacts {
 
 mod extension_resources {
     pub(super) const FILENAME_TS_FORMAT: &str = "%Y-%m-%dT%H-%M-%S";
-    pub(super) const RETENTION_DAYS: i64 = 7;
+    pub(super) const RETENTION_DAYS: i64 = 14;
 }
 
 mod guard_limits {

@@ -42,6 +42,11 @@ use tokio::task;
 use toml::Value as TomlValue;
 use toml_edit::Item as TomlItem;
 
+#[path = "config_manager_service_credential_edits.rs"]
+mod credential_edits;
+
+use credential_edits::CredentialProviderEdits;
+
 #[derive(Debug, Error)]
 pub(crate) enum ConfigManagerError {
     #[error("{message}")]
@@ -144,16 +149,14 @@ impl ConfigManager {
         let config: ApiConfig = serde_json::from_value(json_value)
             .map_err(|err| ConfigManagerError::json("failed to deserialize configuration", err))?;
 
-        let mut origins = layers.origins();
-        origins.retain(|path, metadata| {
-            if matches!(&metadata.name, ConfigLayerSource::PackagedDefaults { .. }) {
-                return false;
-            }
-            let segments = path.split('.').map(str::to_string).collect::<Vec<_>>();
+        let mut origins = layers.origins_with_path_filter(|segments| {
             layers
                 .requirements_toml()
-                .exact_requirement_for_config_path(&segments)
+                .exact_requirement_for_config_path(segments)
                 .is_none()
+        });
+        origins.retain(|_, metadata| {
+            !matches!(&metadata.name, ConfigLayerSource::PackagedDefaults { .. })
         });
 
         Ok(ConfigReadResponse {
@@ -254,6 +257,7 @@ impl ConfigManager {
         }
 
         let mut user_config = user_layer.config.clone();
+        let mut credential_provider_edits = CredentialProviderEdits::new(&user_config);
         let mut parsed_segments = Vec::new();
         let mut config_edits = Vec::new();
 
@@ -275,22 +279,6 @@ impl ConfigManager {
                     .map(|(pattern, _)| pattern.clone())
             {
                 segments[2] = pattern;
-            }
-            if cfg!(windows)
-                && let [policy, field, key] = segments.as_slice()
-                && policy == "shell_environment_policy"
-                && field == "set"
-                && let Some(existing) = user_config
-                    .get(policy)
-                    .and_then(|policy| policy.get(field))
-                    .and_then(TomlValue::as_table)
-                    .and_then(|overrides| {
-                        overrides
-                            .keys()
-                            .find(|candidate| candidate.eq_ignore_ascii_case(key))
-                    })
-            {
-                segments[2].clone_from(existing);
             }
             if !value.is_null() {
                 match segments.as_slice() {
@@ -318,7 +306,10 @@ impl ConfigManager {
                     let has_broker_settings = |config: &TomlValue| {
                         value_at_path(config, &segments)
                             .and_then(TomlValue::as_table)
-                            .is_some_and(|feature| feature.contains_key("credential_broker"))
+                            .is_some_and(|feature| {
+                                feature.contains_key("credential_broker")
+                                    || feature.contains_key("credentials")
+                            })
                     };
                     has_broker_settings(&user_config)
                         || !has_broker_settings(&user_layer.config)
@@ -344,15 +335,6 @@ impl ConfigManager {
                     })?;
             }
 
-            let persist_segments = if matches!(strategy, MergeStrategy::Upsert)
-                && parsed_value.as_ref().is_some_and(|value| {
-                    shell_environment_policy_representation_switch(&user_config, &segments, value)
-                }) {
-                vec!["shell_environment_policy".to_string()]
-            } else {
-                segments.clone()
-            };
-            let original_value = value_at_path(&user_config, &persist_segments).cloned();
             let structured_feature_toggle = preserves_network_proxy_settings
                 || is_structured_feature_path(&segments)
                     && parsed_value.as_ref().is_some_and(|value| {
@@ -363,34 +345,52 @@ impl ConfigManager {
                                 })
                     });
 
-            apply_merge(&mut user_config, &segments, parsed_value.as_ref(), strategy).map_err(
-                |err| match err {
-                    MergeError::Validation(message) => ConfigManagerError::write(
-                        ConfigWriteErrorCode::ConfigValidationError,
-                        message,
-                    ),
-                },
-            )?;
-
-            let updated_value = value_at_path(&user_config, &persist_segments).cloned();
-            if original_value != updated_value {
-                config_edits.push(match updated_value {
-                    Some(value) => ConfigEdit::SetPath {
-                        segments: persist_segments,
-                        value: toml_value_to_item(&value).map_err(|err| {
-                            ConfigManagerError::anyhow("failed to build config edits", err)
-                        })?,
-                    },
-                    None => ConfigEdit::ClearPath {
-                        segments: persist_segments,
-                    },
-                });
+            if let Some(edit) = credential_provider_edits.apply(
+                &mut user_config,
+                &segments,
+                parsed_value.as_ref(),
+                strategy,
+            )? {
+                config_edits.push(edit);
             }
 
             if structured_feature_toggle {
                 segments.push("enabled".to_string());
             }
             parsed_segments.push(segments);
+        }
+        config_edits.extend(credential_provider_edits.remapping_edits(&user_config)?);
+
+        // hooks/list returns an opaque declaration/content approval value. Split it
+        // on persistence so older clients still recognize the declaration approval.
+        if let Some(states) = user_config
+            .get_mut("hooks")
+            .and_then(|hooks| hooks.get_mut("state"))
+            .and_then(TomlValue::as_table_mut)
+        {
+            for (key, state) in states {
+                let Some(state) = state.as_table_mut() else {
+                    continue;
+                };
+                let Some((declaration, content)) = state
+                    .get("trusted_hash")
+                    .and_then(TomlValue::as_str)
+                    .and_then(|hash| hash.split_once('/'))
+                else {
+                    continue;
+                };
+                let hashes = [
+                    ("trusted_hash", declaration.to_owned()),
+                    ("trusted_content_hash", content.to_owned()),
+                ];
+                for (field, hash) in hashes {
+                    state.insert(field.to_string(), TomlValue::String(hash.clone()));
+                    config_edits.push(ConfigEdit::SetPath {
+                        segments: vec!["hooks".into(), "state".into(), key.clone(), field.into()],
+                        value: toml_edit::value(hash),
+                    });
+                }
+            }
         }
 
         validate_config(&user_config).map_err(|err| {
@@ -427,12 +427,20 @@ impl ConfigManager {
                 )
             })?;
         let effective = updated_layers.effective_config();
-        validate_config(&effective).map_err(|err| {
-            ConfigManagerError::write(
-                ConfigWriteErrorCode::ConfigValidationError,
-                format!("Invalid configuration: {err}"),
-            )
-        })?;
+        validate_config(&effective)
+            .and_then(|()| {
+                credential_provider_edits.validate_remapping(
+                    &user_layer.config,
+                    &user_config,
+                    &updated_layers,
+                )
+            })
+            .map_err(|err| {
+                ConfigManagerError::write(
+                    ConfigWriteErrorCode::ConfigValidationError,
+                    format!("Invalid configuration: {err}"),
+                )
+            })?;
 
         if !config_edits.is_empty() {
             ConfigEditsBuilder::for_config_path(provided_path.as_path())
@@ -590,6 +598,19 @@ fn structured_feature_depth(segments: &[String]) -> Option<usize> {
     is_structured_feature_path(&segments[..depth]).then_some(depth)
 }
 
+fn credential_providers_path(segments: &[String]) -> Option<&[String]> {
+    match segments {
+        [features, proxy, credentials, ..]
+            if features == "features"
+                && proxy == "network_proxy"
+                && credentials == "credentials" =>
+        {
+            Some(&segments[..3])
+        }
+        _ => None,
+    }
+}
+
 fn apply_merge(
     root: &mut TomlValue,
     segments: &[String],
@@ -621,7 +642,8 @@ fn apply_merge(
 
     if preserves_structured_feature_config
         || matches!(strategy, MergeStrategy::Upsert)
-            && (shell_environment_policy_representation_switch(root, segments, value)
+            && (credential_providers_path(segments).is_some()
+                || shell_environment_policy_representation_switch(root, segments, value)
                 || (matches!(value_at_path(root, segments), Some(TomlValue::Table(_)))
                     && matches!(value, TomlValue::Table(_))))
     {
@@ -782,19 +804,6 @@ fn value_at_path<'a>(root: &'a TomlValue, segments: &[String]) -> Option<&'a Tom
 fn value_at_semantic_path<'a>(root: &'a TomlValue, segments: &[String]) -> Option<&'a TomlValue> {
     shell_environment_filter_entry(root, segments)
         .map(|(_, value)| value)
-        .or_else(|| match segments {
-            [policy, field, key]
-                if cfg!(windows) && policy == "shell_environment_policy" && field == "set" =>
-            {
-                root.get(policy)?
-                    .get(field)?
-                    .as_table()?
-                    .iter()
-                    .find(|(candidate, _)| candidate.eq_ignore_ascii_case(key))
-                    .map(|(_, value)| value)
-            }
-            _ => None,
-        })
         .or_else(|| value_at_path(root, segments))
         .or_else(|| {
             let (field, parents) = segments.split_last()?;
@@ -892,6 +901,23 @@ fn find_effective_layer(
     layers: &ConfigLayerStack,
     segments: &[String],
 ) -> Option<ConfigLayerMetadata> {
+    if credential_providers_path(segments).is_some() {
+        // A provider can be displaced by another provider's environment sources,
+        // even when that layer never writes the edited path itself.
+        let mut merged = TomlValue::Table(Default::default());
+        let mut origin = None;
+        for layer in layers.layers_low_to_high() {
+            let previous = value_at_path(&merged, segments).cloned();
+            merge_toml_values(&mut merged, &layer.config);
+            if value_at_path(&layer.config, segments).is_some()
+                || previous.as_ref() != value_at_path(&merged, segments)
+            {
+                origin = Some(layer.metadata());
+            }
+        }
+        return origin;
+    }
+
     for layer in layers.layers_high_to_low() {
         if value_at_semantic_path(&layer.config, segments).is_some() {
             return Some(layer.metadata());

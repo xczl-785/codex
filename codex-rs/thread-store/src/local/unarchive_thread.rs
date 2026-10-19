@@ -1,5 +1,5 @@
 use super::LocalThreadStore;
-use super::helpers::owned_rollout_paths;
+use super::helpers::owned_rollout_paths_from_index;
 use super::helpers::restore_rollout_moves;
 use super::helpers::rollout_path_is_archived;
 use super::helpers::scoped_rollout_path;
@@ -10,6 +10,7 @@ use crate::ReadThreadParams;
 use crate::StoredThread;
 use crate::ThreadStoreError;
 use crate::ThreadStoreResult;
+use codex_rollout::RolloutReferenceIndex;
 use codex_rollout::rollout_date_parts;
 
 use super::thread_rollout_resolver;
@@ -23,7 +24,7 @@ pub(super) async fn unarchive_thread(
     let _lifecycle_guard = store.live_writer_locks.lock_lifecycle(thread_id).await;
     // Archive, delete, and revert use the same cross-process lock while moving or selecting
     // rollout files. Unarchive must participate before it moves those files back.
-    let _writer_lock = store.writer_lock_coordinator.acquire(thread_id)?;
+    let _writer_lock = store.acquire_writer_lock(thread_id)?;
     let state_db_ctx = store.state_db().await;
     let selected_archived_path =
         thread_rollout_resolver::resolve_current_including_archived(store, thread_id)
@@ -34,7 +35,15 @@ pub(super) async fn unarchive_thread(
                 message: format!("no archived rollout found for thread id {thread_id}"),
             })?;
 
-    let mut rollout_paths = owned_rollout_paths(store, thread_id).await?;
+    let reference_index = RolloutReferenceIndex::scan_archived_threads(
+        store.config.codex_home.as_path(),
+        &[thread_id],
+    )
+    .await
+    .map_err(|err| ThreadStoreError::Internal {
+        message: format!("failed to scan thread rollout files: {err}"),
+    })?;
+    let mut rollout_paths = owned_rollout_paths_from_index(&reference_index, thread_id);
     if !rollout_paths.contains(&selected_archived_path) {
         rollout_paths.push(selected_archived_path.clone());
     }
@@ -198,8 +207,7 @@ mod tests {
         let archived_path = write_archived_session_file(home.path(), "2025-01-03T13-00-00", uuid)
             .expect("archived session file");
         let writer_guard = owner
-            .writer_lock_coordinator
-            .acquire(thread_id)
+            .acquire_writer_lock(thread_id)
             .expect("acquire writer lock");
 
         let error = store

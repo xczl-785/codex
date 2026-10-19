@@ -10,6 +10,7 @@ use codex_protocol::protocol::SkillMetadata as CoreSkillMetadata;
 use codex_protocol::protocol::SkillScope as CoreSkillScope;
 use codex_protocol::protocol::SkillToolDependency as CoreSkillToolDependency;
 use codex_utils_absolute_path::AbsolutePathBuf;
+use codex_utils_path_uri::LegacyAppPathString;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -190,6 +191,50 @@ pub struct PluginInstalledResponse {
     pub marketplaces: Vec<PluginMarketplaceEntry>,
     #[serde(default)]
     pub marketplace_load_errors: Vec<MarketplaceLoadErrorInfo>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export_to = "v2/")]
+pub struct PluginReconcileParams {
+    /// Optional client-provided reason recorded with the reconciliation attempt.
+    #[ts(optional = nullable)]
+    pub reason: Option<String>,
+}
+
+/// Bundle and installed-state changes observed by this pass, not a runtime-readiness
+/// acknowledgement or a cumulative diff since the client's last request. Other metadata-only
+/// changes are not listed.
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export_to = "v2/")]
+pub struct PluginReconcileResponse {
+    /// Plugins affected by bundle changes, enablement changes, or removals.
+    /// Installed-state changes compare against the previous cached snapshot, including
+    /// cached reinstalls. Removal hints survive cache cleanup failures; unchanged plugins are omitted.
+    pub changed_plugins: Vec<PluginReconcileChangedPlugin>,
+    /// Backend remote plugin IDs whose bundle or identity update failed.
+    pub failed_remote_plugin_ids: Vec<String>,
+    /// Subset of failures for which the requested bundle could not be materialized.
+    /// A previously cached version may still be available.
+    pub failed_materialization_remote_plugin_ids: Vec<String>,
+}
+
+/// Runtime categories affected by this change, not just capabilities currently present.
+/// Flags describe declarations before runtime policy filtering. Updates OR the old and new
+/// bundle flags; enablement changes and cached reinstalls use the cached bundle; removals retain
+/// the old bundle's flags.
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export_to = "v2/")]
+pub struct PluginReconcileChangedPlugin {
+    /// Local plugin ID (`name@marketplace`), matching `PluginSummary.id`.
+    pub id: String,
+    pub has_mcps: bool,
+    pub has_apps: bool,
+    pub has_hooks: bool,
+    /// Whether either bundle declares skill roots; not a validated inventory of enabled skills.
+    pub has_skills: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, TS)]
@@ -433,7 +478,7 @@ pub struct SkillMetadata {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     pub dependencies: Option<SkillDependencies>,
-    pub path: AbsolutePathBuf,
+    pub path: LegacyAppPathString,
     pub scope: SkillScope,
     pub enabled: bool,
     /// Owning plugin ID, matching `PluginSummary.id`, when known.
@@ -717,6 +762,9 @@ pub struct PluginDetail {
     pub share_url: Option<String>,
     pub description: Option<String>,
     pub skills: Vec<SkillSummary>,
+    /// The declared onboarding skill, when the plugin and visible skill are enabled.
+    #[serde(default)]
+    pub onboarding_skill: Option<SkillSummary>,
     pub hooks: Vec<PluginHookSummary>,
     pub apps: Vec<AppSummary>,
     pub app_templates: Vec<AppTemplateSummary>,
@@ -811,7 +859,7 @@ pub struct SkillSummary {
     pub description: String,
     pub short_description: Option<String>,
     pub interface: Option<SkillInterface>,
-    pub path: Option<AbsolutePathBuf>,
+    pub path: Option<LegacyAppPathString>,
     pub enabled: bool,
 }
 
@@ -942,7 +990,7 @@ impl From<CoreSkillMetadata> for SkillMetadata {
             short_description: value.short_description,
             interface: value.interface.map(SkillInterface::from),
             dependencies: value.dependencies.map(SkillDependencies::from),
-            path: value.path,
+            path: value.path.into(),
             scope: value.scope.into(),
             enabled: true,
             plugin_id: None,

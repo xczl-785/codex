@@ -18,7 +18,6 @@ const PATH_DIRNAME: &str = "codex-path";
 const RELEASES_DIRNAME: &str = "releases";
 const RESOURCES_DIRNAME: &str = "codex-resources";
 const STANDALONE_PACKAGES_DIRNAME: &str = "standalone";
-const ZSH_DIRNAME: &str = "zsh";
 static INSTALL_CONTEXT: OnceLock<InstallContext> = OnceLock::new();
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -71,6 +70,8 @@ pub enum InstallMethod {
     Bun,
     /// A Codex binary launched through the pnpm-managed `codex.js` shim.
     Pnpm,
+    /// A Codex binary launched through the Vite+-managed `codex.js` shim.
+    VitePlus,
     /// A Codex binary that appears to come from a Homebrew install prefix.
     Brew,
     /// Any other execution environment.
@@ -119,7 +120,9 @@ impl InstallContext {
     pub fn current() -> &'static Self {
         INSTALL_CONTEXT.get_or_init(|| {
             let current_exe = std::env::current_exe().ok();
-            let method_override = if std::env::var_os("CODEX_MANAGED_BY_PNPM").is_some() {
+            let method_override = if std::env::var_os("CODEX_MANAGED_BY_VITE_PLUS").is_some() {
+                Some(InstallMethod::VitePlus)
+            } else if std::env::var_os("CODEX_MANAGED_BY_PNPM").is_some() {
                 Some(InstallMethod::Pnpm)
             } else if std::env::var_os("CODEX_MANAGED_BY_NPM").is_some() {
                 Some(InstallMethod::Npm)
@@ -224,29 +227,44 @@ impl InstallContext {
 
         None
     }
-
-    pub fn bundled_zsh_path(&self) -> Option<AbsolutePathBuf> {
-        if cfg!(windows) {
-            None
-        } else {
-            self.bundled_resource(zsh_resource_path())
-        }
-    }
-
-    pub fn bundled_zsh_bin_dir(&self) -> Option<AbsolutePathBuf> {
-        self.bundled_zsh_path()?.parent()
-    }
 }
 
 impl CodexPackageLayout {
     fn from_exe(exe_path: &Path) -> Option<Self> {
         let canonical_exe = canonical_absolute_path(exe_path)?;
         let exe_dir = canonical_exe.parent()?;
+        // WinGet preserves a target-qualified executable at the package root.
+        // Only recognize that layout when metadata names this exact executable.
+        #[cfg(windows)]
+        if let Ok(contents) = std::fs::read(exe_dir.join(PACKAGE_METADATA_FILENAME))
+            && let Ok(metadata) = serde_json::from_slice::<serde_json::Value>(&contents)
+            && metadata["layoutVersion"] == 1
+            && metadata["entrypoint"].as_str().map(OsStr::new) == canonical_exe.file_name()
+        {
+            return Some(Self {
+                resources_dir: existing_dir(exe_dir.join(RESOURCES_DIRNAME)),
+                path_dir: existing_dir(exe_dir.join(PATH_DIRNAME)),
+                package_dir: exe_dir.clone(),
+                bin_dir: exe_dir,
+            });
+        }
         match exe_dir.file_name() {
             Some(name) if name == OsStr::new(BIN_DIRNAME) => Self::from_package_bin_dir(exe_dir),
             Some(name) if name == OsStr::new(RESOURCES_DIRNAME) => {
                 let package_dir = exe_dir.parent()?;
                 Self::from_package_bin_dir(package_dir.join(BIN_DIRNAME))
+            }
+            Some(name) if name == OsStr::new("MacOS") => {
+                // A provisioned CLI keeps helpers and metadata in the outer
+                // package. current_exe points inside the bundle, not at bin/codex.
+                let contents = exe_dir.parent()?;
+                let bundle = contents.parent()?;
+                if contents.file_name()? != OsStr::new("Contents")
+                    || bundle.file_name()? != OsStr::new("CodexCLI.app")
+                {
+                    return None;
+                }
+                Self::from_package_bin_dir(bundle.parent()?.join(BIN_DIRNAME))
             }
             Some(_) | None => None,
         }
@@ -340,9 +358,9 @@ fn default_rg_command() -> PathBuf {
     }
 }
 
-fn zsh_resource_path() -> PathBuf {
-    PathBuf::from(ZSH_DIRNAME).join(BIN_DIRNAME).join("zsh")
-}
+#[cfg(test)]
+#[path = "bundle_tests.rs"]
+mod bundle_tests;
 
 #[cfg(test)]
 mod tests {
@@ -537,11 +555,6 @@ mod tests {
         fs::write(bin_dir.join(CODE_MODE_HOST_EXECUTABLE_NAME), "")?;
         fs::write(resources_dir.join(TEST_RESOURCE_NAME), "")?;
         fs::write(path_dir.join(default_rg_command()), "")?;
-        if !cfg!(windows) {
-            let zsh_path = resources_dir.join(zsh_resource_path());
-            fs::create_dir_all(zsh_path.parent().expect("zsh path should have parent"))?;
-            fs::write(&zsh_path, "")?;
-        }
         let canonical_package_dir =
             AbsolutePathBuf::from_absolute_path(package_dir.path().canonicalize()?)?;
         let canonical_bin_dir = AbsolutePathBuf::from_absolute_path(bin_dir.canonicalize()?)?;
@@ -596,19 +609,6 @@ mod tests {
             context.bundled_resource(TEST_RESOURCE_NAME),
             Some(canonical_resources_dir.join(TEST_RESOURCE_NAME))
         );
-        if cfg!(windows) {
-            assert_eq!(context.bundled_zsh_path(), None);
-            assert_eq!(context.bundled_zsh_bin_dir(), None);
-        } else {
-            assert_eq!(
-                context.bundled_zsh_path(),
-                Some(canonical_resources_dir.join(zsh_resource_path()))
-            );
-            assert_eq!(
-                context.bundled_zsh_bin_dir(),
-                Some(canonical_resources_dir.join(ZSH_DIRNAME).join(BIN_DIRNAME))
-            );
-        }
         Ok(())
     }
 
@@ -808,6 +808,19 @@ mod tests {
 
     #[test]
     fn package_manager_method_overrides_take_precedence() {
+        let vite_plus_context = InstallContext::from_exe(
+            /*is_macos*/ false,
+            /*current_exe*/ Some(Path::new("/tmp/codex")),
+            /*method_override*/ Some(InstallMethod::VitePlus),
+        );
+        assert_eq!(
+            vite_plus_context,
+            InstallContext {
+                method: InstallMethod::VitePlus,
+                package_layout: None,
+            }
+        );
+
         let pnpm_context = InstallContext::from_exe(
             /*is_macos*/ false,
             /*current_exe*/ Some(Path::new("/tmp/codex")),

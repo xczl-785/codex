@@ -29,7 +29,7 @@ async fn turn_timing_state_records_ttft_only_once_per_turn() {
     state.mark_turn_started(Instant::now()).await;
     assert_eq!(
         state
-            .record_ttft_for_response_event(&ResponseEvent::Created)
+            .record_ttft_for_response_event(&ResponseEvent::Created { response_id: None })
             .await,
         None
     );
@@ -66,6 +66,7 @@ async fn turn_timing_state_records_ttfm_independently_of_ttft() {
                 phase: None,
                 memory_citation: None,
                 delivery: None,
+                questions: None,
             }))
             .await
             .is_some()
@@ -78,6 +79,7 @@ async fn turn_timing_state_records_ttfm_independently_of_ttft() {
                 phase: None,
                 memory_citation: None,
                 delivery: None,
+                questions: None,
             }))
             .await,
         None
@@ -147,6 +149,8 @@ async fn turn_timing_state_preserves_in_flight_items_after_turn_completion() {
 fn response_item_records_turn_ttft_for_first_output_signals() {
     assert!(response_item_records_turn_ttft(
         &ResponseItem::FunctionCall {
+            status: None,
+            encrypted_content: None,
             id: None,
             name: "shell".to_string(),
             namespace: None,
@@ -158,6 +162,7 @@ fn response_item_records_turn_ttft_for_first_output_signals() {
     ));
     assert!(response_item_records_turn_ttft(
         &ResponseItem::CustomToolCall {
+            encrypted_content: None,
             id: None,
             status: None,
             call_id: "call-2".to_string(),
@@ -168,9 +173,13 @@ fn response_item_records_turn_ttft_for_first_output_signals() {
         }
     ));
     assert!(response_item_records_turn_ttft(&ResponseItem::Message {
+        status: None,
+        encrypted_content: None,
         id: None,
         role: "assistant".to_string(),
         content: vec![ContentItem::OutputText {
+            annotations: None,
+            logprobs: None,
             text: "hello".to_string(),
         }],
         phase: None,
@@ -181,9 +190,13 @@ fn response_item_records_turn_ttft_for_first_output_signals() {
 #[test]
 fn response_item_records_turn_ttft_ignores_empty_non_output_items() {
     assert!(!response_item_records_turn_ttft(&ResponseItem::Message {
+        status: None,
+        encrypted_content: None,
         id: None,
         role: "assistant".to_string(),
         content: vec![ContentItem::OutputText {
+            annotations: None,
+            logprobs: None,
             text: String::new(),
         }],
         phase: None,
@@ -235,6 +248,7 @@ fn turn_profile_breaks_down_sampling_blocking_and_retry_overhead() {
             after_last_sampling_ms: 100,
             sampling_request_count: 2,
             sampling_retry_count: 1,
+            tools_change_count: 0,
         }
     );
 }
@@ -268,6 +282,7 @@ fn turn_profile_counts_compaction_as_an_exclusive_phase() {
             after_last_sampling_ms: 100,
             sampling_request_count: 1,
             sampling_retry_count: 0,
+            tools_change_count: 0,
         }
     );
 }

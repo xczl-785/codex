@@ -1,3 +1,44 @@
+use codex_app_server_protocol::JSONRPCErrorError;
+use codex_thread_store::ThreadStoreError;
+use pretty_assertions::assert_eq;
+
+#[test]
+fn storage_failure_classification_does_not_change_mutation_error_policy() {
+    for error in [
+        ThreadStoreError::Internal {
+            message: "retryable conflict; outcome unknown".to_owned(),
+        },
+        ThreadStoreError::Retryable {
+            message: "store temporarily unavailable".to_owned(),
+        },
+        ThreadStoreError::OutcomeUnknown {
+            message: "connection lost after write".to_owned(),
+        },
+    ] {
+        let mapped = super::thread_store_mutation_error("archive", error.clone());
+        let expected = JSONRPCErrorError {
+            code: -32603,
+            message: format!("failed to archive session: {error}"),
+            data: None,
+        };
+        assert_eq!(mapped, expected);
+    }
+
+    assert_eq!(
+        super::thread_store_mutation_error(
+            "archive",
+            ThreadStoreError::Conflict {
+                message: "writer already active".to_owned(),
+            },
+        ),
+        JSONRPCErrorError {
+            code: -32600,
+            message: "writer already active".to_owned(),
+            data: None,
+        },
+    );
+}
+
 mod thread_list_cwd_filter_tests {
     use super::super::normalize_thread_list_cwd_filters;
     use codex_app_server_protocol::ThreadListCwdFilter;
@@ -291,6 +332,7 @@ mod thread_processor_behavior_tests {
         ))];
         let active_turn = Turn {
             id: "live-turn".to_string(),
+            root_turn_id: None,
             items: vec![ThreadItem::UserMessage {
                 id: "live-user-message".to_string(),
                 client_id: None,
@@ -459,6 +501,7 @@ mod thread_processor_behavior_tests {
         let thread_id =
             ThreadId::from_string("00000000-0000-0000-0000-000000000123").expect("valid thread");
         let stored_thread = StoredThread {
+            originator: None,
             thread_id,
             extra_config: None,
             rollout_path: Some(PathBuf::from("/tmp/thread.jsonl")),
@@ -477,6 +520,7 @@ mod thread_processor_behavior_tests {
             section_position: None,
             section_entered_at: None,
             project_id: None,
+            daybreak_enabled: None,
             cwd: PathBuf::from("/tmp"),
             cli_version: "0.0.0".to_string(),
             source: SessionSource::Cli,
@@ -592,10 +636,12 @@ mod thread_processor_behavior_tests {
         let session_provider = ModelProviderInfo {
             name: "session".to_string(),
             base_url: Some("http://127.0.0.1:8061/api/codex".to_string()),
+            model_catalog_url: None,
             env_key: None,
             env_key_instructions: None,
             experimental_bearer_token: None,
             auth: None,
+            gateway_oauth: None,
             aws: None,
             wire_api: WireApi::Responses,
             query_params: None,
@@ -608,6 +654,8 @@ mod thread_processor_behavior_tests {
             requires_openai_auth: false,
             supports_websockets: true,
             supports_standalone_web_search: false,
+            capabilities: None,
+            include_internal_metadata: false,
         };
         let config_manager = ConfigManager::new(
             temp_dir.path().to_path_buf(),
@@ -677,12 +725,15 @@ mod thread_processor_behavior_tests {
             initial_turns_page: None,
         };
         let config_snapshot = ThreadConfigSnapshot {
+            turn_extension_init: Default::default(),
+            disabled_plugin_ids: Vec::new(),
             model: "gpt-5".to_string(),
             model_provider_id: "openai".to_string(),
             service_tier: Some("flex".to_string()),
             approval_policy: codex_protocol::protocol::AskForApproval::OnRequest,
             approvals_reviewer: codex_protocol::config_types::ApprovalsReviewer::User,
             permission_profile: codex_protocol::models::PermissionProfile::Disabled,
+            full_access: false,
             active_permission_profile: None,
             environments: TurnEnvironmentSelections::new(cwd, Vec::new()),
             workspace_roots: Vec::new(),
@@ -1190,7 +1241,9 @@ mod thread_processor_behavior_tests {
             state.track_current_turn_event(
                 "turn-1",
                 &EventMsg::TurnStarted(codex_protocol::protocol::TurnStartedEvent {
+                    turn_attribution: None,
                     turn_id: "turn-1".to_string(),
+                    root_turn_id: None,
                     trace_id: None,
                     started_at: None,
                     model_context_window: None,

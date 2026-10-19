@@ -10,6 +10,7 @@ use crate::marketplace::marketplace_root_dir;
 use crate::marketplace_add::MarketplaceSource;
 use crate::marketplace_add::parse_marketplace_source;
 use crate::remote::RemotePluginScope;
+use crate::startup_sync::OPENAI_PLUGINS_GIT_URL;
 use crate::startup_sync::curated_plugins_api_marketplace_path;
 use crate::startup_sync::curated_plugins_repo_path;
 use codex_config::ConfigLayerStack;
@@ -20,10 +21,12 @@ use codex_config::RequirementSource;
 use codex_config::types::MarketplaceConfig;
 use codex_config::types::MarketplaceSourceType;
 use codex_config::types::PluginConfig;
+use codex_config::types::PluginsConfigToml;
 use codex_plugin::PluginId;
 use codex_utils_absolute_path::AbsolutePathBuf;
 use codex_utils_path::paths_match_after_normalization;
 use regex::Regex;
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::path::Path;
@@ -110,6 +113,9 @@ impl MarketplacePolicy {
     ) -> Result<(), String> {
         let root = marketplace_root_dir(marketplace_path).map_err(|err| err.to_string())?;
         if let Some(expected_name) = managed_marketplace_name(codex_home, marketplace_path, &root) {
+            if is_openai_curated_marketplace_name(expected_name) {
+                self.validate_git_source(OPENAI_PLUGINS_GIT_URL, /*ref_name*/ None)?;
+            }
             return validate_expected_marketplace_name(expected_name, marketplace_name);
         }
         if is_reserved_marketplace_name(marketplace_name) {
@@ -232,6 +238,9 @@ pub(crate) fn policy_filtered_plugin_config(
         .and_then(toml::Value::as_table_mut)
     {
         plugins.retain(|plugin_key, _| {
+            if plugin_key == "_default" {
+                return true;
+            }
             let Ok(plugin_id) = PluginId::parse(plugin_key) else {
                 return !policy.is_restricted();
             };
@@ -239,7 +248,12 @@ pub(crate) fn policy_filtered_plugin_config(
             if configured_marketplace_names.contains(marketplace_name) {
                 return allowed_marketplace_names.contains(marketplace_name);
             }
-            is_openai_curated_marketplace_name(marketplace_name) || !policy.is_restricted()
+            if is_openai_curated_marketplace_name(marketplace_name) {
+                return policy
+                    .validate_git_source(OPENAI_PLUGINS_GIT_URL, /*ref_name*/ None)
+                    .is_ok();
+            }
+            !policy.is_restricted()
         });
     }
     Some(effective_config)
@@ -292,8 +306,8 @@ pub(crate) fn configured_plugins_from_stack(
     let Some(plugins_value) = effective_config.get("plugins") else {
         return HashMap::new();
     };
-    match plugins_value.clone().try_into() {
-        Ok(plugins) => plugins,
+    match PluginsConfigToml::deserialize(plugins_value.clone()) {
+        Ok(plugins) => plugins.plugins,
         Err(err) => {
             tracing::warn!("invalid plugins config: {err}");
             HashMap::new()
@@ -520,13 +534,19 @@ fn is_expected_managed_path(path: &Path, expected: &Path) -> bool {
     #[cfg(windows)]
     {
         let path = path.to_string_lossy();
-        let expected = expected.to_string_lossy();
         let path = codex_utils_absolute_path::normalize_windows_device_path(&path)
-            .unwrap_or_else(|| path.into_owned());
-        let expected = codex_utils_absolute_path::normalize_windows_device_path(&expected)
-            .unwrap_or_else(|| expected.into_owned());
-        path.replace('/', "\\")
-            .eq_ignore_ascii_case(&expected.replace('/', "\\"))
+            .unwrap_or_else(|| path.into_owned())
+            .replace('/', "\\");
+        // Resolve only the owned root; arbitrary aliases must not borrow managed provenance.
+        let canonical_expected = expected.canonicalize().ok();
+        std::iter::once(expected)
+            .chain(canonical_expected.as_deref())
+            .any(|expected| {
+                let expected = expected.to_string_lossy();
+                let expected = codex_utils_absolute_path::normalize_windows_device_path(&expected)
+                    .unwrap_or_else(|| expected.into_owned());
+                path.eq_ignore_ascii_case(&expected.replace('/', "\\"))
+            })
     }
     #[cfg(not(any(target_os = "macos", windows)))]
     {

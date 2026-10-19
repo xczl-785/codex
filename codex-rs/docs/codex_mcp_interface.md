@@ -1,4 +1,8 @@
-# Codex MCP Server Interface [experimental]
+# 历史资料：已移除的 Codex MCP Server 接口
+
+> 此文档保留旧版接口说明，仅用于历史追溯。上游提交 `531f3836` 已移除 `codex mcp-server` 命令；以下启动方式与接口描述不适用于当前版本。当前客户端接口见 [App Server README](../app-server/README.md)。
+
+## Codex MCP Server Interface [experimental]
 
 This document describes Codex's experimental MCP server interface: a JSON-RPC API that runs over the Model Context Protocol (MCP) transport to control a local Codex engine.
 

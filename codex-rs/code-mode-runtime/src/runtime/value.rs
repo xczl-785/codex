@@ -4,6 +4,9 @@ use codex_code_mode_protocol::DEFAULT_IMAGE_DETAIL;
 use codex_code_mode_protocol::FunctionCallOutputContentItem;
 use codex_code_mode_protocol::ImageDetail;
 
+use super::RuntimeState;
+use super::audio::wav_duration_seconds;
+
 const IMAGE_HELPER_EXPECTS_MESSAGE: &str = "image expects a non-empty image URL string, an object with image_url and optional detail, or a raw MCP image block";
 const AUDIO_HELPER_EXPECTS_MESSAGE: &str = "audio expects a non-empty audio URL string, an object with audio_url, or a raw MCP audio block";
 const REMOTE_IMAGE_URL_ERROR: &str = "Tool call failed: remote image URLs are not supported in tool outputs. Pass a base64 data URI instead";
@@ -214,6 +217,14 @@ pub(super) fn normalize_output_audio(
             return Err(INVALID_AUDIO_URL_ERROR.to_string());
         }
 
+        // Tiny tool-generated clips cannot be encoded reliably by audio models.
+        if wav_duration_seconds(&audio_url).is_some_and(|duration| duration < 0.025) {
+            return Ok(FunctionCallOutputContentItem::InputText {
+                text: "Audio output omitted because the clip is shorter than 25 ms; use a longer clip."
+                    .to_string(),
+            });
+        }
+
         Ok(FunctionCallOutputContentItem::InputAudio { audio_url })
     })();
 
@@ -287,6 +298,15 @@ pub(super) fn v8_value_to_json(
     scope: &mut v8::PinScope<'_, '_>,
     value: v8::Local<'_, v8::Value>,
 ) -> Result<Option<JsonValue>, String> {
+    // Reentering V8 during termination can replace it with a catchable exception.
+    if scope.is_execution_terminating() {
+        return Err("JavaScript execution terminated".to_string());
+    }
+    // V8 stringifies undefined as the non-JSON text "undefined".
+    if value.is_undefined() {
+        return Ok(None);
+    }
+
     let tc = std::pin::pin!(v8::TryCatch::new(scope));
     let mut tc = tc.init();
     let Some(stringified) = v8::json::stringify(&tc, value) else {
@@ -298,7 +318,26 @@ pub(super) fn v8_value_to_json(
         }
         return Ok(None);
     };
-    serde_json::from_str(&stringified.to_rust_string_lossy(&tc))
+    let json = stringified.to_rust_string_lossy(&tc);
+    // V8 emits compact JSON with these ASCII key names unescaped. The object/comma
+    // prefix and colon distinguish keys from string contents. Reject these before
+    // Serde can reinterpret them as values and bypass its normal recursion limit.
+    // TODO(cconger): Remove this guard once our resolved serde_json dependency
+    // includes the upstream private-key provenance fix. Retain regression coverage
+    // for literal keys, depth limits, and session recovery.
+    // https://github.com/cconger/json/commit/63f6f14053ef3a173013d7e5ee5ac74140736929
+    if [
+        r#"{"$serde_json::private::RawValue":"#,
+        r#","$serde_json::private::RawValue":"#,
+        r#"{"$serde_json::private::Number":"#,
+        r#","$serde_json::private::Number":"#,
+    ]
+    .into_iter()
+    .any(|key| json.contains(key))
+    {
+        return Err("failed to serialize JavaScript value: reserved JSON object key".to_string());
+    }
+    serde_json::from_str(&json)
         .map(Some)
         .map_err(|err| format!("failed to serialize JavaScript value: {err}"))
 }
@@ -324,10 +363,23 @@ pub(super) fn value_to_error_text(
     {
         return stack.to_rust_string_lossy(scope);
     }
+    // The stack getter can call exit() and V8 can clear its termination before
+    // returning here. Never enter a user-defined toString() after that.
+    if scope
+        .get_slot::<RuntimeState>()
+        .is_some_and(|state| state.exit_requested)
+    {
+        // send_scope_result reports this as successful exit and preserves prior stores.
+        return String::new();
+    }
     value.to_rust_string_lossy(scope)
 }
 
 pub(super) fn throw_type_error(scope: &mut v8::PinScope<'_, '_>, message: &str) {
+    // Preserve V8's uncatchable termination instead of replacing it with a JS error.
+    if scope.is_execution_terminating() {
+        return;
+    }
     if let Some(message) = v8::String::new(scope, message) {
         scope.throw_exception(message.into());
     }
