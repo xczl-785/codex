@@ -12,12 +12,12 @@
 ## Current progress
 
 - Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 课程 0002 的 Queue/Steer 核心理论已讲完，包括结束竞态、Esc 与记录回执协调、传输恢复扩展及受控测试用途。用户反馈理解，当前按用户要求先整理推送资料，再做场景回顾以加深理解；不把理解反馈视为实现验收。理解证据见记录 0017，未启动目标工程编码。
-- Next checkpoint: 场景回顾后，将已核实行为映射到目标工程，再完成实践 0006 的 M0.5，随后推进 Subagent M1—M4。用户明确不实现客户端/App Server 传输断线恢复；保留为扩展知识，不阻塞实践。第二批 Skills 发现与加载暂后移，主题保留。
+- Current lesson: 课程 0002 的 Queue/Steer 核心理论及本轮场景回顾已收束。用户能区分 pending、记录与模型消费，复述 Esc 的判断条件，并将接收/收尾协调关联到互斥锁与临界区；补充了循环层级、输入 hooks 与历史记录入口。理解证据见记录 0017，尚无实现验收证据。本轮整理提交后结束，不继续启动编码。
+- Next checkpoint: 下次进入目标工程的 M0.5 职责映射，核对 Turn、输入入口、执行循环和取消机制，再完成实践 0006 的 M0.5，随后推进 Subagent M1—M4。用户明确不实现客户端/App Server 传输断线恢复；保留为扩展知识，不阻塞实践。第二批 Skills 发现与加载暂后移，主题保留。
 - Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
-- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备，新增 M0.5 单 Agent Steer 前置切片，位置在 M0 设计之后、M1 子 Agent 创建之前。本轮只更新学习仓库并准备授课，未修改或重新验收 CodebaseAgent。0003—0005 的既有收口记录不重新激活；开始实际编码时读取目标工程 AGENTS、WORKFLOW、`docs/STATUS.md`，以其源码和测试确认可复用能力。
+- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备，M0.5 前置理论与回顾已收束，位置在 M0 设计之后、M1 子 Agent 创建之前。尚未修改或重新验收 CodebaseAgent。0003—0005 的既有收口记录不重新激活；下次到目标工程读取 AGENTS、WORKFLOW、`docs/STATUS.md`，以其源码和测试确认可复用能力，先做职责映射。
 - Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
 - Last entropy pass lesson: 22
 
