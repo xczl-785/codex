@@ -10,12 +10,12 @@
 | --- | --- |
 | 资料状态 | `prepared`：已准备实践资料，未启动实现 |
 | 目标工程 | `D:\Program\AgentLab\CodebaseAgent` |
-| 学习依据 | 课程 [0022：设计与创建](../lessons/0022-subagent-history-ownership-and-configuration.md)、[0021：通信与执行](../lessons/0021-subagent-message-delivery-and-execution.md)、[0023：生命周期](../lessons/0023-subagent-interruption-eviction-and-archive.md) |
+| 学习依据 | 先补课程 [0002：Steer](../lessons/0002-start-steer-or-queue.md)，再衔接 [0022：设计与创建](../lessons/0022-subagent-history-ownership-and-configuration.md)、[0021：通信与执行](../lessons/0021-subagent-message-delivery-and-execution.md)、[0023：生命周期](../lessons/0023-subagent-interruption-eviction-and-archive.md) |
 | 进入条件 | 用户明确开始实现；读取目标工程 AGENTS、工作区 WORKFLOW 和自身 `docs/STATUS.md`；核对本次切片依赖的既有能力 |
 | 退出条件 | 委派、消息与触发、结果归属、中断及资源收口通过确定性验证；学习者能解释关键控制流与失败边界 |
 | 退出后安排 | 在目标工程收口契约、能力与状态；在学习仓库记录理解反馈，后续课程仍按 MAINTENANCE 安排 |
 
-目标工程的状态文档已记录 0003—0005 收口；不因为上游旧实践仍写着 prepared 就要求重做。本次仅编写此处的资料与索引，不修改目标工程状态。
+此前接手记录指出目标工程的状态文档已记录 0003—0005 收口；不因为上游旧实践仍写着 prepared 就要求重做。当前增加 M0.5 Steer 前置实践，尚未到目标工程重新核验或实现，不修改其状态。
 
 ## 要解决的具体问题
 
@@ -64,6 +64,24 @@
 ### M0：设计一个可观察的委派流程
 
 学习者描述 A/B 的正常流程，指定失败与边界行为。确定身份、任务、Turn、工具 Call 和消息各自的含义，记录首版范围及开放决定。以验收材料建立事件剧本；未决定的语义不能由测试替身悄悄补齐。
+
+### M0.5：单 Agent Steer 前置实践
+
+先学清 Steer，再在引入子身份前验证公共运行循环如何接收执行中的新要求。场景是：Agent 正在分析恢复机制，用户补充“把范围缩到历史文件缺失”；继续当前 Turn，后续模型请求能够看到补充内容。这里的“0.5”指本实践 M0 与 M1 之间的前置切片，不另起实践编号。
+
+学习者先表达输入准入与执行循环的职责边界：谁判断当前活动 Turn，谁保存待消费输入，谁将其纳入后续模型请求，谁处理 Turn 恰好结束的竞争。沿用公共 Agent 执行机制；不要先为子 Agent 单独实现一套 Steer，也不预先指定 channel、锁或回调结构。
+
+首版行为契约：
+
+- 严格 Steer 必须针对调用方预期的活动 Turn；空闲或 ID 不匹配时明确失败，不悄悄开新 Turn 或投给下一轮。
+- 接收成功只承诺运行时接受输入；模型可见性必须通过实际请求另行证明。成功路径保持 Thread 与 Turn 身份。
+- 固定消费边界与已接受输入的顺序；当前已发出的模型请求不能被当作已经包含后来补充的输入。
+- Steer 不隐含取消工具或撤销既有副作用。已有 Call/Output 仍须按原有契约收口，再由模型在约定边界使用新输入。
+- 对接收与 Turn 结束的竞争，明确已接受但尚未消费输入的归属，以及拒绝后调用方怎样保留输入。不能静默丢失、串入下一轮或重复消费。
+
+用 ScriptedModel、工具 gate 和请求捕获实现[前置验收 P1—P5](materials/0006-subagent-lifecycle-acceptance.md#m05-前置验收单-agent-steer)。本切片先覆盖单进程运行；断线重试去重、跨重启可靠投递和复杂 UI 暂不扩展，若承诺持久接收须补上相应恢复证据。
+
+退出时，学习者应能解释“接收成功”和“模型已经看见”的差别，以及为什么 Steer 不能替代 Interrupt。目标工程记录验证证据后，再进入 M1；M2 复用这里的忙时输入能力，但普通消息、唤醒空闲子方和协作结果归属仍须另行设计，不能把所有通信操作直接等同于 Steer。
 
 ### M1：创建与独立执行
 

@@ -56,6 +56,8 @@
 
 ## 接下来的一批课程
 
+进入下一批前，先回到[课程 0002](lessons/0002-start-steer-or-queue.md)补充 Steer 的运行时机制，并完成[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)，再推进 Subagent 实践。此处是补齐实践依赖，不重复开设已完成的 Subagent 理论专题。
+
 第一批已由 Subagent 与 A2A 对照收尾。下一批安排为 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
@@ -84,7 +86,7 @@
 - [持久恢复与同 Turn 上下文压缩](practice/0003-context-history-recovery-lab.md)：复用 CodebaseAgent，分阶段验证持久事实与恢复边界，以及容量准入、自动压缩和原 Turn 续跑；相关体验优化可按需激活。
 - [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
 - [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
-- [Subagent 委派、通信与生命周期](practice/0006-subagent-lifecycle-lab.md)：将已学专题转为独立执行、消息与触发、结果归属、中断关闭及恢复边界的实践；资料已准备，实现尚未启动。
+- [Subagent 委派、通信与生命周期](practice/0006-subagent-lifecycle-lab.md)：先以 M0.5 验证单 Agent Steer，再推进独立执行、消息与触发、结果归属、中断关闭及恢复边界；资料已准备，实现尚未启动。
 
 当前实践顺序与进入条件由 [MAINTENANCE.md](MAINTENANCE.md) 维护；这里列出的是可查阅的契约，不代表所有实践都已激活。详细验收场景从相应实践进入 [支持材料目录](practice/materials/README.md)。
 

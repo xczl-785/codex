@@ -12,12 +12,12 @@
 ## Current progress
 
 - Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 无正在授课的新主题。本轮按用户要求准备 Subagent 实践资料，仅存放在 Codex 学习仓库，不启动实现或 Skills 新课。
-- Next checkpoint: 用户再次要求继续时，进入第二批首题 Skills 发现与加载，沿磁盘文件 → 发现目录 → 模型知道能力 → 正文进入上下文展开；本轮未开始该课。
+- Current lesson: 按 2026-10-20 用户安排，先补 Steer，沿课程 0002 深入运行中输入的准入、消费与结束竞态；目前为教学准备，未标记掌握或实践完成。
+- Next checkpoint: 先讲清单 Agent 的 Steer，再完成实践 0006 的 M0.5 前置实践，随后推进 Subagent M1—M4。第二批 Skills 发现与加载暂后移，主题保留。
 - Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
-- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备；用户确认正文放在 Codex 仓库，本轮未修改 CodebaseAgent。该工程 `docs/STATUS.md` 已记录 0003—0005 收口，实时实现与验收继续由其维护；旧实践安排不重新激活。0006 实现须由用户另行明确开始，按目标工程 WORKFLOW 进入设计表达与切片闭环。
+- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备，新增 M0.5 单 Agent Steer 前置切片，位置在 M0 设计之后、M1 子 Agent 创建之前。本轮只更新学习仓库并准备授课，未修改或重新验收 CodebaseAgent。0003—0005 的既有收口记录不重新激活；开始实际编码时读取目标工程 AGENTS、WORKFLOW、`docs/STATUS.md`，以其源码和测试确认可复用能力。
 - Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
 - Last entropy pass lesson: 22
 
@@ -54,7 +54,7 @@
 - Practice 0003: 持久恢复与同 Turn 上下文压缩（0003-A 恢复；0003-B 自动压缩）
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
-- Practice 0006: Subagent 委派、通信与生命周期（资料已准备，未启动实现）
+- Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；资料已准备，未启动实现）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -86,14 +86,14 @@
 - 已确定的实践任务放在 `practice/`，明确目标、非目标、行为契约和验收标准；实验源码不直接加入 Codex workspace。
 - 实践默认使用 Rust，采用“关键控制面手写、基础设施复用、AI 受控协作”，目标仓库保持语言无关，先以小型 fixture repository 和 ScriptedModel 验证 Harness，再接真实模型。
 - 第一版通过 Repository Binding 限制代码库根目录，所有工具输出有界并携带相对路径和行号；Codex、CodeGraph 和 Git 都不是硬依赖。
-- 实践 0001 收尾后，学习顺序固定为：权限与沙盒实践 → 持久恢复与同 Turn 自动压缩 → 取消传播 → 并行工具调度 → Subagent 生命周期。恢复与压缩分为 0003-A/0003-B 两个阶段，但仍属于一个实践主题。
+- 实践 0001 收尾后的依赖顺序为：权限与沙盒实践 → 持久恢复与同 Turn 自动压缩 → 取消传播 → 并行工具调度 → 单 Agent Steer（0006 M0.5）→ Subagent 生命周期。恢复与压缩分为 0003-A/0003-B 两个阶段，但仍属于一个实践主题。
 - 权限专题深入控制面和失败语义，但不手搓安全级操作系统沙箱；上下文专题深入事实、投影、检查点和恢复不变量，中等深度定位 Codex 源码，暂不深入 tokenizer、摘要算法、分布式存储或向量记忆。
 - 答疑课按需开启，不参与主循环。它以 `on-demand` 状态常驻 `lessons/`，使用独立编号但不写入 Current lesson 与 Next checkpoint，不推进主线顺序，也不在前一课外形成新的阻塞条件；产物是随时可查的概念澄清，而不是线性课程。
 - 答疑课的沉淀方式：用户提问、Agent 查源码核对、当场解释，然后建立骨架；正文按用户后续需要再补，不因骨架存在而自动排入主线。
 
 ## Next likely directions
 
-- 第一批以 Subagent 和 A2A 扩展收尾。下一批从 Skills 发现与加载开始，只有用户重新要求继续时才开课。
+- 第一批理论以 Subagent 和 A2A 扩展收尾；当前先补 Steer 及 0006 M0.5，再推进 Subagent 实践。之后再接第二批 Skills 发现与加载，不把已有专题收尾撤销为未学。
 - A2A 扩展已达到用户要求深度。协议细节、完整接入和委派器改造均不自动激活；进入 MCP 对比时按需引用课程 0024。
 - 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
 - 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
