@@ -84,6 +84,7 @@
 - [持久恢复与同 Turn 上下文压缩](practice/0003-context-history-recovery-lab.md)：复用 CodebaseAgent，分阶段验证持久事实与恢复边界，以及容量准入、自动压缩和原 Turn 续跑；相关体验优化可按需激活。
 - [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
 - [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
+- [Subagent 委派、通信与生命周期](practice/0006-subagent-lifecycle-lab.md)：将已学专题转为独立执行、消息与触发、结果归属、中断关闭及恢复边界的实践；资料已准备，实现尚未启动。
 
 当前实践顺序与进入条件由 [MAINTENANCE.md](MAINTENANCE.md) 维护；这里列出的是可查阅的契约，不代表所有实践都已激活。详细验收场景从相应实践进入 [支持材料目录](practice/materials/README.md)。
 

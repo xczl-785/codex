@@ -6,3 +6,4 @@
 
 - [0004：取消传播验收材料](0004-cancellation-acceptance.md)
 - [0005：并行调度验收材料](0005-parallel-scheduling-acceptance.md)
+- [0006：Subagent 生命周期验收材料](0006-subagent-lifecycle-acceptance.md)

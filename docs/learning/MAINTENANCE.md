@@ -12,12 +12,12 @@
 ## Current progress
 
 - Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 无正在授课的新主题。本轮仅整理文档；用户明确要求不再推进。
+- Current lesson: 无正在授课的新主题。本轮按用户要求准备 Subagent 实践资料，仅存放在 Codex 学习仓库，不启动实现或 Skills 新课。
 - Next checkpoint: 用户再次要求继续时，进入第二批首题 Skills 发现与加载，沿磁盘文件 → 发现目录 → 模型知道能力 → 正文进入上下文展开；本轮未开始该课。
 - Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
-- Practice boundary: 旧实践安排不重新激活；CodebaseAgent 的实时实现与验收仍由独立工程 `docs/STATUS.md` 维护。
+- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备；用户确认正文放在 Codex 仓库，本轮未修改 CodebaseAgent。该工程 `docs/STATUS.md` 已记录 0003—0005 收口，实时实现与验收继续由其维护；旧实践安排不重新激活。0006 实现须由用户另行明确开始，按目标工程 WORKFLOW 进入设计表达与切片闭环。
 - Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
 - Last entropy pass lesson: 22
 
@@ -54,6 +54,7 @@
 - Practice 0003: 持久恢复与同 Turn 上下文压缩（0003-A 恢复；0003-B 自动压缩）
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
+- Practice 0006: Subagent 委派、通信与生命周期（资料已准备，未启动实现）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
