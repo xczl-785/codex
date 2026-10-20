@@ -12,8 +12,8 @@
 ## Current progress
 
 - Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 按 2026-10-20 用户安排，先补 Steer，沿课程 0002 深入运行中输入的准入、消费与结束竞态；目前为教学准备，未标记掌握或实践完成。
-- Next checkpoint: 先讲清单 Agent 的 Steer，再完成实践 0006 的 M0.5 前置实践，随后推进 Subagent M1—M4。第二批 Skills 发现与加载暂后移，主题保留。
+- Current lesson: 课程 0002 的 Queue/Steer 核心理论已讲完，包括结束竞态、Esc 与记录回执协调、传输恢复扩展及受控测试用途。用户反馈理解，当前按用户要求先整理推送资料，再做场景回顾以加深理解；不把理解反馈视为实现验收。理解证据见记录 0017，未启动目标工程编码。
+- Next checkpoint: 场景回顾后，将已核实行为映射到目标工程，再完成实践 0006 的 M0.5，随后推进 Subagent M1—M4。用户明确不实现客户端/App Server 传输断线恢复；保留为扩展知识，不阻塞实践。第二批 Skills 发现与加载暂后移，主题保留。
 - Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
@@ -71,6 +71,7 @@
 - Learning record 0013: 取消与进程生命周期边界
 - Learning record 0014: 并行准入、结果顺序与职责分离
 - Learning record 0016: Subagent 理解变化、扩展与专题收束
+- Learning record 0017: Queue、Steer 与 Turn 边界
 - Learning record 0015: 逐课回顾、记忆深度与扩展阶段衔接
 
 ### 答疑课（不参与主循环）
