@@ -44,4 +44,4 @@
 - A2A 扩展已满足当前需要；OpenCode 委派 Skill 仅作概念映照，不启动委派或新增实现计划。
 - durable sleep 生产触发链路和 App 专用跨 Thread 工具仍有证据空白；标注未知，不靠假设补全。
 
-当前进度由维护账本持有。近期理解证据见[记录 0016](learning-records/0016-subagent-and-persistence-detour.md)。Steer 补课从“执行过程中补充要求如何送入同一 Turn”开始，再映射到子 Agent 忙时交付；不把发现前置依赖解读为此前 Subagent 理论未理解，也不把 Steer 与停止当前工具混为一谈。
+当前进度由维护账本持有。Subagent 理解证据见[记录 0016](learning-records/0016-subagent-and-persistence-detour.md)，Queue/Steer 的后续理解与场景回顾见[记录 0017](learning-records/0017-queue-steer-and-turn-boundaries.md)。实践映射时沿“执行过程中补充要求如何送入同一 Turn”连接子 Agent 忙时交付；不重开已收束的理论补课，也不把 Steer 与停止当前工具混为一谈。

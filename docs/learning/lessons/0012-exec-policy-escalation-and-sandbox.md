@@ -404,7 +404,7 @@ PermissionProfile 与工作区目录
 
 只读挂载是操作系统实际执行的限制，即使底层文件的普通用户权限允许写入，通过这个只读挂载写入仍会失败。可写绑定可以指向真实工作区，修改直接生效，无须复制仓库。策略若限制读取范围，当前实现也可以从空视图开始，只加入批准的可读目录。见[bubblewrap 官方参数说明](https://github.com/containers/bubblewrap/blob/main/bwrap.xml)。
 
-[bwrap.rs](../../../codex-rs/linux-sandbox/src/bwrap.rs) 的 `create_filesystem_args` 组织 `--ro-bind`、`--bind` 及屏蔽区域；挂载顺序还要保证受保护子路径不会被后续可写绑定重新开放。[linux_run_main.rs](../../../codex-rs/linux-sandbox/src/linux_run_main.rs) 组织文件系统视图建立、进程限制与最终命令执行。`no_new_privs` 和 seccomp 等机制承担相应的提权和系统调用限制，不能把所有目录判断都归因于 seccomp。[landlock.rs](../../../codex-rs/linux-sandbox/src/landlock.rs) 还保留 legacy 路径，不能仅根据文件名就认为当前默认文件限制由 Landlock 落实。
+[bwrap.rs](../../../codex-rs/linux-sandbox/src/bwrap.rs) 的 `create_filesystem_args` 组织 `--ro-bind`、`--bind` 及屏蔽区域；挂载顺序还要保证受保护子路径不会被后续可写绑定重新开放。[linux_run_main.rs](../../../codex-rs/linux-sandbox/src/linux_run_main.rs) 组织文件系统视图建立、进程限制与最终命令执行。`no_new_privs` 和 seccomp 等机制承担相应的提权和系统调用限制，不能把所有目录判断都归因于 seccomp。[seccomp.rs](../../../codex-rs/linux-sandbox/src/seccomp.rs) 保留了 legacy Landlock 实现，但当前 helper 对文件系统受限策略拒绝 legacy 模式；保留实现不表示它承担当前默认文件限制。
 
 ### 5.7 子进程与已持有资源也必须纳入边界
 

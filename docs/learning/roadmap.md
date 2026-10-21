@@ -95,7 +95,7 @@ A2A 按 Agent2Agent 协议理解，是用户明确加入的对照主题。授课
 
 ## 第二批课程：能力扩展与接入
 
-实践衔接先补[课程 0002 的 Steer](lessons/0002-start-steer-or-queue.md)，再做[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)，之后继续 Subagent 实践。前置目标是贯通运行中输入的准入、模型可见性与结束竞态；Skills/MCP 的主题顺序保留，当前进度以维护账本为准。
+实践依赖顺序是[课程 0002 的 Steer](lessons/0002-start-steer-or-queue.md)机制、[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)、Subagent 实践。前置目标是贯通运行中输入的准入、模型可见性与结束竞态；本路线不表示理论或实现仍未完成，当前完成情况与下一动作以维护账本为准。Skills/MCP 的主题顺序保留。
 
 本批次已根据用户兴趣排在 Subagent 后面；以下拆分和顺序是教学建议，尚未授课。主问题是：一种外部能力怎样从“可发现”变成“模型可用”，再进入已有执行闭环？Skills 加载和 MCP 接入是主线，用户的 Skill 想法在相关课内讨论，不自动转为实现任务。
 

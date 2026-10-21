@@ -6,18 +6,18 @@
 
 | 字段       | 当前值                                                                                                                                       |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 状态       | `prepared / blocked by practice 0004`                                                                                                        |
+| 资料用途   | 保留的并行调度实践契约，供按需复习和行为对照；不登记实时实施或阻塞状态                                                                       |
 | 目标工程   | `D:\Program\AgentLab\CodebaseAgent`                                                                                                          |
 | 事实来源   | 实践 0004 完成后的 CodebaseAgent 行为与测试、[课程 0018](../lessons/0018-parallel-tool-admission-and-result-order.md)、当前 Codex 源码与测试 |
-| 进入条件   | 实践 0004 已完成并收口；用户明确开始本实践；更新 CodebaseAgent 的 `docs/STATUS.md`                                                           |
+| 进入条件   | 须确认实践 0004 的取消契约及验收前置已满足；实施前核对目标工程已有能力及验收证据，由用户选定尚未完成的切片，再更新其 `docs/STATUS.md`        |
 | 退出条件   | 并发上限、工具资格、结果配对、历史顺序、取消与失败语义均有确定性测试                                                                         |
-| 退出后安排 | 阶段复盘，再决定是否恢复 Subagent 生命周期专题                                                                                               |
+| 退出后安排 | 在目标工程收口契约与证据；需要时记录理解变化，教学下一步由 MAINTENANCE 维护                                                                  |
 
-本实践不会绕过 0004，也不会仅因文档存在而自动改变 AgentLab 状态。
+本实践沿用 0004 的取消契约，不重新激活已有收口的实践。当前教学衔接见 [MAINTENANCE.md](../MAINTENANCE.md)，实时实施与验收状态以 CodebaseAgent 自己的 `docs/STATUS.md` 及其证据为准。
 
 ## 实验目标
 
-CodebaseAgent 已能在一个模型响应中接收多个 Function Call，但仍按顺序执行并拒绝 `max_parallel_tool_calls > 1`。本实践要把它扩展为有界并行，同时保持以下边界：
+本实践设计时的起点是：CodebaseAgent 已能在一个模型响应中接收多个 Function Call，但按顺序执行并拒绝 `max_parallel_tool_calls > 1`。这不是当前能力清单；本契约规定从该起点扩展为有界并行时需要保持的边界：
 
 - 模型或上层工作流表达业务依赖；
 - Harness 依据工具声明和并发上限调度，不分析参数猜冲突；
@@ -89,4 +89,4 @@ CodebaseAgent 已能在一个模型响应中接收多个 Function Call，但仍�
 
 ## 完成后的处置
 
-实践通过后，在 CodebaseAgent 中收口 `STATUS`、行为契约和测试证据，再回到学习工作区完成阶段复盘。Subagent 是否进入下一实践由复盘决定，不在本实验中顺带实现。
+实施切片通过后，在 CodebaseAgent 中收口 `STATUS`、行为契约和测试证据；有新的理解变化时再回到学习工作区记录。当前教学方向由 [MAINTENANCE.md](../MAINTENANCE.md) 维护，不因回看本契约而重开已收束的 Subagent 理论，也不在本实验中顺带实现 Subagent。

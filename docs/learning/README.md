@@ -56,7 +56,7 @@
 
 ## 接下来的一批课程
 
-进入下一批前，先回到[课程 0002](lessons/0002-start-steer-or-queue.md)补充 Steer 的运行时机制，并完成[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)，再推进 Subagent 实践。此处是补齐实践依赖，不重复开设已完成的 Subagent 理论专题。
+进入下一批前，实践依赖是[课程 0002](lessons/0002-start-steer-or-queue.md)的 Steer 机制与[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)，之后再推进 Subagent 实践。理论回顾与实现验收是不同环节；当前完成情况和下一动作统一见 [MAINTENANCE.md](MAINTENANCE.md)，不因这条依赖路线重复开设已完成的理论专题。
 
 第一批已由 Subagent 与 A2A 对照收尾。下一批安排为 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
 
