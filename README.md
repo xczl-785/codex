@@ -25,6 +25,7 @@
 | 需要                         | 入口                                                |
 | ---------------------------- | --------------------------------------------------- |
 | 按顺序学习                   | [课程目录](docs/learning/README.md)                 |
+| 查找实践契约与工程改进调研   | [实践目录](docs/learning/practice/README.md)        |
 | 了解整体工程                 | [工程介绍](docs/learning/repository-inventory.md)   |
 | 查看完整主题范围             | [学习路线图](docs/learning/roadmap.md)              |
 | 快速查概念                   | [核心概念速查](docs/learning/reference/glossary.md) |

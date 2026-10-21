@@ -79,16 +79,9 @@
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
 - [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：归纳课程 0016—0018 的理解边界，区分源码场景校准与可运行实践证据。
 
-## 实践任务
+## 实践入口
 
-- [实现一个通用代码库理解 Agent](practice/0001-codebase-study-agent.md)：绑定任意本地代码库，通过通用只读工具和证据约束实现最小 Agent Harness，再以 Codex 作为复杂对照样本。
-- [权限、审批、沙箱与提权实验](practice/0002-permission-sandbox-lab.md)：用确定性策略与执行替身贯通动作准入、用户审批、受限真实执行、权限提升和失败分类。
-- [持久恢复与同 Turn 上下文压缩](practice/0003-context-history-recovery-lab.md)：复用 CodebaseAgent，分阶段验证持久事实与恢复边界，以及容量准入、自动压缩和原 Turn 续跑；相关体验优化可按需激活。
-- [取消传播与部分完成状态](practice/0004-cancellation-propagation-lab.md)：复用 CodebaseAgent，固定取消请求、结果竞争、部分完成、历史收口和重启恢复的行为契约。
-- [有界并行工具调度与结果顺序](practice/0005-bounded-parallel-tool-scheduling-lab.md)：在取消语义稳定后，验证工具并行资格、共享/独占门禁、并发上限、完成顺序与稳定历史顺序。
-- [Subagent 委派、通信与生命周期](practice/0006-subagent-lifecycle-lab.md)：先以 M0.5 验证单 Agent Steer，再推进独立执行、消息与触发、结果归属、中断关闭及恢复边界；资料已准备，实现尚未启动。
-
-当前实践顺序与进入条件由 [MAINTENANCE.md](MAINTENANCE.md) 维护；这里列出的是可查阅的契约，不代表所有实践都已激活。详细验收场景从相应实践进入 [支持材料目录](practice/materials/README.md)。
+实践契约、验收材料和暂存的工程改进调研统一从[实践目录](practice/README.md)查阅，不纳入课程阅读顺序。教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)，独立工程的实时实施与 deferred 状态以该工程自己的状态文档为准。
 
 ## 接续教学
 
@@ -96,6 +89,6 @@
 
 ## 文档边界
 
-`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`practice/` 保存已经确定的实践入口与验收边界，`practice/materials/` 保存按需读取的详细场景材料，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
+`lessons/` 是面向学习者的详细课程，`reviews/` 用于跨课程阶段复盘，`practice/` 的材料分类与责任见其[目录入口](practice/README.md)，`reference/` 是压缩后的稳定速查。`learning-records/` 记录学习者理解状态，`MAINTENANCE.md` 和 `NOTES.md` 记录教学过程；后三者用于后续教学衔接，不应被当作 Codex 架构事实或首次阅读入口。
 
 本目录不是 Codex 的上游用户文档。产品、安装与使用说明见根目录 [上游 README](../../README.codex-upstream.md)，本地构建要求见 [docs/install.md](../install.md)。
