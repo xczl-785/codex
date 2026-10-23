@@ -8,14 +8,14 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 资料状态 | `prepared`：已准备实践资料，未启动实现 |
+| 资料状态 | 实践契约与回看材料；完成情况和下一动作见 [MAINTENANCE](../MAINTENANCE.md) |
 | 目标工程 | `D:\Program\AgentLab\CodebaseAgent` |
-| 学习依据 | 先补课程 [0002：Steer](../lessons/0002-start-steer-or-queue.md)，再衔接 [0022：设计与创建](../lessons/0022-subagent-history-ownership-and-configuration.md)、[0021：通信与执行](../lessons/0021-subagent-message-delivery-and-execution.md)、[0023：生命周期](../lessons/0023-subagent-interruption-eviction-and-archive.md) |
+| 学习依据 | 前置课程 [0002：Steer](../lessons/0002-start-steer-or-queue.md)，再衔接 [0022：设计与创建](../lessons/0022-subagent-history-ownership-and-configuration.md)、[0021：通信与执行](../lessons/0021-subagent-message-delivery-and-execution.md)、[0023：生命周期](../lessons/0023-subagent-interruption-eviction-and-archive.md) |
 | 进入条件 | 用户明确开始实现；读取目标工程 AGENTS、工作区 WORKFLOW 和自身 `docs/STATUS.md`；核对本次切片依赖的既有能力 |
 | 退出条件 | 委派、消息与触发、结果归属、中断及资源收口通过确定性验证；学习者能解释关键控制流与失败边界 |
 | 退出后安排 | 在目标工程收口契约、能力与状态；在学习仓库记录理解反馈，后续课程仍按 MAINTENANCE 安排 |
 
-此前接手记录指出目标工程的状态文档已记录 0003—0005 收口；不因为上游旧实践仍写着 prepared 就要求重做。当前增加 M0.5 Steer 前置实践，尚未到目标工程重新核验或实现，不修改其状态。
+本材料的阶段顺序表达实现依赖，不是当前待办列表；0003—0005 与本实践的已完成阶段不因旧材料重新激活。学习衔接由维护账本记录，工程实时状态与交付证据仍由目标工程维护。
 
 ## 要解决的具体问题
 
@@ -71,7 +71,7 @@
 
 学习者先表达输入准入与执行循环的职责边界：谁判断当前活动 Turn，谁保存待消费输入，谁将其纳入后续模型请求，谁处理 Turn 恰好结束的竞争。沿用公共 Agent 执行机制；不要先为子 Agent 单独实现一套 Steer，也不预先指定 channel、锁或回调结构。
 
-前置理论与场景回顾已收束，尚未核验目标工程或启动实现。下一步先对照目标工程的 Turn 登记、输入入口、模型/工具循环、历史记录和取消机制完成职责映射。重点识别“检查仍可接收并入队”与“关闭接收入口”必须协调的业务边界；Codex 用活动 Turn 锁实现，不要求目标工程机械复制同一同步结构。工程中的验收结果才决定 M0.5 是否完成。
+职责映射需核对目标工程的 Turn 登记、输入入口、模型/工具循环、历史记录和取消机制。重点识别“检查仍可接收并入队”与“关闭接收入口”必须协调的业务边界；Codex 用活动 Turn 锁实现，不要求目标工程机械复制同一同步结构。工程中的验收结果才决定 M0.5 是否完成。
 
 用户已明确选择以当前 Codex 的 Queue/Steer 功能和异常闭环为实践对照，不另行设计简化版交付语义。设计工作是把已核实行为映射到目标工程的职责和生命周期；实现可以分切片推进，但不得因分阶段而删掉失败与竞态要求。未知分支先查源码和测试，不能自行补成另一个产品契约。
 
@@ -85,7 +85,7 @@
 - 正常循环与外层任务复查待输入并尝试在原 Turn 继续；保留 Codex 极晚输入或异常收尾时的历史记录边界，不改成“接收成功就绝对保证原 Turn 采样”。历史保存不等于模型已读。
 - 客户端与严格 Core 分层对照：NoActiveTurn 后转新 Turn，ID 不匹配更新目标并重试一次，不可 Steer 时保留为拒绝后的待发输入；重复失败与中断恢复按已核实路径处理。客户端另一次提交不能记成原严格 Steer 成功。
 
-用 ScriptedModel、工具 gate 和请求捕获实现[前置验收](materials/0006-subagent-lifecycle-acceptance.md#m05-前置验收单-agent-steer)。Queue 的后续工作等待队列与 Steer 的当前 Turn 待消费输入分别表达；不要求复制 Codex 的 TUI 结构。本轮仍为学习与资料准备，未启动目标工程实现。
+用 ScriptedModel、工具 gate 和请求捕获实现[前置验收](materials/0006-subagent-lifecycle-acceptance.md#m05-前置验收单-agent-steer)。Queue 的后续工作等待队列与 Steer 的当前 Turn 待消费输入分别表达；不要求复制 Codex 的 TUI 结构。具体实现和验证证据由目标工程维护。
 
 用户明确将客户端与独立 App Server 之间的传输断线恢复排除在本实践之外：不要求增加服务端部署、重连、Unconfirmed 队列协调或跨连接交付保证。这部分保留为课程中的架构扩展知识，不作为 M0.5 退出条件。已有正常运行中的输入保留、中断恢复和记录回执协调仍在范围内；这里的范围收束不改变严格 Steer、结束竞态或取消契约。
 

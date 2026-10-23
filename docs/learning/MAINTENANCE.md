@@ -12,12 +12,13 @@
 ## Current progress
 
 - Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 课程 0002 的 Queue/Steer 核心理论及本轮场景回顾已收束。用户能区分 pending、记录与模型消费，复述 Esc 的判断条件，并将接收/收尾协调关联到互斥锁与临界区；补充了循环层级、输入 hooks 与历史记录入口。理解证据见记录 0017，尚无实现验收证据。本轮整理提交后结束，不继续启动编码。
-- Next checkpoint: 下次进入目标工程的 M0.5 职责映射，核对 Turn、输入入口、执行循环和取消机制，再完成实践 0006 的 M0.5，随后推进 Subagent M1—M4。用户明确不实现客户端/App Server 传输断线恢复；保留为扩展知识，不阻塞实践。第二批 Skills 发现与加载暂后移，主题保留。
+- Current lesson: 第一批理论与实践已收束。Queue/Steer 理论及场景回顾见记录 0017；2026-10-23 用户确认 Subagent 实践完成，本次核对了独立工程的 M0.5 与 M1—M4 交付记录。第二批尚未授课。
+- Next checkpoint: 进入第二批 Skills 的发现与加载：围绕一个 Skill 从磁盘文件到模型上下文的过程，核对扫描、元信息暴露、显式指定与自动选择、正文及引用资料加载的职责。先讲场景和主链，再查当前源码与测试；不重新安排 M0.5 或 Subagent M1—M4。
 - Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
-- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)及验收材料已准备，M0.5 前置理论与回顾已收束，位置在 M0 设计之后、M1 子 Agent 创建之前。尚未修改或重新验收 CodebaseAgent。0003—0005 的既有收口记录不重新激活；下次到目标工程读取 AGENTS、WORKFLOW、`docs/STATUS.md`，以其源码和测试确认可复用能力，先做职责映射。
+- Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)保留学习目标、设计输入与验收场景；独立工程拥有实现、契约及测试证据。本次依据用户确认和交付记录更新学习衔接，未重新运行测试或评审源码。协作专用界面仍延期，偶发 Responses 协议错误仍由目标工程 STATUS 跟踪，不把实践收束扩大为全部平台、Provider 或异常路径均已验收。
+- Practice evidence (2026-10-23): 独立工程 `D:/Program/AgentLab/CodebaseAgent/docs/archive/2026-10-21-steer-delivery-and-experience.md` 记录 M0.5 技术交付与用户体验验收；`docs/archive/2026-10-22-subagent-delivery.md` 记录 M1—M4 交付、恢复修复及用户结束试用。路径均属独立工程，未复制其测试批次或工程待办；当前能力见其 `docs/capabilities/subagents.md`，实时状态见其 `docs/STATUS.md`。
 - Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
 - Last entropy pass lesson: 22
 
@@ -54,7 +55,7 @@
 - Practice 0003: 持久恢复与同 Turn 上下文压缩（0003-A 恢复；0003-B 自动压缩）
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
-- Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；资料已准备，未启动实现）
+- Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；用户确认完成，作为回看材料保留）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -94,7 +95,7 @@
 
 ## Next likely directions
 
-- 第一批理论以 Subagent 和 A2A 扩展收尾；当前先补 Steer 及 0006 M0.5，再推进 Subagent 实践。之后再接第二批 Skills 发现与加载，不把已有专题收尾撤销为未学。
+- 第一批理论与实践已经收束；下一课进入第二批 Skills 发现与加载。0006 的依赖顺序保留作理解路线，不再作为待实施队列。
 - A2A 扩展已达到用户要求深度。协议细节、完整接入和委派器改造均不自动激活；进入 MCP 对比时按需引用课程 0024。
 - 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
 - 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
