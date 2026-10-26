@@ -86,6 +86,15 @@
 - [A2A 核心概念](https://a2a-protocol.org/v1.0.1/topics/key-concepts/)、[任务生命周期](https://a2a-protocol.org/v1.0.1/topics/life-of-a-task/)：课程 0024 的外部协议依据，固定已查版本，接入前重查。
 - [Google ADK A2A](https://google.github.io/adk-docs/a2a/quickstart-consuming/)、[Microsoft Agent Framework A2A](https://learn.microsoft.com/en-us/agent-framework/journey/agent-to-agent)、[LangSmith A2A](https://docs.langchain.com/langsmith/server-a2a)：实际框架接入示例；支持版本和可选能力属于 2026-10-19 查询快照。
 
+## Skills 发现、加载与刷新
+
+- [元信息与模型](../../codex-rs/skills/src/model.rs)、[frontmatter 解析](../../codex-rs/skills/src/parser.rs)：Skill 身份与描述怎样成为运行时数据。
+- [显式选择](../../codex-rs/skills/src/selection.rs)、[提及解析](../../codex-rs/skills/src/mentions.rs)、[选择测试](../../codex-rs/skills/src/selection_tests.rs)：文本、路径、结构化输入、歧义与禁用。
+- [目录与预算](../../codex-rs/ext/skills/src/render.rs)、[本地正文注入](../../codex-rs/ext/skills/src/host_prompt.rs)、[Skills 扩展](../../codex-rs/ext/skills/src/extension.rs)：目录与正文的不同角色、来源相关截断及重复片段协调。
+- [SkillsWatcher](../../codex-rs/app-server/src/skills_watcher.rs)、[FileWatcher](../../codex-rs/file-watcher/src/lib.rs)、[缓存服务](../../codex-rs/ext/skills/src/host_service.rs)：事件驱动失效、路径匹配、节流及缓存重建，不能与模型历史更新混为一谈。
+
+- [Step 状态构造](../../codex-rs/core/src/session/world_state.rs)、[增量工具声明](../../codex-rs/core/src/context/world_state/top_level_tools.rs)、[请求转换](../../codex-rs/core/src/client.rs)：课程 0028 的状态同步与协议载体依据。
+
 ## Wisdom (Communities)
 
 - [OpenAI Codex Pull Requests](https://github.com/openai/codex/pulls)

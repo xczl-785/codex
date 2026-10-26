@@ -54,11 +54,25 @@
 
 专题已按约定目标收尾，保留未核实边界，不等于所有分支均经运行验证。
 
-## 接下来的一批课程
+Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为准。
 
 实践的依赖顺序是[课程 0002](lessons/0002-start-steer-or-queue.md)的 Steer 机制与[实践 0006 的 M0.5](practice/0006-subagent-lifecycle-lab.md#m05单-agent-steer-前置实践)，之后是 Subagent 实践。理论回顾与实现验收是不同环节；当前完成情况和下一动作统一见 [MAINTENANCE.md](MAINTENANCE.md)，不因这条依赖路线重复开设已完成的理论专题。
 
-第一批已由 Subagent 与 A2A 对照收尾。下一批安排为 Skills 加载与设计讨论、MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。这些主题尚未授课，不计入已完成课程。
+## 第二批课程：Skills 与能力接入
+
+- [0025：Skill 怎样从文件变成模型可用的指令](lessons/0025-skills-catalog-loading-and-refresh.md)：目录、显式选择、正文注入与长度限制、Core/扩展去重，以及文件变化如何刷新列表。
+
+- [0026：Skill 包的职责、脚本权限与使用记录](lessons/0026-skills-package-execution-and-usage-tracking.md)：辅助资源的分工、脚本权限，以及隐式使用识别的动机、消费者和证据限制。
+
+- [0027：Skill 发现范围与输入身份](lessons/0027-skills-discovery-and-identity.md)：模块工作目录、扫描根、路径身份，以及界面名称与结构化提交。
+
+- [0028：Skill 清单怎样随上下文更新](lessons/0028-skills-context-updates-and-incremental-tools.md)：world state、提示缓存、增量工具与协议边界。
+
+- [0029：怎样设计并验证一个有用的 Skill](lessons/0029-skill-design-and-validation.md)：选择依据、正文与引用分工、脚本和正反例验证。
+
+- [0030：Skills 接入职责与验收边界](lessons/0030-skills-integration-contracts.md)：完整请求链、状态区分及实践需要验证的行为。
+
+第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0030，其余安排不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 
@@ -76,12 +90,16 @@
 
 ## 阶段复盘
 
+- [Skills 整体回顾（0025—0030）](reviews/0003-skills-end-to-end-review.md)：从一次任务串联发现、选择、上下文与执行，定位实践验收边界。
+
 - [课程 0001—0015 整体知识地图](reviews/0001-lessons-0001-0015-stage-review.md)：按生命周期、状态投影、工具闭环、安全执行和真实进程重新组织前十五课，并提供综合自测场景。
 - [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：归纳课程 0016—0018 的理解边界，区分源码场景校准与可运行实践证据。
 
 ## 实践入口
 
-实践契约、验收材料和暂存的工程改进调研统一从[实践目录](practice/README.md)查阅，不纳入课程阅读顺序。教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)，独立工程的实时实施与 deferred 状态以该工程自己的状态文档为准。
+- 当前 Skills 实践材料：[0007：Skills 接入体系](practice/0007-skills-integration-lab.md)。任务书完整交接课程内容；具体实现范围与阶段由 CodebaseAgent 工程确定。
+
+实践输入与契约、验收材料和暂存的工程改进调研统一从[实践目录](practice/README.md)查阅，不纳入课程阅读顺序。教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)，独立工程的实时实施与 deferred 状态以该工程自己的状态文档为准。
 
 ## 接续教学
 

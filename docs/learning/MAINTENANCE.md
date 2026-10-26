@@ -11,16 +11,17 @@
 
 ## Current progress
 
-- Last completed lesson: 0024；Subagent 专题（0021—0024）按已约定学习目标收尾。0019 是按需答疑骨架，0020 是待深入课程，不随编号计入已完成。
-- Current lesson: 第一批理论与实践已收束。Queue/Steer 理论及场景回顾见记录 0017；2026-10-23 用户确认 Subagent 实践完成，本次核对了独立工程的 M0.5 与 M1—M4 交付记录。第二批尚未授课。
-- Next checkpoint: 进入第二批 Skills 的发现与加载：围绕一个 Skill 从磁盘文件到模型上下文的过程，核对扫描、元信息暴露、显式指定与自动选择、正文及引用资料加载的职责。先讲场景和主链，再查当前源码与测试；不重新安排 M0.5 或 Subagent M1—M4。
-- Current handoff: 已讲 Subagent 设计、创建、历史过滤、配置、消息与触发、等待状态、中断、回收、关闭和归档，并完成 A2A 概念扩展。用户反馈设计先行后理解清晰；A2A 与 OpenCode Skill 的映照只作扩展，不继续安排委派器改造。
+- Last completed lesson: 0030 接入设计输入已讲解并保存；未修改 CodebaseAgent，未运行接入验收。
+- Current lesson: 用户已通过 Skills 整体回顾；[实践任务书 0007](practice/0007-skills-integration-lab.md)已整理本次涉及的完整内容，作为独立工程实践输入。
+- Next checkpoint: 用户在 CodebaseAgent 工程结合实际场景确定 Skills 实现范围、行为契约和阶段，再按当地流程实践；本仓库等待实践反馈并维护教学衔接。Skills 实践完成后才开始转型课程。
+- Planned transition (2026-10-23): 先完成 Skills 课程及接入实践，再在当前学习仓库开展 CodebaseAgent 转型课程；学完后才补充转型实践任务书，随后按独立工程流程实践，再接 MCP。转型部分当前只记录安排，不提前授课、生成转型任务书或启动转型实现。范围见[路线图](roadmap.md#codebaseagent-转型课程与实践)。
+- Current handoff: 用户明确要求任务书不约定实现范围。0007 按主循环、上下文、Codex 细节增强、组合与多来源、验证组织内容，分类不代表优先级；不预设 MVP、必做项或延期清单。目标工程拥有范围和实施决定。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
 - Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)保留学习目标、设计输入与验收场景；独立工程拥有实现、契约及测试证据。本次依据用户确认和交付记录更新学习衔接，未重新运行测试或评审源码。协作专用界面仍延期，偶发 Responses 协议错误仍由目标工程 STATUS 跟踪，不把实践收束扩大为全部平台、Provider 或异常路径均已验收。
 - Practice evidence (2026-10-23): 独立工程 `D:/Program/AgentLab/CodebaseAgent/docs/archive/2026-10-21-steer-delivery-and-experience.md` 记录 M0.5 技术交付与用户体验验收；`docs/archive/2026-10-22-subagent-delivery.md` 记录 M1—M4 交付、恢复修复及用户结束试用。路径均属独立工程，未复制其测试批次或工程待办；当前能力见其 `docs/capabilities/subagents.md`，实时状态见其 `docs/STATUS.md`。
-- Last entropy pass: 本次在新增 0023/0024 前完成，覆盖截至 0022 的资料与教学状态。
-- Last entropy pass lesson: 22
+- Last entropy pass: 新增 0028 前检查截至 0027 的资料：资源索引仍与主线相关；两份 reference 职责不同，无重复；无待移出的 assets；历史学习记录保留证据身份，0018 清理过期下一步；NOTES 保留长期偏好并加入专题结束后整体回顾；当前索引与进度同步，未删除历史证据。
+- Last entropy pass lesson: 27
 
 ## Current index
 
@@ -28,6 +29,12 @@
 - Lesson 0022: Subagent 设计、创建、历史与配置
 - Lesson 0023: Subagent 中断、回收、关闭与归档
 - Lesson 0024: A2A 跨系统委派与协议价值
+- Lesson 0025: Skill 怎样从文件变成模型可用的指令
+- Lesson 0026: Skill 包的职责、脚本权限与使用记录
+- Lesson 0027: Skill 发现范围与输入身份
+- Lesson 0028: Skill 清单怎样随上下文更新：world state 与增量工具
+- Lesson 0029: 怎样设计并验证一个有用的 Skill
+- Lesson 0030: Skills 接入职责与验收边界
 
 - Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 - Lesson 0017: 停止 Turn，究竟停止了什么
@@ -49,6 +56,7 @@
 - Lesson 0014: 一条命令怎样变成可续接的真实进程
 - Lesson 0015: 同一个真实进程为什么有三种输出视图
 - Stage review 0001: 课程 0001—0015 整体知识地图
+- Stage review 0003: Skills 整体回顾（0025—0030）
 - Stage review 0002: 权限实验之后的上下文、取消与并行复盘
 - Practice 0001: 实现一个通用代码库理解 Agent
 - Practice 0002: 权限、审批、沙箱与提权实验
@@ -56,6 +64,7 @@
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
 - Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；用户确认完成，作为回看材料保留）
+- Practice 0007: Skills 接入体系（内容交接；实现范围由目标工程确定）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -73,6 +82,7 @@
 - Learning record 0014: 并行准入、结果顺序与职责分离
 - Learning record 0016: Subagent 理解变化、扩展与专题收束
 - Learning record 0017: Queue、Steer 与 Turn 边界
+- Learning record 0018: Skills 专题理解变化与实践交接
 - Learning record 0015: 逐课回顾、记忆深度与扩展阶段衔接
 
 ### 答疑课（不参与主循环）
@@ -85,7 +95,7 @@
 - 事实优先取自当前分支源码与测试。
 - 课程与速查统一使用纯 Markdown；不维护 H5 和样式资产，文档沉淀不得拖慢对话反馈。
 - 跨多课的阶段复盘放在 `reviews/`，按主题重组理解，不改变 `lessons/` 的线性课程职责，也不冒充下一课。
-- 已确定的实践任务放在 `practice/`，明确目标、非目标、行为契约和验收标准；实验源码不直接加入 Codex workspace。
+- 实践材料放在 `practice/`，按用户要求区分知识交接与实施契约；0007 只交接内容，范围和验收由目标工程确定。既有实践契约保留原有用途，实验源码不直接加入 Codex workspace。
 - 实践默认使用 Rust，采用“关键控制面手写、基础设施复用、AI 受控协作”，目标仓库保持语言无关，先以小型 fixture repository 和 ScriptedModel 验证 Harness，再接真实模型。
 - 第一版通过 Repository Binding 限制代码库根目录，所有工具输出有界并携带相对路径和行号；Codex、CodeGraph 和 Git 都不是硬依赖。
 - 实践 0001 收尾后的依赖顺序为：权限与沙盒实践 → 持久恢复与同 Turn 自动压缩 → 取消传播 → 并行工具调度 → 单 Agent Steer（0006 M0.5）→ Subagent 生命周期。恢复与压缩分为 0003-A/0003-B 两个阶段，但仍属于一个实践主题。
@@ -95,10 +105,10 @@
 
 ## Next likely directions
 
-- 第一批理论与实践已经收束；下一课进入第二批 Skills 发现与加载。0006 的依赖顺序保留作理解路线，不再作为待实施队列。
+- 第一批理论与实践已经收束；Skills 课程 0025—0030 与整体回顾已完成，实践输入见 0007。0006 保留作回看材料。
 - A2A 扩展已达到用户要求深度。协议细节、完整接入和委派器改造均不自动激活；进入 MCP 对比时按需引用课程 0024。
-- 第二批课程围绕能力扩展与接入，建议顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；主题已排入，具体拆课和顺序可随用户问题调整。
-- 实践 0002 已由用户确认完成；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
+- 第二批顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → Skills 接入实践 → CodebaseAgent 转型课程 → 转型实践任务书与实践 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；转型课必须等 Skills 实践完成后开始。
+- 实践 0002 已由用户确认完成，指独立 PermissionSandboxLab，不代表 CodebaseAgent 已正式接入权限与沙箱；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。
 - 已有学习记录不是即时记忆测试。重点用权限链路、恢复投影、工具调用与进程的边界做短场景复习，不重讲所有基础名词。
 - LangGraph checkpoint 横向比较已收束，仅在具体疑问触发时回看。
 
