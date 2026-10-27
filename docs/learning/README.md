@@ -72,7 +72,15 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 
 - [0030：Skills 接入职责与验收边界](lessons/0030-skills-integration-contracts.md)：完整请求链、状态区分及实践需要验证的行为。
 
-第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0030，其余安排不计入已完成课程。
+- [0031：从只读理解到编码执行](lessons/0031-coding-agent-tools-and-permission-boundaries.md)：编码闭环、补丁工具定位、通用权限边界与面向 Agent 的工具设计。
+
+- [0032：文件变化、部分失败与历史重建](lessons/0032-file-change-conflicts-and-history-recovery.md)：补丁匹配、并发边界、变更归属、撤销和 rollout 中的恢复依据。
+
+- [0033：验证闭环的三层职责](lessons/0033-verification-tools-and-model-judgment.md)：宿主工具能力、检查程序规则、LLM 判断及强制门禁的区别。
+
+- [0034：子 Agent 写入与集成](lessons/0034-subagent-writes-and-integration.md)：实际执行约束与模型分工、共享工作区冲突、完成报告及组合结果判断。
+
+第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0034，其余安排不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 

@@ -95,6 +95,13 @@
 
 - [Step 状态构造](../../codex-rs/core/src/session/world_state.rs)、[增量工具声明](../../codex-rs/core/src/context/world_state/top_level_tools.rs)、[请求转换](../../codex-rs/core/src/client.rs)：课程 0028 的状态同步与协议载体依据。
 
+## 编码工具、变更与验证
+
+- [补丁工具入口](../../codex-rs/core/src/tools/handlers/apply_patch.rs)、[补丁运行时](../../codex-rs/core/src/tools/runtimes/apply_patch.rs)：具体补丁操作如何复用通用授权与执行流程。
+- [文件内容更新](../../codex-rs/apply-patch/src/file_update.rs)、[差异跟踪](../../codex-rs/core/src/turn_diff_tracker.rs)：上下文匹配、实际变更与本轮净差异的不同职责。
+- [工具输出](../../codex-rs/core/src/tools/context.rs)：进程标识、退出码、输出与截断信息如何成为模型输入，不等同业务验收结论。
+- [Rollout 持久化策略](../../codex-rs/rollout/src/policy.rs)、[记录器](../../codex-rs/rollout/src/recorder.rs)：历史工具调用与结果的保存边界及本地路径。
+
 ## Wisdom (Communities)
 
 - [OpenAI Codex Pull Requests](https://github.com/openai/codex/pulls)

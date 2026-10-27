@@ -40,6 +40,10 @@
 
 - [0018：Skills 专题理解变化与实践交接](0018-skills-loading-and-refresh-baseline.md)
 
+- [0019：面向 Agent 的工具与通用权限边界](0019-agent-native-tools-and-common-permissions.md)
+
+- [0020：区分验证能力与模型判断](0020-verification-capabilities-and-llm-decisions.md)
+
 新理解推翻旧记录时，不静默重写学习过程；应在新记录中说明它修正或取代了哪项认识，并把稳定结论沉淀到对应课程。当前教学方向始终由 [MAINTENANCE.md](../MAINTENANCE.md) 决定。
 
 ## 历史过程证据
