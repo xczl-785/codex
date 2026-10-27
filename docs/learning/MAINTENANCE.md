@@ -11,11 +11,11 @@
 
 ## Current progress
 
-- Last completed lesson: 0030 接入设计输入已讲解并保存；未修改 CodebaseAgent，未运行接入验收。
-- Current lesson: 用户已通过 Skills 整体回顾；[实践任务书 0007](practice/0007-skills-integration-lab.md)已整理本次涉及的完整内容，作为独立工程实践输入。
-- Next checkpoint: 用户在 CodebaseAgent 工程结合实际场景确定 Skills 实现范围、行为契约和阶段，再按当地流程实践；本仓库等待实践反馈并维护教学衔接。Skills 实践完成后才开始转型课程。
-- Planned transition (2026-10-23): 先完成 Skills 课程及接入实践，再在当前学习仓库开展 CodebaseAgent 转型课程；学完后才补充转型实践任务书，随后按独立工程流程实践，再接 MCP。转型部分当前只记录安排，不提前授课、生成转型任务书或启动转型实现。范围见[路线图](roadmap.md#codebaseagent-转型课程与实践)。
-- Current handoff: 用户明确要求任务书不约定实现范围。0007 按主循环、上下文、Codex 细节增强、组合与多来源、验证组织内容，分类不代表优先级；不预设 MVP、必做项或延期清单。目标工程拥有范围和实施决定。
+- Last completed lesson: 0030 接入设计输入及 Skills 整体回顾已完成；2026-10-27 用户确认 Skills 接入实践已完成。
+- Current lesson: Skills 理论与实践已收束；下一主题为 CodebaseAgent 转型课程，尚未开始授课。[实践任务书 0007](practice/0007-skills-integration-lab.md)保留为回看与设计参考。
+- Next checkpoint: 在当前学习仓库开始 CodebaseAgent 转型课程，先讨论从只读代码理解到编码闭环的目标、任务场景和行为边界，再深入权限、文件修改与验证链路。
+- Planned transition (2026-10-27): Skills 实践前置条件已由用户确认满足。接下来开展 CodebaseAgent 转型课程；学完后才补充转型实践任务书，随后按独立工程流程实践，再接 MCP。本次仅同步进度与后续安排，不生成转型课程正文、任务书或启动实现。范围见[路线图](roadmap.md#codebaseagent-转型课程与实践)。
+- Current handoff: 依据本次用户确认关闭 Skills 实践等待，不新增实现范围或验收结论。0007 不预设 MVP、必做项或延期清单的边界继续有效；目标工程拥有范围、实施决定及测试证据。本次未评审其源码或重新运行接入验收。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
 - Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)保留学习目标、设计输入与验收场景；独立工程拥有实现、契约及测试证据。本次依据用户确认和交付记录更新学习衔接，未重新运行测试或评审源码。协作专用界面仍延期，偶发 Responses 协议错误仍由目标工程 STATUS 跟踪，不把实践收束扩大为全部平台、Provider 或异常路径均已验收。
@@ -64,7 +64,7 @@
 - Practice 0004: 取消传播与部分完成状态
 - Practice 0005: 有界并行工具调度与结果顺序
 - Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；用户确认完成，作为回看材料保留）
-- Practice 0007: Skills 接入体系（内容交接；实现范围由目标工程确定）
+- Practice 0007: Skills 接入体系（2026-10-27 用户确认完成，作为回看材料保留；实现范围与证据由目标工程维护）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -105,7 +105,7 @@
 
 ## Next likely directions
 
-- 第一批理论与实践已经收束；Skills 课程 0025—0030 与整体回顾已完成，实践输入见 0007。0006 保留作回看材料。
+- 第一批理论与实践已经收束；Skills 课程 0025—0030、整体回顾与接入实践已完成，下一主题为 CodebaseAgent 转型课程。0006、0007 保留作回看材料；实践完成依据为用户确认。
 - A2A 扩展已达到用户要求深度。协议细节、完整接入和委派器改造均不自动激活；进入 MCP 对比时按需引用课程 0024。
 - 第二批顺序为 Skills 发现与加载 → Skills 执行边界及用户设计想法 → Skills 接入实践 → CodebaseAgent 转型课程 → 转型实践任务书与实践 → MCP 接入闭环 → 内部工具 / Skill / MCP 横向对比 → 动态工具与连接生命周期 → Plugins/Apps 组合 → 配置与客户端边界综合串联。详细问题与完成标准只在[路线图](roadmap.md#第二批课程能力扩展与接入)维护；转型课必须等 Skills 实践完成后开始。
 - 实践 0002 已由用户确认完成，指独立 PermissionSandboxLab，不代表 CodebaseAgent 已正式接入权限与沙箱；0003—0005 保留为实践契约和按需回看材料，不按旧记录重新安排。若要实施或确认某项能力，再到独立工程读取自己的 `docs/STATUS.md`、源码和测试。

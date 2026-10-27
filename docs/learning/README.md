@@ -97,7 +97,7 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 
 ## 实践入口
 
-- 当前 Skills 实践材料：[0007：Skills 接入体系](practice/0007-skills-integration-lab.md)。任务书完整交接课程内容；具体实现范围与阶段由 CodebaseAgent 工程确定。
+- Skills 实践回看材料：[0007：Skills 接入体系](practice/0007-skills-integration-lab.md)。用户已确认实践完成；任务书保留课程内容与设计参考，具体实现范围及证据由 CodebaseAgent 工程维护。当前教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)。
 
 实践输入与契约、验收材料和暂存的工程改进调研统一从[实践目录](practice/README.md)查阅，不纳入课程阅读顺序。教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)，独立工程的实时实施与 deferred 状态以该工程自己的状态文档为准。
 
