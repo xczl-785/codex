@@ -80,7 +80,13 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 
 - [0034：子 Agent 写入与集成](lessons/0034-subagent-writes-and-integration.md)：实际执行约束与模型分工、共享工作区冲突、完成报告及组合结果判断。
 
-第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0034，其余安排不计入已完成课程。
+- [0035：只读运行契约与 Plan 模式](lessons/0035-read-only-contract-and-plan-mode.md)：行为指令、工具暴露、执行权限，以及 Plan 的指令、宿主分支和客户端切换。
+
+- [0036：执行异常与恢复](lessons/0036-execution-failure-and-safe-recovery.md)：区分执行、修改和验证状态，理解暂时返回、超时、取消与结果未知，避免盲目重放。
+
+- [0037：Harness 能力增量](lessons/0037-harness-capability-delta.md)：已有能力、新增与扩展、模型职责、暂不需要的功能，以及权限接入前置条件。
+
+第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0037，其余安排不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 
@@ -104,6 +110,8 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 - [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：归纳课程 0016—0018 的理解边界，区分源码场景校准与可运行实践证据。
 
 ## 实践入口
+
+- 编码实践准备材料：[0008：编码能力接入](practice/0008-coding-agent-integration.md)。已准备，放在权限与沙箱正式接入实践验收之后；编号不表示执行顺序，不代表现在启动编码实现。
 
 - Skills 实践回看材料：[0007：Skills 接入体系](practice/0007-skills-integration-lab.md)。用户已确认实践完成；任务书保留课程内容与设计参考，具体实现范围及证据由 CodebaseAgent 工程维护。当前教学衔接见 [MAINTENANCE.md](MAINTENANCE.md)。
 
