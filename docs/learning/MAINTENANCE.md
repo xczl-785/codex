@@ -11,17 +11,24 @@
 
 ## Current progress
 
-- Last completed lesson: 0037 Harness 能力差异已讲解并保存；区分已有、新增/扩展、模型职责与暂不需要。用户指出权限沙箱未正式接入，要求校正实践前置顺序。Skills 实践已于 2026-10-27 由用户确认完成。
-- Current lesson: 用户确认分开权限接入与编码实践，开始第二专题“权限、审批与受控执行接入现有 Harness”；首节定位公共动作准入与具体执行约束的连接。
-- Next checkpoint: 讲清准入、授权、平台执行与失败反馈后，单独准备权限与沙箱接入实践任务书并在目标工程验收；之后才进入编码实践 0008。当前不改目标工程只读契约、不启动实现。旧权限实验 0002 不代表正式接入。
+- Last completed lesson: 0038 已讲清并保存；用户确认补丁前置目标更明确，但仍需执行限制，理解证据见记录 0021。Skills 实践已于 2026-10-27 由用户确认完成。
+- Current lesson: 权限接入课程已交接为[实践 0009](practice/0009-permission-sandbox-integration.md)。用户要求不再展开后端课程，转到 CodebaseAgent 讨论技术使用、范围与实施；未选定后端、未启动实现或重跑实验。
+- Next checkpoint: 用户在 CodebaseAgent 讨论并完成权限与沙箱接入，按目标工程约定验收后，复核编码实践 0008 前置条件。学习仓库等待实践反馈，不继续默认展开 Windows 后端课程；旧权限实验 0002 不代替正式接入。
 - Planned transition (2026-10-28): 用户要求编码任务书先出并推送，已准备[实践 0008](practice/0008-coding-agent-integration.md)，等待权限与沙箱接入实践验收。顺序为权限接入课程 → 独立接入实践与验收 → 编码实践准备复核 → 编码实践 → MCP。两项实践在 CodebaseAgent 内推进，不再新建权限实验工程；各自范围和实施阶段由目标工程确定。
 - Current handoff: 先定位工具覆盖范围，再区分当前 Harness 确实保证的行为、模型协调策略与可选工程增强。Patch 是修改路径之一；子 Agent 任务分工不自动形成路径写入权限；验证报告不自动成为整体验收。理解证据见记录 0019、0020。本轮仅静态核对 Codex 并更新课程，未评审或验收独立工程。
 - Evidence limits: durable sleep 的生产宿主触发和持久恢复链路未定位；App 创建独立 Thread 的专用实现未定位；未据此认定 Codex 原生支持 A2A。均不阻塞本节完成，不标记为已验证。
 - Persistence follow-up: [课程 0020](lessons/0020-persistence-projections-and-recovery.md)保留 SQLite 答疑与容量样本，正式深入排在第二批之后。新版编辑同 Thread Revert 已修正于课程 0005，不能推出子树自动回滚。
 - Practice boundary: [实践 0006](practice/0006-subagent-lifecycle-lab.md)保留学习目标、设计输入与验收场景；独立工程拥有实现、契约及测试证据。本次依据用户确认和交付记录更新学习衔接，未重新运行测试或评审源码。协作专用界面仍延期，偶发 Responses 协议错误仍由目标工程 STATUS 跟踪，不把实践收束扩大为全部平台、Provider 或异常路径均已验收。
 - Practice evidence (2026-10-23): 独立工程 `D:/Program/AgentLab/CodebaseAgent/docs/archive/2026-10-21-steer-delivery-and-experience.md` 记录 M0.5 技术交付与用户体验验收；`docs/archive/2026-10-22-subagent-delivery.md` 记录 M1—M4 交付、恢复修复及用户结束试用。路径均属独立工程，未复制其测试批次或工程待办；当前能力见其 `docs/capabilities/subagents.md`，实时状态见其 `docs/STATUS.md`。
-- Last entropy pass: 新增 0033 前检查截至 0032 的资料；资源与主线相关，两份 reference 分别承担概念与执行后端参考，历史版本边界明确；assets 无待迁移代码。学习记录保留理解证据与历史身份，下一动作统一由本账本持有。补入编码闭环源码入口、压缩 NOTES 的过时将来式表述、同步课程索引与验证职责纠正；未删除历史材料，未重审全部旧课或外部产品现状。
-- Last entropy pass lesson: 32
+- Last entropy pass: 新增 0038 前检查截至 0037 的资料，详见下方 Entropy pass through lesson 0037；补入权限源码导航、更新教学偏好及课程衔接，保留历史证据；未重审全部旧课或外部产品现状。
+- Last entropy pass lesson: 37
+
+## Entropy pass through lesson 0037
+
+- 新课前最高编号 37，上次检查到 32，差值 5，按 teach 执行检查。RESOURCES 仍围绕源码学习，外部资料保留版本快照身份；本轮未重验外部链接或产品现状。
+- NOTES 保留教学偏好并补入本轮有效解释方法；学习记录按理解变化组织，历史记录保持历史身份，无需删除或合并。两份 reference 分别承担概念与执行后端速查，职责不同；assets 无实验代码待迁移。
+- 课程 0031—0037 分别承担工具边界、修改状态、验证、协作、模式、恢复与能力增量；新课专门解释准入与执行限制的接入，不重复权限基础课。同步课程入口、理解记录及当前衔接。
+- 当前 Codex 工程只按课程节奏推进；用户明确不采用实施工作节奏，实际接入由 CodebaseAgent 承接。
 
 ## Current index
 
@@ -42,6 +49,7 @@
 - Lesson 0035: 只读运行契约与 Plan 模式
 - Lesson 0036: 执行异常后，从当前事实恢复
 - Lesson 0037: Harness 能力增量与权限接入前置条件
+- Lesson 0038: 把动作准入与执行限制接入 Harness
 
 - Lesson 0016: 压缩怎样整理历史，以及哪些信息仍然可见
 - Lesson 0017: 停止 Turn，究竟停止了什么
@@ -72,6 +80,8 @@
 - Practice 0005: 有界并行工具调度与结果顺序
 - Practice 0006: Subagent 委派、通信与生命周期（含 M0.5 Steer 前置实践；用户确认完成，作为回看材料保留）
 - Practice 0007: Skills 接入体系（2026-10-27 用户确认完成，作为回看材料保留；实现范围与证据由目标工程维护）
+- Practice 0009: 权限、审批与真实沙箱接入（课程交接已准备，技术选型与实施在 CodebaseAgent 讨论；先于 0008 验收）
+- Practice 0008: 编码能力接入（等待 0009 前置验收）
 - Reference: Codex 核心概念速查
 - Learning record 0001: 已有概念基础与学习方式
 - Learning record 0002: Thread、Turn 与 App Server 理解基线
@@ -92,6 +102,7 @@
 - Learning record 0018: Skills 专题理解变化与实践交接
 - Learning record 0019: 面向 Agent 的工具与通用权限边界
 - Learning record 0020: 区分验证能力与模型判断
+- Learning record 0021: 前置检查与实际执行限制的连接
 - Learning record 0015: 逐课回顾、记忆深度与扩展阶段衔接
 
 ### 答疑课（不参与主循环）

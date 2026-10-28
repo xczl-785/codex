@@ -85,8 +85,9 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 - [0036：执行异常与恢复](lessons/0036-execution-failure-and-safe-recovery.md)：区分执行、修改和验证状态，理解暂时返回、超时、取消与结果未知，避免盲目重放。
 
 - [0037：Harness 能力增量](lessons/0037-harness-capability-delta.md)：已有能力、新增与扩展、模型职责、暂不需要的功能，以及权限接入前置条件。
+- [0038：动作准入与执行限制](lessons/0038-permission-admission-and-execution.md)：补丁与 Shell 的前置判断差异、共享编排，以及为什么已知目标仍保留执行约束。
 
-第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0037，其余安排不计入已完成课程。
+第一批已由 Subagent 与 A2A 对照收尾。第二批先完成 Skills 加载与设计讨论及接入实践，再在本仓库开展 [CodebaseAgent 转型课程](roadmap.md#codebaseagent-转型课程与实践)；学完后补充实践任务书并按流程实践。随后继续 MCP 接入、内部工具 / Skill / MCP 横向对比、动态工具生命周期、Plugins/Apps 组合及配置与客户端边界。具体安排见[路线图](roadmap.md#第二批课程能力扩展与接入)，逐课难度与历史理解证据见[记录 0015](learning-records/0015-review-and-extension-phase.md)。已讲内容见课程 0025—0038，其余安排不计入已完成课程。
 
 已另行安排[持久化、投影与恢复](lessons/0020-persistence-projections-and-recovery.md)：当前保存答疑与本机容量样本，正式深入放在第二批能力扩展课程之后，不计入已完成课程。
 
@@ -110,6 +111,8 @@ Subagent 实践的历史依赖路线如下；当前状态仍以维护账本为�
 - [权限实验之后的上下文、取消与并行复盘](reviews/0002-after-permission-context-cancellation-parallel.md)：归纳课程 0016—0018 的理解边界，区分源码场景校准与可运行实践证据。
 
 ## 实践入口
+
+- 权限接入交接材料：[0009：权限、审批与真实沙箱接入](practice/0009-permission-sandbox-integration.md)。技术选型、实现范围和阶段在 CodebaseAgent 讨论；验收后再进入 0008。
 
 - 编码实践准备材料：[0008：编码能力接入](practice/0008-coding-agent-integration.md)。已准备，放在权限与沙箱正式接入实践验收之后；编号不表示执行顺序，不代表现在启动编码实现。
 

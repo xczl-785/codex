@@ -102,6 +102,11 @@
 - [工具输出](../../codex-rs/core/src/tools/context.rs)：进程标识、退出码、输出与截断信息如何成为模型输入，不等同业务验收结论。
 - [Rollout 持久化策略](../../codex-rs/rollout/src/policy.rs)、[记录器](../../codex-rs/rollout/src/recorder.rs)：历史工具调用与结果的保存边界及本地路径。
 
+## 权限接入
+
+- [补丁安全判定](../../codex-rs/core/src/safety.rs)、[补丁准备](../../codex-rs/core/src/apply_patch.rs)：目标路径检查与审批要求。
+- [命令准备](../../codex-rs/core/src/unified_exec/process_manager.rs)、[共享编排](../../codex-rs/core/src/tools/orchestrator.rs)、[执行尝试契约](../../codex-rs/core/src/tools/sandboxing.rs)：命令准入、审批和本次执行限制的连接。
+
 ## Wisdom (Communities)
 
 - [OpenAI Codex Pull Requests](https://github.com/openai/codex/pulls)
